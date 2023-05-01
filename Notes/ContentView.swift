@@ -8,14 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
+    init() {
+        UITabBar.appearance().backgroundColor = .primaryGray
+    }
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            VStack {
+                TabView {
+                    Text("Notes")
+                        .tabItem {
+                            Image(systemName: "note")
+                            Text("Notes")
+                        }
+                        .toolbarBackground(Color.red, for: .tabBar)
+                    
+                    Text("Second View")
+                          .tabItem {
+                              Image(systemName: "bubble.left")
+                              Text("Chat")
+                          }
+                }
         }
-        .padding()
+
     }
 }
 
