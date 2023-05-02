@@ -10,24 +10,26 @@ import SwiftUI
 struct ContentView: View {
     init() {
         UITabBar.appearance().backgroundColor = .primaryGray
+        UITabBar.appearance().unselectedItemTintColor = .secondaryWhite
     }
     
     var body: some View {
             VStack {
                 TabView {
-                    Text("Notes")
+                    NoteView()
                         .tabItem {
                             Image(systemName: "note")
                             Text("Notes")
                         }
-                        .toolbarBackground(Color.red, for: .tabBar)
                     
-                    Text("Second View")
+                    
+                    Text("Chat")
                           .tabItem {
                               Image(systemName: "bubble.left")
                               Text("Chat")
                           }
                 }
+                
         }
 
     }

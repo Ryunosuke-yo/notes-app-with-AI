@@ -11,6 +11,8 @@
 		2B74066129FF162200B99FFA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74066029FF162200B99FFA /* ContentView.swift */; };
 		2B74066329FF162300B99FFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B74066229FF162300B99FFA /* Assets.xcassets */; };
 		2B74066629FF162300B99FFA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B74066529FF162300B99FFA /* Preview Assets.xcassets */; };
+		2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9F3B212A00D45500F55754 /* NoteView.swift */; };
+		2B9F3B242A00D80E00F55754 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9F3B232A00D80E00F55754 /* Font.swift */; };
 		2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA4D34229FF30F500BA22FF /* UIColor.swift */; };
 		2BA4D34629FF360700BA22FF /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA4D34529FF360700BA22FF /* Color.swift */; };
 /* End PBXBuildFile section */
@@ -21,6 +23,8 @@
 		2B74066029FF162200B99FFA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2B74066229FF162300B99FFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2B74066529FF162300B99FFA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2B9F3B212A00D45500F55754 /* NoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteView.swift; sourceTree = "<group>"; };
+		2B9F3B232A00D80E00F55754 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		2BA4D34229FF30F500BA22FF /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		2BA4D34529FF360700BA22FF /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,6 +80,7 @@
 		2BA4D34029FF30BD00BA22FF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2B9F3B212A00D45500F55754 /* NoteView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -85,6 +90,7 @@
 			children = (
 				2BA4D34229FF30F500BA22FF /* UIColor.swift */,
 				2BA4D34529FF360700BA22FF /* Color.swift */,
+				2B9F3B232A00D80E00F55754 /* Font.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -160,6 +166,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B74066129FF162200B99FFA /* ContentView.swift in Sources */,
+				2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */,
+				2B9F3B242A00D80E00F55754 /* Font.swift in Sources */,
 				2BA4D34629FF360700BA22FF /* Color.swift in Sources */,
 				2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */,
 				2B74065F29FF162200B99FFA /* NotesApp.swift in Sources */,
