@@ -11,9 +11,13 @@ struct ContentView: View {
     init() {
         UITabBar.appearance().backgroundColor = .primaryGray
         UITabBar.appearance().unselectedItemTintColor = .secondaryWhite
+        
     }
     
+   
     var body: some View {
+        ZStack {
+            Color.primaryBlcak
             VStack {
                 TabView {
                     NoteView()
@@ -21,17 +25,23 @@ struct ContentView: View {
                             Image(systemName: "note")
                             Text("Notes")
                         }
+                        .toolbarBackground(.hidden, for: .tabBar)
                     
                     
-                    Text("Chat")
-                          .tabItem {
-                              Image(systemName: "bubble.left")
-                              Text("Chat")
-                          }
+                    ChatView()
+                        .tabItem {
+                            Image(systemName: "bubble.left")
+                            Text("Chat")
+                        }
+                        .toolbarBackground(.hidden, for: .tabBar)
                 }
                 
+                
+            }
+            
         }
-
+        
+        
     }
 }
 
