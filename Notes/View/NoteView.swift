@@ -9,6 +9,8 @@ import SwiftUI
 
 struct NoteView: View {
     @State private var text: String = ""
+    @State private var showVoiceRec = false
+    @State private var showCreateNote = false
     let data = ["All", "Daily", "Work", "Item 4", "Item 5"]
     let columns = [
         GridItem(.flexible()),
@@ -18,33 +20,37 @@ struct NoteView: View {
         ZStack {
             Color.primaryBlcak
                 .ignoresSafeArea()
-            
-            VStack {
+            VStack(spacing: 10) {
                 HStack(spacing: 0) {
-                   Rectangle()
+                    Rectangle()
                         .frame(width: 30, height: 22)
                         .padding(.leading, 15)
                         .foregroundColor(Color.primaryBlcak)
                     Text("Note")
                         .font(Font.mainFont(36))
-                        .fontWeight(.bold)
+                        .bold()
                         .tracking(5)
                         .foregroundColor(.primaryWhite)
                         .frame(maxWidth: .infinity, alignment: .center)
-                 
-                    Image(systemName: "folder.badge.plus")
-                        .resizable(resizingMode: .stretch)
-                        .frame(width: 30, height: 22, alignment: .trailing)
-                        .foregroundColor(.secondaryWhite)
-                        .padding(.trailing, 15)
+                    
+                    NavigationLink(destination: FolderView().navigationBarBackButtonHidden(true)) {
+                        Image(systemName: "folder.badge.plus")
+                            .resizable(resizingMode: .stretch)
+                            .frame(width: 30, height: 22, alignment: .trailing)
+                            .foregroundColor(.secondaryWhite)
+                            .padding(.trailing, 15)
+                    }
+                    
+                    
+                    
                 }
                 
-              
+                
                 
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .resizable(resizingMode: .stretch)
-                        .frame(width: 25, height: 25)
+                        .frame(width: 15, height: 15)
                         .foregroundColor(.primaryWhite)
                         .padding(.leading, 10)
                     
@@ -57,7 +63,7 @@ struct NoteView: View {
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(Color.gray, lineWidth: 0)
                         )
-                        .padding(10)
+                        .padding(5)
                     
                     
                     
@@ -133,7 +139,7 @@ struct NoteView: View {
                                 .background(Color.primaryOrange)
                                 .cornerRadius(20)
                                 .padding(.horizontal, 5)
-                                .padding(.top, 18)
+                                .padding(.top, 5)
                                 
                                 
                             } else {
@@ -151,16 +157,16 @@ struct NoteView: View {
                                     
                                     
                                     
-                                 
-                                        Image(systemName: "waveform")
-                                            .resizable()
-                                            .foregroundColor(Color.primaryWhite)
-                                            .frame(width: 90, height: 100)
-                                            .padding(.vertical, 10)
+                                    
+                                    Image(systemName: "waveform")
+                                        .resizable()
+                                        .foregroundColor(Color.primaryWhite)
+                                        .frame(width: 90, height: 100)
+                                        .padding(.vertical, 10)
                                     
                                     
-                                 
-                                  
+                                    
+                                    
                                     
                                     HStack {
                                         Spacer()
@@ -178,32 +184,70 @@ struct NoteView: View {
                                 .background(Color.primaryPurple)
                                 .cornerRadius(20)
                                 .padding(.horizontal, 5)
-                                .padding(.top, 18)
+                                .padding(.top, 5)
                                 
                                 
                             }
                         }
                     }
+                    .padding(.bottom, 80)
                 }
                 
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
             }
+            
+            VStack {
+                Spacer()
+                HStack {
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Button(action: {
+                            showCreateNote.toggle()
+                        }) {
+                            Image(systemName: "square.and.pencil")
+                                .resizable()
+                                .foregroundColor(.primaryBlcak)
+                                .frame(width: 30, height: 30)
+                                .padding(2)
+                        }
+                        .padding()
+                        .background(Color.primaryWhite)
+                        .clipShape(Circle())
+                        .padding(.trailing, 16)
+                        .fullScreenCover(isPresented: $showCreateNote) {
+                            CreateNoteModal()
+                        }
+                        
+                        Button(action: {
+                            showVoiceRec.toggle()
+                        }) {
+                            Image(systemName: "mic.fill")
+                                .resizable()
+                                .foregroundColor(.primaryBlcak)
+                                .frame(width: 20, height: 30)
+                                .padding(5)
+                        }
+                        .padding()
+                        .background(Color.primaryWhite)
+                        .clipShape(Circle())
+                        .padding(.trailing, 16)
+                        .padding(.bottom, 16)
+                        .sheet(isPresented: $showVoiceRec) {
+                           VoiceMemoModal()
+                                .presentationDetents([.height(360)])
+                                
+                        }
+                    }
+                    
+                }
+            }
+            
         }
+        
     }
 }
+
 
 struct NoteView_Previews: PreviewProvider {
     static var previews: some View {

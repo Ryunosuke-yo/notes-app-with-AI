@@ -18,4 +18,5 @@ extension Color {
     static let primaryOrange = Color("primaryOrange")
     static let secondaryWhite = Color("secondaryWhite")
     static let primaryPurple = Color("primaryPurple")
+    static let recordRed = Color("recordRed")
 }

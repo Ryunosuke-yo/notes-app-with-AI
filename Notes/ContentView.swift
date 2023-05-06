@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+   
     init() {
         UITabBar.appearance().backgroundColor = .primaryGray
         UITabBar.appearance().unselectedItemTintColor = .secondaryWhite
@@ -20,10 +21,13 @@ struct ContentView: View {
             Color.primaryBlcak
             VStack {
                 TabView {
-                    NoteView()
+                    NavigationView {
+                            NoteView()
+                    }
                         .tabItem {
                             Image(systemName: "note")
                             Text("Notes")
+                             
                         }
                         .toolbarBackground(.hidden, for: .tabBar)
                     
