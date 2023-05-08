@@ -10,7 +10,6 @@ import SwiftUI
 struct NoteView: View {
     @State private var text: String = ""
     @State private var showVoiceRec = false
-    @State private var showCreateNote = false
     let data = ["All", "Daily", "Work", "Item 4", "Item 5"]
     let columns = [
         GridItem(.flexible()),
@@ -202,37 +201,33 @@ struct NoteView: View {
                     Spacer()
                     
                     VStack {
-                        Button(action: {
-                            showCreateNote.toggle()
-                        }) {
+                        NavigationLink(destination: CreateNoteView()) {
                             Image(systemName: "square.and.pencil")
                                 .resizable()
                                 .foregroundColor(.primaryBlcak)
                                 .frame(width: 30, height: 30)
                                 .padding(2)
+                            .padding()
+                            .background(Color.primaryWhite)
+                            .clipShape(Circle())
+                            .padding(.trailing, 16)
                         }
-                        .padding()
-                        .background(Color.primaryWhite)
-                        .clipShape(Circle())
-                        .padding(.trailing, 16)
-                        .fullScreenCover(isPresented: $showCreateNote) {
-                            CreateNoteModal()
-                        }
+                       
+    
                         
-                        Button(action: {
-                            showVoiceRec.toggle()
-                        }) {
-                            Image(systemName: "mic.fill")
-                                .resizable()
-                                .foregroundColor(.primaryBlcak)
-                                .frame(width: 20, height: 30)
-                                .padding(5)
-                        }
+                        Image(systemName: "mic.fill")
+                            .resizable()
+                            .foregroundColor(.primaryBlcak)
+                            .frame(width: 20, height: 30)
+                            .padding(5)
                         .padding()
                         .background(Color.primaryWhite)
                         .clipShape(Circle())
                         .padding(.trailing, 16)
                         .padding(.bottom, 16)
+                        .onTapGesture {
+                            showVoiceRec.toggle()
+                        }
                         .sheet(isPresented: $showVoiceRec) {
                            VoiceMemoModal()
                                 .presentationDetents([.height(360)])

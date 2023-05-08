@@ -21,7 +21,7 @@ struct ContentView: View {
             Color.primaryBlcak
             VStack {
                 TabView {
-                    NavigationView {
+                    NavigationStack {
                             NoteView()
                     }
                         .tabItem {

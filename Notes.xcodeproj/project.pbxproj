@@ -17,8 +17,10 @@
 		2B9F3B242A00D80E00F55754 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9F3B232A00D80E00F55754 /* Font.swift */; };
 		2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA4D34229FF30F500BA22FF /* UIColor.swift */; };
 		2BA4D34629FF360700BA22FF /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA4D34529FF360700BA22FF /* Color.swift */; };
+		2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0B2A08BD45007532FC /* CreateNoteView.swift */; };
+		2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0D2A08CB44007532FC /* FolderModal.swift */; };
+		2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0F2A08D6CA007532FC /* UIScreen.swift */; };
 		2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */; };
-		2BD178BE2A063143002FC661 /* CreateNoteModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD178BD2A063143002FC661 /* CreateNoteModal.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,8 +35,10 @@
 		2B9F3B232A00D80E00F55754 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		2BA4D34229FF30F500BA22FF /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		2BA4D34529FF360700BA22FF /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		2BBD9D0B2A08BD45007532FC /* CreateNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNoteView.swift; sourceTree = "<group>"; };
+		2BBD9D0D2A08CB44007532FC /* FolderModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModal.swift; sourceTree = "<group>"; };
+		2BBD9D0F2A08D6CA007532FC /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
 		2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMemoModal.swift; sourceTree = "<group>"; };
-		2BD178BD2A063143002FC661 /* CreateNoteModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNoteModal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,10 +93,11 @@
 			isa = PBXGroup;
 			children = (
 				2B9F3B212A00D45500F55754 /* NoteView.swift */,
+				2BBD9D0B2A08BD45007532FC /* CreateNoteView.swift */,
 				2B25827D2A023D7A00CE3BC6 /* ChatView.swift */,
 				2B5326F02A02DE51006D297F /* FolderView.swift */,
 				2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */,
-				2BD178BD2A063143002FC661 /* CreateNoteModal.swift */,
+				2BBD9D0D2A08CB44007532FC /* FolderModal.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -103,6 +108,7 @@
 				2BA4D34229FF30F500BA22FF /* UIColor.swift */,
 				2BA4D34529FF360700BA22FF /* Color.swift */,
 				2B9F3B232A00D80E00F55754 /* Font.swift */,
+				2BBD9D0F2A08D6CA007532FC /* UIScreen.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -179,14 +185,16 @@
 			files = (
 				2B74066129FF162200B99FFA /* ContentView.swift in Sources */,
 				2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */,
+				2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */,
 				2B5326F12A02DE51006D297F /* FolderView.swift in Sources */,
 				2B9F3B242A00D80E00F55754 /* Font.swift in Sources */,
 				2BA4D34629FF360700BA22FF /* Color.swift in Sources */,
 				2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */,
+				2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */,
 				2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */,
 				2B74065F29FF162200B99FFA /* NotesApp.swift in Sources */,
+				2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */,
 				2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */,
-				2BD178BE2A063143002FC661 /* CreateNoteModal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
