@@ -13,18 +13,25 @@ struct FolderModal: View {
         ZStack {
             Color.primaryBlcak.ignoresSafeArea()
             
-            List {
-               FolderList()
-                    .listRowBackground(Color.primaryGray)
-                    .foregroundColor(Color.primaryWhite)
-                FolderList()
-                    .listRowBackground(Color.primaryGray)
-                    .foregroundColor(Color.primaryWhite)
-                    
+            VStack(spacing: 10) {
+                Capsule()
+                            .foregroundColor(.primaryGray)
+                            .frame(width: 80, height: 9)
+                            .padding(.top, 20)
+                List {
+                   FolderList()
+                        .listRowBackground(Color.primaryGray)
+                        .foregroundColor(Color.primaryWhite)
+                    FolderList()
+                        .listRowBackground(Color.primaryGray)
+                        .foregroundColor(Color.primaryWhite)
+                        
+                }
+                .scrollContentBackground(.hidden)
+                .background(Color.primaryBlcak)
             }
-            .scrollContentBackground(.hidden)
-           
-            .background(Color.primaryBlcak)
+            
+            
         }
     }
 }

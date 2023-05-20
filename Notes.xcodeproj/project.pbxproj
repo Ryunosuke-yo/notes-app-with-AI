@@ -13,6 +13,8 @@
 		2B74066129FF162200B99FFA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74066029FF162200B99FFA /* ContentView.swift */; };
 		2B74066329FF162300B99FFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B74066229FF162300B99FFA /* Assets.xcassets */; };
 		2B74066629FF162300B99FFA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B74066529FF162300B99FFA /* Preview Assets.xcassets */; };
+		2B86206F2A183CD1004013DD /* DynamicHeightTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B86206E2A183CD1004013DD /* DynamicHeightTextEditor.swift */; };
+		2B8620722A184422004013DD /* LeftRight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8620712A184422004013DD /* LeftRight.swift */; };
 		2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9F3B212A00D45500F55754 /* NoteView.swift */; };
 		2B9F3B242A00D80E00F55754 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9F3B232A00D80E00F55754 /* Font.swift */; };
 		2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA4D34229FF30F500BA22FF /* UIColor.swift */; };
@@ -31,6 +33,8 @@
 		2B74066029FF162200B99FFA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2B74066229FF162300B99FFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2B74066529FF162300B99FFA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2B86206E2A183CD1004013DD /* DynamicHeightTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightTextEditor.swift; sourceTree = "<group>"; };
+		2B8620712A184422004013DD /* LeftRight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftRight.swift; sourceTree = "<group>"; };
 		2B9F3B212A00D45500F55754 /* NoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteView.swift; sourceTree = "<group>"; };
 		2B9F3B232A00D80E00F55754 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		2BA4D34229FF30F500BA22FF /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -71,6 +75,7 @@
 		2B74065D29FF162200B99FFA /* Notes */ = {
 			isa = PBXGroup;
 			children = (
+				2B8620702A18440E004013DD /* enum */,
 				2BA4D34129FF30DF00BA22FF /* extension */,
 				2BA4D34029FF30BD00BA22FF /* View */,
 				2B74065E29FF162200B99FFA /* NotesApp.swift */,
@@ -89,6 +94,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		2B8620702A18440E004013DD /* enum */ = {
+			isa = PBXGroup;
+			children = (
+				2B8620712A184422004013DD /* LeftRight.swift */,
+			);
+			path = enum;
+			sourceTree = "<group>";
+		};
 		2BA4D34029FF30BD00BA22FF /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +111,7 @@
 				2B5326F02A02DE51006D297F /* FolderView.swift */,
 				2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */,
 				2BBD9D0D2A08CB44007532FC /* FolderModal.swift */,
+				2B86206E2A183CD1004013DD /* DynamicHeightTextEditor.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -189,10 +203,12 @@
 				2B5326F12A02DE51006D297F /* FolderView.swift in Sources */,
 				2B9F3B242A00D80E00F55754 /* Font.swift in Sources */,
 				2BA4D34629FF360700BA22FF /* Color.swift in Sources */,
+				2B86206F2A183CD1004013DD /* DynamicHeightTextEditor.swift in Sources */,
 				2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */,
 				2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */,
 				2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */,
 				2B74065F29FF162200B99FFA /* NotesApp.swift in Sources */,
+				2B8620722A184422004013DD /* LeftRight.swift in Sources */,
 				2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */,
 				2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */,
 			);

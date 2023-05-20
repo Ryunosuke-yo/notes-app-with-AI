@@ -230,7 +230,7 @@ struct NoteView: View {
                         }
                         .sheet(isPresented: $showVoiceRec) {
                            VoiceMemoModal()
-                                .presentationDetents([.height(360)])
+                                .presentationDetents([.height(430)])
                                 
                         }
                     }
