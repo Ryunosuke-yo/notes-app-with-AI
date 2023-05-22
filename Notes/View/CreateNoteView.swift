@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateNoteView: View {
     @Environment(\.presentationMode) var presentationMode
+    @Environment (\.managedObjectContext) var moc
     @State var titleValue = ""
     @State var contentValue = ""
     @State var showFolderModal = false
@@ -65,6 +66,9 @@ struct CreateNoteView: View {
                         Text("Done")
                             .font(Font.mainFont(20))
                             .foregroundColor(.primaryWhite)
+                            .onTapGesture {
+                                saveNote()
+                            }
                     }
                     .padding([.horizontal, .top], 20)
                 }
@@ -80,6 +84,29 @@ struct CreateNoteView: View {
                         }
                 }
             }
+        }
+    }
+    
+    func saveNote() {
+        
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let timestamp = formatter.string(from: date)
+        
+        let newNote = Note(context: moc)
+        newNote.id = UUID()
+        newNote.title = titleValue
+        newNote.timestamp = timestamp
+        newNote.contents = contentValue
+        newNote.folder = "test"
+        
+        
+        do {
+            try moc.save()
+            presentationMode.wrappedValue.dismiss()
+        } catch {
+            print("An error occurred: \(error)")
         }
     }
 }

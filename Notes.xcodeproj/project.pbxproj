@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B25827D2A023D7A00CE3BC6 /* ChatView.swift */; };
+		2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */; };
+		2B2FC8812A1B1FC200CBA7B0 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */; };
 		2B5326F12A02DE51006D297F /* FolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5326F02A02DE51006D297F /* FolderView.swift */; };
 		2B74065F29FF162200B99FFA /* NotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74065E29FF162200B99FFA /* NotesApp.swift */; };
 		2B74066129FF162200B99FFA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74066029FF162200B99FFA /* ContentView.swift */; };
@@ -27,6 +29,8 @@
 
 /* Begin PBXFileReference section */
 		2B25827D2A023D7A00CE3BC6 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		2B2FC87E2A1B1CCF00CBA7B0 /* Note.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Note.xcdatamodel; sourceTree = "<group>"; };
+		2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		2B5326F02A02DE51006D297F /* FolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderView.swift; sourceTree = "<group>"; };
 		2B74065B29FF162200B99FFA /* Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B74065E29FF162200B99FFA /* NotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesApp.swift; sourceTree = "<group>"; };
@@ -56,6 +60,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B3A89832A1AC47400A1B75C /* model */ = {
+			isa = PBXGroup;
+			children = (
+				2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */,
+				2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		2B74065229FF162200B99FFA = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +88,7 @@
 		2B74065D29FF162200B99FFA /* Notes */ = {
 			isa = PBXGroup;
 			children = (
+				2B3A89832A1AC47400A1B75C /* model */,
 				2B8620702A18440E004013DD /* enum */,
 				2BA4D34129FF30DF00BA22FF /* extension */,
 				2BA4D34029FF30BD00BA22FF /* View */,
@@ -203,6 +217,7 @@
 				2B5326F12A02DE51006D297F /* FolderView.swift in Sources */,
 				2B9F3B242A00D80E00F55754 /* Font.swift in Sources */,
 				2BA4D34629FF360700BA22FF /* Color.swift in Sources */,
+				2B2FC8812A1B1FC200CBA7B0 /* DataController.swift in Sources */,
 				2B86206F2A183CD1004013DD /* DynamicHeightTextEditor.swift in Sources */,
 				2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */,
 				2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */,
@@ -211,6 +226,7 @@
 				2B8620722A184422004013DD /* LeftRight.swift in Sources */,
 				2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */,
 				2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */,
+				2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +433,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2B2FC87E2A1B1CCF00CBA7B0 /* Note.xcdatamodel */,
+			);
+			currentVersion = 2B2FC87E2A1B1CCF00CBA7B0 /* Note.xcdatamodel */;
+			path = Note.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2B74065329FF162200B99FFA /* Project object */;
 }
