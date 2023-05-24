@@ -18,5 +18,7 @@ class DataController: ObservableObject {
                 print("Fatal error: \(error.localizedDescription)")
             }
         }
+        
+        self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
     }
 }

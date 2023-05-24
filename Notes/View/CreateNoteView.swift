@@ -13,6 +13,7 @@ struct CreateNoteView: View {
     @State var titleValue = ""
     @State var contentValue = ""
     @State var showFolderModal = false
+    @State var folderValue = ""
     var body: some View {
         ZStack {
             Color.primaryBlcak.ignoresSafeArea()
@@ -58,10 +59,13 @@ struct CreateNoteView: View {
                             .foregroundColor(.primaryWhite)
                             .onTapGesture {
                                 showFolderModal.toggle()
+                               
                             }
                             .sheet(isPresented: $showFolderModal) {
-                                FolderModal()
+                                
+                                FolderModal(folderValue: $folderValue)
                             }
+                           
                         
                         Text("Done")
                             .font(Font.mainFont(20))
@@ -70,7 +74,7 @@ struct CreateNoteView: View {
                                 saveNote()
                             }
                     }
-                    .padding([.horizontal, .top], 20)
+                    .padding([.leading, .top], 20)
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -84,6 +88,7 @@ struct CreateNoteView: View {
                         }
                 }
             }
+           
         }
     }
     
@@ -99,7 +104,7 @@ struct CreateNoteView: View {
         newNote.title = titleValue
         newNote.timestamp = timestamp
         newNote.contents = contentValue
-        newNote.folder = "test"
+        newNote.folder = folderValue
         
         
         do {

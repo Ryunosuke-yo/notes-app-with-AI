@@ -9,13 +9,73 @@ import SwiftUI
 
 struct FolderView: View {
     @Environment(\.presentationMode) var presentationMode
-  
-       
+    @Environment(\.managedObjectContext) var moc
+    @State var folderNameValue = ""
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
+   
+    
+    
     var body: some View {
         ZStack {
             Color.primaryBlcak.ignoresSafeArea()
             
-              }
+            
+            VStack {
+                HStack {
+                    TextField("", text: $folderNameValue)
+                        .font(Font.mainFont(20))
+                        .fontWeight(Font.Weight.medium)
+                        .tracking(2)
+                        .foregroundColor(.primaryWhite)
+                        .padding()
+                    
+                    
+                }
+                
+                .background(Color.primaryGray)
+                .cornerRadius(10)
+                .padding()
+                .padding([.top], 40)
+                
+                Button {
+                    saveFolder()
+                } label: {
+                    Text("Add")
+                        .font(Font.mainFont(20))
+                        .fontWeight(Font.Weight.medium)
+                        .tracking(1)
+                        .foregroundColor(.primaryWhite)
+                        .padding([.top, .bottom])
+                        .padding([.trailing, .leading], 50)
+                    
+                }
+                .background(Color.primaryOrange)
+                .cornerRadius(10)
+                
+                
+                
+                if(folders.count == 0) {
+                    Spacer()
+                } else {
+                    List {
+                        ForEach(folders, id: \.self) { item in
+                            FolderList(plusIocn: false, folderName: item.folderName ?? "Error getting name")
+                                .listRowBackground(Color.primaryGray)
+                                .foregroundColor(Color.primaryWhite)
+                        }
+                        .onDelete(perform: deleteFolder)
+                    }
+                    .scrollContentBackground(.hidden)
+                    .background(Color.primaryBlcak)
+                }
+                
+                
+            }
+            
+            
+            
+            
+        }
         .toolbar {
             ToolbarItem (placement: .navigationBarLeading) {
                 Image(systemName: "chevron.left")
@@ -28,20 +88,36 @@ struct FolderView: View {
                     }
             }
             ToolbarItem(placement: .principal) {
-                HStack {
-                    Text("Folders")
-                        .font(Font.mainFont(32))
-                        .tracking(4)
-                        .foregroundColor(Color.primaryWhite)
-                        .bold()
-                    
-                }
                 
+                Text("Folders")
+                    .font(Font.mainFont(32))
+                    .tracking(4)
+                    .foregroundColor(Color.primaryWhite)
+                    .bold()
                 
             }
         }
     }
+    
+    func saveFolder() {
+        let newFolder = Folder(context: moc)
+        newFolder.folderName = folderNameValue
+        
+        do {
+            try moc.save()
+        } catch {
+            print("An error occurred: \(error)")
+        }
     }
+    
+    func deleteFolder(at indexSet:IndexSet) {
+        for index in indexSet {
+            let folder = folders[index]
+            moc.delete(folder)
+            
+        }
+    }
+}
 
 
 

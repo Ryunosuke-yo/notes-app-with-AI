@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct FolderModal: View {
-   
+    @Binding var folderValue: String
+    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.managedObjectContext) var moc
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
+    
+    
     var body: some View {
         ZStack {
             Color.primaryBlcak.ignoresSafeArea()
@@ -18,13 +23,14 @@ struct FolderModal: View {
                             .foregroundColor(.primaryGray)
                             .frame(width: 80, height: 9)
                             .padding(.top, 20)
-                List {
-                   FolderList()
+                List(folders) { folder in
+                    FolderList(plusIocn: true, folderName: folder.folderName ?? "Error getting name")
                         .listRowBackground(Color.primaryGray)
                         .foregroundColor(Color.primaryWhite)
-                    FolderList()
-                        .listRowBackground(Color.primaryGray)
-                        .foregroundColor(Color.primaryWhite)
+                        .onTapGesture {
+                            folderValue = folder.folderName ?? ""
+                            presentationMode.wrappedValue.dismiss()
+                        }
                         
                 }
                 .scrollContentBackground(.hidden)
@@ -37,13 +43,18 @@ struct FolderModal: View {
 }
 
 struct FolderList: View {
+    let plusIocn: Bool
+    let folderName: String
     var body: some View {
         HStack {
-            Image(systemName: "plus.circle")
-                .resizable()
-                .foregroundColor(.primaryOrange)
-                .frame(width: 20, height: 20)
-            Text("folder name")
+            if plusIocn == true {
+                Image(systemName: "plus.circle")
+                    .resizable()
+                    .foregroundColor(.primaryOrange)
+                    .frame(width: 20, height: 20)
+            }
+           
+            Text(folderName)
                 .foregroundColor(.primaryWhite)
                 .font(Font.mainFont(20))
                 .tracking(1.5)
@@ -52,16 +63,13 @@ struct FolderList: View {
         }
         .contentShape(Rectangle())
         .padding(7)
-        .onTapGesture {
-            print("taped")
-        }
         
             
     }
 }
 
-struct FolderModal_Previews: PreviewProvider {
-    static var previews: some View {
-        FolderModal()
-    }
-}
+//struct FolderModal_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FolderModal()
+//    }
+//}

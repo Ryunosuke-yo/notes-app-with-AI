@@ -11,12 +11,9 @@ struct NoteView: View {
     @State private var text: String = ""
     @State private var showVoiceRec = false
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @Environment (\.managedObjectContext) var moc
     
-    
-    
-    
-    let data = ["All", "Daily", "Work", "Item 4", "Item 5"]
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -79,8 +76,8 @@ struct NoteView: View {
                 
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
-                        ForEach(data, id: \.self) { item in
-                            Text(item)
+                        ForEach(folders, id: \.self) { item in
+                            Text(item.folderName ?? "")
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 10)
                                 .cornerRadius(20)
@@ -110,16 +107,23 @@ struct NoteView: View {
                             .tracking(0.2)
                             .foregroundColor(.primaryWhite)
                             .padding(.top, 20)
-                    } else {
+                    } else if(folders.count != 0) {
                         LazyVGrid(columns: columns, spacing: 2) {
-                            ForEach(notes, id: \.self) {
+                            ForEach(getNotesInFolder(), id: \.self) {
                                 note in
+                                
                                 MemoGridItem(title: note.title ?? "", content: note.contents ?? "") {
                                     moc.delete(note)
                                 }
                             }
+                            
+                          
                         }
                         .padding(.bottom, 80)
+                        
+                    } else if folders.count == 0 {
+                        Text("0")
+                            .foregroundColor(.primaryWhite)
                     }
                     
                     
@@ -173,6 +177,14 @@ struct NoteView: View {
             
         }
         
+    }
+    
+    
+    private func getNotesInFolder()-> [Note] {
+        notes.filter {
+            note in
+            note.wrappedFolder == folders[0].wrappedFolderNeme
+        }
     }
     
     
