@@ -28,6 +28,10 @@ extension Note {
         title ?? ""
     }
     
+    public var wrappedContents: String {
+        contents ?? ""
+    }
+    
     public var wrappedFolder: String {
         folder ?? ""
     }

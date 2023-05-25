@@ -10,21 +10,25 @@ import SwiftUI
 struct CreateNoteView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment (\.managedObjectContext) var moc
+    @EnvironmentObject private var editMode: EditMode
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @State var titleValue = ""
     @State var contentValue = ""
     @State var showFolderModal = false
     @State var folderValue = ""
+    @Binding var noteId: UUID?
     var body: some View {
         ZStack {
             Color.primaryBlcak.ignoresSafeArea()
             VStack {
-                    TextField("Title", text: $titleValue)
-                        .font(Font.mainFont(38))
-                        .fontWeight(Font.Weight.medium)
-                        .tracking(2)
-                        .foregroundColor(.primaryWhite)
-                       
-              
+                TextField("Title", text: $titleValue)
+                    .font(Font.mainFont(38))
+                    .fontWeight(Font.Weight.medium)
+                    .tracking(2)
+                    .foregroundColor(.primaryWhite)
+                    .padding([.top], 10)
+                
+                
                 
                 
                 TextEditor(text: $contentValue)
@@ -35,10 +39,10 @@ struct CreateNoteView: View {
                     .background(Color.primaryBlcak)
                     .scrollBounceBehavior(.always)
                 
-                   
                 
                 
-                 
+                
+                
                 
             }
             .padding([.trailing, .leading], 20)
@@ -59,13 +63,13 @@ struct CreateNoteView: View {
                             .foregroundColor(.primaryWhite)
                             .onTapGesture {
                                 showFolderModal.toggle()
-                               
+                                
                             }
                             .sheet(isPresented: $showFolderModal) {
                                 
                                 FolderModal(folderValue: $folderValue)
                             }
-                           
+                        
                         
                         Text("Done")
                             .font(Font.mainFont(20))
@@ -88,7 +92,17 @@ struct CreateNoteView: View {
                         }
                 }
             }
-           
+            
+        }
+        .onAppear {
+            if editMode.editMode {
+                if let editNote = notes.first (where: {$0.id == noteId}){
+                    titleValue = editNote.wrappedTitle
+                    contentValue = editNote.wrappedContents
+                }
+                
+                
+            }
         }
     }
     
@@ -116,8 +130,8 @@ struct CreateNoteView: View {
     }
 }
 
-struct CreateNoteView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateNoteView()
-    }
-}
+//struct CreateNoteView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CreateNoteView()
+//    }
+//}

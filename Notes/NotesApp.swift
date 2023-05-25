@@ -17,6 +17,7 @@ struct NotesApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, dataController.container.viewContext)
+                .environmentObject(EditMode())
         }
     }
 }

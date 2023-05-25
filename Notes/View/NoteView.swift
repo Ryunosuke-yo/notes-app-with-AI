@@ -10,6 +10,9 @@ import SwiftUI
 struct NoteView: View {
     @State private var text: String = ""
     @State private var showVoiceRec = false
+    @State private var selectedFolder = ""
+    @EnvironmentObject private var editMode:EditMode
+    @State private var selectedNoteId: UUID? = nil
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @Environment (\.managedObjectContext) var moc
@@ -76,6 +79,20 @@ struct NoteView: View {
                 
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
+                        Text("All")
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .cornerRadius(20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .inset(by: 2)
+                                    .stroke(getFolderStrokeColor(cuurentFolder: ""), lineWidth: 2)
+                            )
+                            .background(Color.primaryBlcak)
+                            .foregroundColor(getFolderTextColor(cuurentFolder: ""))
+                            .onTapGesture {
+                                selectedFolder = ""
+                            }
                         ForEach(folders, id: \.self) { item in
                             Text(item.folderName ?? "")
                                 .padding(.horizontal, 20)
@@ -84,10 +101,13 @@ struct NoteView: View {
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
                                         .inset(by: 2)
-                                        .stroke(Color.secondaryWhite, lineWidth: 2)
+                                        .stroke(getFolderStrokeColor(cuurentFolder: item.wrappedFolderNeme), lineWidth: 2)
                                 )
                                 .background(Color.primaryBlcak)
-                                .foregroundColor(.primaryWhite)
+                                .foregroundColor(getFolderTextColor(cuurentFolder: item.wrappedFolderNeme))
+                                .onTapGesture {
+                                    selectedFolder = item.wrappedFolderNeme
+                                }
                             
                             
                         }
@@ -107,27 +127,48 @@ struct NoteView: View {
                             .tracking(0.2)
                             .foregroundColor(.primaryWhite)
                             .padding(.top, 20)
-                    } else if(folders.count != 0) {
+                    } else {
                         LazyVGrid(columns: columns, spacing: 2) {
                             ForEach(getNotesInFolder(), id: \.self) {
                                 note in
-                                
-                                MemoGridItem(title: note.title ?? "", content: note.contents ?? "") {
-                                    moc.delete(note)
+                                NavigationLink(value: "Note") {
+                                    MemoGridItem(title: note.title ?? "", content: note.contents ?? "") {
+                                        moc.delete(note)
+                                        
+                                    }
+                                    
                                 }
+                                .simultaneousGesture(TapGesture().onEnded {
+                                    selectedNoteId = note.id
+                                    editMode.editMode = true
+                                })
+                                
+                                
+                                
                             }
                             
-                          
+                            
+                        }
+                        .navigationDestination(for: String.self) {
+                            string in
+                            if string == "Note" {
+                                CreateNoteView(noteId: $selectedNoteId)
+                            }
+                            
+                            
                         }
                         .padding(.bottom, 80)
                         
-                    } else if folders.count == 0 {
-                        Text("0")
-                            .foregroundColor(.primaryWhite)
                     }
                     
                     
-                }                
+                }
+                
+                .onAppear {
+                    if folders.count == 0 {
+                        selectedFolder = ""
+                    }
+                }
             }
             
             VStack {
@@ -138,7 +179,7 @@ struct NoteView: View {
                     Spacer()
                     
                     VStack {
-                        NavigationLink(destination: CreateNoteView()) {
+                        NavigationLink(destination: CreateNoteView(noteId:$selectedNoteId)) {
                             Image(systemName: "square.and.pencil")
                                 .resizable()
                                 .foregroundColor(.primaryBlcak)
@@ -149,6 +190,11 @@ struct NoteView: View {
                                 .clipShape(Circle())
                                 .padding(.trailing, 16)
                         }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            editMode.editMode = false
+                        })
+                           
+                        
                         
                         
                         
@@ -177,18 +223,35 @@ struct NoteView: View {
             
         }
         
+        
     }
+    
     
     
     private func getNotesInFolder()-> [Note] {
-        notes.filter {
-            note in
-            note.wrappedFolder == folders[0].wrappedFolderNeme
+        if selectedFolder == "" {
+            return Array(notes)
+        }
+        
+        return  notes.filter { note in
+            note.wrappedFolder == selectedFolder
         }
     }
     
+    private func getFolderStrokeColor(cuurentFolder: String)-> Color {
+        selectedFolder == cuurentFolder ? .primaryOrange : .secondaryWhite
+    }
+    
+    private func getFolderTextColor(cuurentFolder: String)-> Color {
+        selectedFolder == cuurentFolder ? .primaryOrange : .primaryWhite
+    }
     
 }
+
+
+
+
+
 
 
 struct MemoGridItem :View {

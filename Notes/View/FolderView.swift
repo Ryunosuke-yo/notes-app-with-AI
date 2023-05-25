@@ -100,6 +100,13 @@ struct FolderView: View {
     }
     
     func saveFolder() {
+        
+        if folders.contains(where: {
+            $0.wrappedFolderNeme == folderNameValue
+        }) {
+            return
+        }
+        
         let newFolder = Folder(context: moc)
         newFolder.folderName = folderNameValue
         
