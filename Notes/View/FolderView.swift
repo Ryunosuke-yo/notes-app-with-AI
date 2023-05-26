@@ -12,8 +12,7 @@ struct FolderView: View {
     @Environment(\.managedObjectContext) var moc
     @State var folderNameValue = ""
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
-   
-    
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     
     var body: some View {
         ZStack {
@@ -59,7 +58,7 @@ struct FolderView: View {
                 } else {
                     List {
                         ForEach(folders, id: \.self) { item in
-                            FolderList(plusIocn: false, folderName: item.folderName ?? "Error getting name")
+                            FolderList(plusIocn: false, folderName: item.folderName ?? "Error getting name", folderValue: nil)
                                 .listRowBackground(Color.primaryGray)
                                 .foregroundColor(Color.primaryWhite)
                         }
@@ -90,7 +89,7 @@ struct FolderView: View {
             ToolbarItem(placement: .principal) {
                 
                 Text("Folders")
-                    .font(Font.mainFont(32))
+                    .font(Font.headerFont(32))
                     .tracking(4)
                     .foregroundColor(Color.primaryWhite)
                     .bold()
@@ -118,10 +117,19 @@ struct FolderView: View {
     }
     
     func deleteFolder(at indexSet:IndexSet) {
+        var folderName: String?
+        
         for index in indexSet {
             let folder = folders[index]
+            folderName = folder.folderName ?? nil
             moc.delete(folder)
             
+        }
+        
+        notes.forEach { note in
+            if note.folder == folderName {
+                note.folder = ""
+            }
         }
     }
 }

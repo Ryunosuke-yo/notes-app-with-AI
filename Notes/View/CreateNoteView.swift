@@ -12,6 +12,7 @@ struct CreateNoteView: View {
     @Environment (\.managedObjectContext) var moc
     @EnvironmentObject private var editMode: EditMode
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @State var titleValue = ""
     @State var contentValue = ""
     @State var showFolderModal = false
@@ -22,7 +23,7 @@ struct CreateNoteView: View {
             Color.primaryBlcak.ignoresSafeArea()
             VStack {
                 TextField("Title", text: $titleValue)
-                    .font(Font.mainFont(38))
+                    .font(Font.headerFont(34))
                     .fontWeight(Font.Weight.medium)
                     .tracking(2)
                     .foregroundColor(.primaryWhite)
@@ -32,7 +33,7 @@ struct CreateNoteView: View {
                 
                 
                 TextEditor(text: $contentValue)
-                    .font(Font.mainFont(26))
+                    .font(Font.mainFont(17))
                     .tracking(1.5)
                     .scrollContentBackground(.hidden)
                     .foregroundColor(.primaryWhite)
@@ -47,6 +48,7 @@ struct CreateNoteView: View {
             }
             .padding([.trailing, .leading], 20)
             .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 20) {
@@ -57,39 +59,46 @@ struct CreateNoteView: View {
                             .frame(width: 20, height: 25)
                             .foregroundColor(.primaryWhite)
                         
-                        Image(systemName: "folder")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundColor(.primaryWhite)
-                            .onTapGesture {
-                                showFolderModal.toggle()
-                                
-                            }
-                            .sheet(isPresented: $showFolderModal) {
-                                
-                                FolderModal(folderValue: $folderValue)
-                            }
                         
-                        
-                        Text("Done")
-                            .font(Font.mainFont(20))
-                            .foregroundColor(.primaryWhite)
-                            .onTapGesture {
-                                saveNote()
-                            }
+                       
                     }
                     .padding([.leading, .top], 20)
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Image(systemName: "chevron.left")
-                        .resizable()
-                        .frame(width: 10, height: 20)
-                        .foregroundColor(.primaryWhite)
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .resizable()
+                            .frame(width: 10, height: 20)
+                            .foregroundColor(.primaryWhite)
+                            .simultaneousGesture(TapGesture().onEnded {
+                                if titleValue == "" && contentValue == "" {
+                                    presentationMode.wrappedValue.dismiss()
+                                    return
+                                }
+                                saveNote()
+                              
+                            })
+                               
+                            
+
+                    }
+                    
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    Text(folderValue == "" ? "All" : folderValue)
+                        .foregroundColor(.secondaryWhite)
+                        .tracking(1)
+                        .font(Font.mainFont(20))
+                        .padding([ .top], 25)
                         .onTapGesture {
-                            print("pressed")
-                            self.presentationMode.wrappedValue.dismiss()
+                            showFolderModal.toggle()
                         }
+                        .sheet(isPresented: $showFolderModal) {
+                            FolderModal(folderValue: $folderValue)
+                        }
+                    
                 }
             }
             
@@ -99,6 +108,8 @@ struct CreateNoteView: View {
                 if let editNote = notes.first (where: {$0.id == noteId}){
                     titleValue = editNote.wrappedTitle
                     contentValue = editNote.wrappedContents
+                    folderValue = editNote.wrappedFolder
+                    
                 }
                 
                 
@@ -107,6 +118,23 @@ struct CreateNoteView: View {
     }
     
     func saveNote() {
+        if editMode.editMode {
+            
+            guard let noteToEdit = notes.first(where: {$0.id == noteId}) else {return}
+            
+            
+            
+            if let index = notes.firstIndex(of: noteToEdit) {
+                let editNote = notes[index]
+                editNote.title = titleValue
+                editNote.contents = contentValue
+                editNote.folder = folderValue
+            }
+            
+            presentationMode.wrappedValue.dismiss()
+            return
+            
+        }
         
         let date = Date()
         let formatter = DateFormatter()

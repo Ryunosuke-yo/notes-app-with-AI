@@ -22,19 +22,26 @@ extension Note {
     @NSManaged public var timestamp: String?
     @NSManaged public var title: String?
     @NSManaged public var noteInFolder: Folder?
+  
     
     
     public var wrappedTitle: String {
-        title ?? ""
+        title ?? "Unknown"
     }
     
     public var wrappedContents: String {
-        contents ?? ""
+        contents ?? "Unknown"
     }
     
     public var wrappedFolder: String {
-        folder ?? ""
+        folder ?? "Unknown"
     }
+    
+    public var wrappedTimestamp: String {
+        timestamp ?? "Unknown"
+    }
+    
+ 
     
 
     

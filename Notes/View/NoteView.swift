@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NoteView: View {
-    @State private var text: String = ""
+    @State private var seactText: String = ""
     @State private var showVoiceRec = false
     @State private var selectedFolder = ""
     @EnvironmentObject private var editMode:EditMode
@@ -26,62 +26,12 @@ struct NoteView: View {
             Color.primaryBlcak
                 .ignoresSafeArea()
             VStack(spacing: 10) {
-                HStack(spacing: 0) {
-                    Rectangle()
-                        .frame(width: 30, height: 22)
-                        .padding(.leading, 15)
-                        .foregroundColor(Color.primaryBlcak)
-                    Text("Note")
-                        .font(Font.mainFont(36))
-                        .bold()
-                        .tracking(5)
-                        .foregroundColor(.primaryWhite)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    
-                    NavigationLink(destination: FolderView().navigationBarBackButtonHidden(true)) {
-                        Image(systemName: "folder.badge.plus")
-                            .resizable(resizingMode: .stretch)
-                            .frame(width: 30, height: 22, alignment: .trailing)
-                            .foregroundColor(.secondaryWhite)
-                            .padding(.trailing, 15)
-                    }
-                    
-                    
-                    
-                }
-                
-                
-                
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .resizable(resizingMode: .stretch)
-                        .frame(width: 15, height: 15)
-                        .foregroundColor(.primaryWhite)
-                        .padding(.leading, 10)
-                    
-                    TextField("", text: $text)
-                        .font(Font.mainFont(20))
-                        .fontWeight(.regular)
-                        .tracking(1)
-                        .foregroundColor(.primaryWhite)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.gray, lineWidth: 0)
-                        )
-                        .padding(5)
-                    
-                    
-                    
-                }
-                .background(Color.primaryGray)
-                .cornerRadius(30)
-                .padding(.horizontal, 10)
-                
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
                         Text("All")
                             .padding(.horizontal, 20)
                             .padding(.vertical, 10)
+                          
                             .cornerRadius(20)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
@@ -112,10 +62,12 @@ struct NoteView: View {
                             
                         }
                     }
+                    .padding(.leading, 10)
                     
                 }
                 .scrollIndicators(.hidden)
-                .padding(.top, 5)
+                .padding(.top, 15)
+                
                 
                 
                 
@@ -131,39 +83,21 @@ struct NoteView: View {
                         LazyVGrid(columns: columns, spacing: 2) {
                             ForEach(getNotesInFolder(), id: \.self) {
                                 note in
-                                NavigationLink(value: "Note") {
-                                    MemoGridItem(title: note.title ?? "", content: note.contents ?? "") {
-                                        moc.delete(note)
-                                        
-                                    }
-                                    
+                                NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
+                                    MemoGridItem(title: note.title ?? "", content: note.contents ?? "")
+                                
                                 }
                                 .simultaneousGesture(TapGesture().onEnded {
                                     selectedNoteId = note.id
                                     editMode.editMode = true
                                 })
-                                
-                                
-                                
-                            }
-                            
-                            
-                        }
-                        .navigationDestination(for: String.self) {
-                            string in
-                            if string == "Note" {
-                                CreateNoteView(noteId: $selectedNoteId)
                             }
                             
                             
                         }
                         .padding(.bottom, 80)
-                        
                     }
-                    
-                    
                 }
-                
                 .onAppear {
                     if folders.count == 0 {
                         selectedFolder = ""
@@ -171,8 +105,8 @@ struct NoteView: View {
                 }
             }
             
+            
             VStack {
-                
                 Spacer()
                 HStack {
                     
@@ -193,7 +127,7 @@ struct NoteView: View {
                         .simultaneousGesture(TapGesture().onEnded {
                             editMode.editMode = false
                         })
-                           
+                        
                         
                         
                         
@@ -222,11 +156,40 @@ struct NoteView: View {
             }
             
         }
-        
-        
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                NavigationLink(destination: SeacrhView().navigationBarBackButtonHidden(true)) {
+                    Image(systemName: "magnifyingglass")
+                        .resizable(resizingMode: .stretch)
+                        .frame(width: 22, height: 22, alignment: .leading)
+                        .foregroundColor(.secondaryWhite)
+                    
+                }
+            }
+            
+            ToolbarItem(placement: .principal) {
+                Text("Note")
+                    .font(Font.headerFont(36))
+                    .bold()
+                    .tracking(5)
+                    .foregroundColor(.primaryWhite)
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: FolderView().navigationBarBackButtonHidden(true)) {
+                    Image(systemName: "folder.badge.plus")
+                        .resizable(resizingMode: .stretch)
+                        .frame(width: 30, height: 22, alignment: .trailing)
+                        .foregroundColor(.secondaryWhite)
+                    
+                }
+                
+            }
+            
+            
+        }
     }
-    
-    
     
     private func getNotesInFolder()-> [Note] {
         if selectedFolder == "" {
@@ -257,7 +220,6 @@ struct NoteView: View {
 struct MemoGridItem :View {
     let title: String
     let content : String
-    let deleteNote : (()-> Void)
     
     var body: some View {
         VStack(spacing: 0) {
@@ -290,7 +252,7 @@ struct MemoGridItem :View {
                     .frame(width: 25, height: 25, alignment: .trailing)
                     .padding([.trailing, .bottom], 20)
                     .onTapGesture {
-                        deleteNote()
+                      
                     }
             }
             

@@ -24,14 +24,6 @@ extension Folder {
         folderName ?? ""
     }
     
-    public var noteArray: [Note] {
-        let set = note as? Set<Note> ?? []
-//        print(set)
-        
-    
-        
-        return  Array(set)
-    }
     
 
 
