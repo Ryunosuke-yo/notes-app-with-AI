@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B05596E2A25CA03000FCDB7 /* ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */; };
+		2B0559732A25EE4F000FCDB7 /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0559722A25EE4F000FCDB7 /* Loading.swift */; };
+		2B0559762A25F158000FCDB7 /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 2B0559752A25F158000FCDB7 /* ActivityIndicatorView */; };
 		2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B25827D2A023D7A00CE3BC6 /* ChatView.swift */; };
 		2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */; };
 		2B2FC8812A1B1FC200CBA7B0 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */; };
@@ -36,6 +39,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponse.swift; sourceTree = "<group>"; };
+		2B0559722A25EE4F000FCDB7 /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
 		2B25827D2A023D7A00CE3BC6 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		2B2FC87E2A1B1CCF00CBA7B0 /* Note.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Note.xcdatamodel; sourceTree = "<group>"; };
 		2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -70,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B0559762A25F158000FCDB7 /* ActivityIndicatorView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +93,7 @@
 				2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */,
 				2BC772D72A1F645C001E4C44 /* EditMode.swift */,
 				2BABADFF2A20152E00A40041 /* AudioManager.swift */,
+				2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -134,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				2B8620712A184422004013DD /* LeftRight.swift */,
+				2B0559722A25EE4F000FCDB7 /* Loading.swift */,
 			);
 			path = enum;
 			sourceTree = "<group>";
@@ -181,6 +189,9 @@
 			dependencies = (
 			);
 			name = Notes;
+			packageProductDependencies = (
+				2B0559752A25F158000FCDB7 /* ActivityIndicatorView */,
+			);
 			productName = Notes;
 			productReference = 2B74065B29FF162200B99FFA /* Notes.app */;
 			productType = "com.apple.product-type.application";
@@ -209,6 +220,9 @@
 				Base,
 			);
 			mainGroup = 2B74065229FF162200B99FFA;
+			packageReferences = (
+				2B0559742A25F158000FCDB7 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */,
+			);
 			productRefGroup = 2B74065C29FF162200B99FFA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -237,6 +251,7 @@
 			files = (
 				2BFA673C2A1D95E0008A2460 /* Folder+CoreDataClass.swift in Sources */,
 				2B74066129FF162200B99FFA /* ContentView.swift in Sources */,
+				2B0559732A25EE4F000FCDB7 /* Loading.swift in Sources */,
 				2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */,
 				2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */,
 				2BC772D82A1F645C001E4C44 /* EditMode.swift in Sources */,
@@ -255,6 +270,7 @@
 				2BFA673D2A1D95E0008A2460 /* Folder+CoreDataProperties.swift in Sources */,
 				2BABAE002A20152E00A40041 /* AudioManager.swift in Sources */,
 				2B8620722A184422004013DD /* LeftRight.swift in Sources */,
+				2B05596E2A25CA03000FCDB7 /* ChatResponse.swift in Sources */,
 				2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */,
 				2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */,
 				2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */,
@@ -465,6 +481,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B0559742A25F158000FCDB7 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/ActivityIndicatorView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B0559752A25F158000FCDB7 /* ActivityIndicatorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B0559742A25F158000FCDB7 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */;
+			productName = ActivityIndicatorView;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */ = {

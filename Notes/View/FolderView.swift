@@ -124,6 +124,13 @@ struct FolderView: View {
             folderName = folder.folderName ?? nil
             moc.delete(folder)
             
+            
+            do {
+                try moc.save()
+            } catch {
+                print(error.localizedDescription, "when deleteing folder"
+                )
+            }
         }
         
         notes.forEach { note in
@@ -132,6 +139,9 @@ struct FolderView: View {
             }
         }
     }
+    
+    
+    
 }
 
 

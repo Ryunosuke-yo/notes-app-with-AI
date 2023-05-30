@@ -31,7 +31,7 @@ struct NoteView: View {
                         Text("All")
                             .padding(.horizontal, 20)
                             .padding(.vertical, 10)
-                          
+                        
                             .cornerRadius(20)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
@@ -84,13 +84,15 @@ struct NoteView: View {
                             ForEach(getNotesInFolder(), id: \.self) {
                                 note in
                                 NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
-                                    MemoGridItem(title: note.title ?? "", content: note.contents ?? "")
-                                
+                                    MemoGridItem(note: note)
+                                    
                                 }
                                 .simultaneousGesture(TapGesture().onEnded {
                                     selectedNoteId = note.id
                                     editMode.editMode = true
+                                
                                 })
+                                
                             }
                             
                             
@@ -218,10 +220,16 @@ struct NoteView: View {
 
 
 struct MemoGridItem :View {
-    let title: String
-    let content : String
+    let note: Note
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
+    @Environment (\.managedObjectContext) var moc
     
     var body: some View {
+        let title = note.wrappedTitle
+        let content = note.wrappedContents
+        
+      
+        
         VStack(spacing: 0) {
             Text(title)
                 .font(Font.mainFont(20))
@@ -239,10 +247,13 @@ struct MemoGridItem :View {
                 .font(Font.mainFont(15))
                 .tracking(0.2)
                 .foregroundColor(.primaryWhite)
-                .frame( height: 100)
+                .frame( height: 140)
+                .multilineTextAlignment(.leading)
                 .padding(.horizontal, 10)
-                .padding(.bottom, 40)
+                .padding(.bottom, 10)
                 .padding(.top, 9)
+            
+            
             
             HStack {
                 Spacer()
@@ -252,11 +263,12 @@ struct MemoGridItem :View {
                     .frame(width: 25, height: 25, alignment: .trailing)
                     .padding([.trailing, .bottom], 20)
                     .onTapGesture {
-                      
+                       
+                            deleteNote(note)
+                
+                        
                     }
             }
-            
-            
             
             
         }
@@ -267,7 +279,18 @@ struct MemoGridItem :View {
         
     }
     
+    private func deleteNote(_ note: Note) {
+        moc.delete(note)
+        saveContext()
+    }
     
+    private func saveContext() {
+        do {
+            try moc.save()
+        } catch {
+            print(error.localizedDescription, "when saving context")
+        }
+    }
 }
 
 

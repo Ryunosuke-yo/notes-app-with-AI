@@ -110,6 +110,7 @@ struct CreateNoteView: View {
                     contentValue = editNote.wrappedContents
                     folderValue = editNote.wrappedFolder
                     
+                   
                 }
                 
                 
@@ -119,6 +120,7 @@ struct CreateNoteView: View {
     
     func saveNote() {
         if editMode.editMode {
+         
             
             guard let noteToEdit = notes.first(where: {$0.id == noteId}) else {return}
             
