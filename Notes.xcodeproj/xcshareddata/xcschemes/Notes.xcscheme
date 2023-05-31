@@ -49,13 +49,6 @@
             ReferencedContainer = "container:Notes.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "CHAT_API_KEY"
-            value = "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"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

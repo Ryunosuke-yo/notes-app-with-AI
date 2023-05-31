@@ -31,7 +31,6 @@ struct NoteView: View {
                         Text("All")
                             .padding(.horizontal, 20)
                             .padding(.vertical, 10)
-                        
                             .cornerRadius(20)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
@@ -90,7 +89,7 @@ struct NoteView: View {
                                 .simultaneousGesture(TapGesture().onEnded {
                                     selectedNoteId = note.id
                                     editMode.editMode = true
-                                
+                                    
                                 })
                                 
                             }
@@ -149,7 +148,7 @@ struct NoteView: View {
                             }
                             .sheet(isPresented: $showVoiceRec) {
                                 VoiceMemoModal()
-                                    .presentationDetents([.height(430)])
+                                    .presentationDetents([.height(430), .large])
                                 
                             }
                     }
@@ -220,15 +219,18 @@ struct NoteView: View {
 
 
 struct MemoGridItem :View {
+    @State var showDeleteAlert = false
     let note: Note
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @Environment (\.managedObjectContext) var moc
+
     
     var body: some View {
         let title = note.wrappedTitle
         let content = note.wrappedContents
+        let noteColorString = note.wrappedColor
         
-      
+        
         
         VStack(spacing: 0) {
             Text(title)
@@ -236,24 +238,23 @@ struct MemoGridItem :View {
                 .fontWeight(.bold)
                 .tracking(0.2)
                 .foregroundColor(.primaryWhite)
-                .frame(height: 20, alignment: .leading)
-                .padding(.top, 25)
-                .padding(.leading, 10)
+                .padding([.top, .bottom], 10)
             
             
             
             
-            Text(content)
-                .font(Font.mainFont(15))
-                .tracking(0.2)
-                .foregroundColor(.primaryWhite)
-                .frame( height: 140)
-                .multilineTextAlignment(.leading)
-                .padding(.horizontal, 10)
-                .padding(.bottom, 10)
-                .padding(.top, 9)
-            
-            
+            VStack {
+                Text(content)
+                    .font(Font.mainFont(13))
+                    .tracking(0.2)
+                    .foregroundColor(.primaryWhite)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
+                    .padding([.leading, .trailing], 15)
+                
+                Spacer()
+            }
+            .frame(height: 140)
             
             HStack {
                 Spacer()
@@ -263,19 +264,23 @@ struct MemoGridItem :View {
                     .frame(width: 25, height: 25, alignment: .trailing)
                     .padding([.trailing, .bottom], 20)
                     .onTapGesture {
-                       
-                            deleteNote(note)
-                
-                        
+                        showDeleteAlert = true
                     }
             }
             
             
         }
-        .background(Color.primaryOrange)
+        .background(convertNoteColorString(colorString: noteColorString))
         .cornerRadius(20)
         .padding(.horizontal, 5)
         .padding(.top, 5)
+        .alert("Sure to delete?", isPresented: $showDeleteAlert) {
+            Button("delete", role: .destructive) {
+                deleteNote(note)
+            }
+            Button("Cancel", role:.cancel) {}
+            
+        }
         
     }
     
@@ -289,6 +294,21 @@ struct MemoGridItem :View {
             try moc.save()
         } catch {
             print(error.localizedDescription, "when saving context")
+        }
+    }
+    
+    private func convertNoteColorString(colorString: String)-> Color {
+        switch colorString {
+        case NoteColors.orange.rawValue:
+            return .primaryOrange
+        case NoteColors.green.rawValue:
+            return .primaryGreen
+        case NoteColors.purple.rawValue:
+            return .primaryPurple
+        case NoteColors.yellow.rawValue:
+            return . primaryYellow
+        default:
+            return .primaryOrange
         }
     }
 }
@@ -343,8 +363,8 @@ struct VocieMemoGridItem: View {
 }
 
 
-struct NoteView_Previews: PreviewProvider {
-    static var previews: some View {
-        NoteView()
-    }
-}
+//struct NoteView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NoteView()
+//    }
+//}

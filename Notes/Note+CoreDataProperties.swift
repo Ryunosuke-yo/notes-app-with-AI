@@ -19,6 +19,7 @@ extension Note {
     @NSManaged public var contents: String?
     @NSManaged public var folder: String?
     @NSManaged public var id: UUID?
+    @NSManaged public var color: String?
     @NSManaged public var timestamp: String?
     @NSManaged public var title: String?
     @NSManaged public var noteInFolder: Folder?
@@ -39,6 +40,10 @@ extension Note {
     
     public var wrappedTimestamp: String {
         timestamp ?? "Unknown"
+    }
+    
+    public var wrappedColor: String {
+        color ?? "primaryOrange"
     }
     
  

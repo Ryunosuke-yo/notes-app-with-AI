@@ -9,7 +9,10 @@ import SwiftUI
 
 struct SeacrhView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var text = ""
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
+    @EnvironmentObject var editMode: EditMode
+    @State private var searchText = ""
+    @State private var selectedNoteId: UUID? = nil
     
     var body: some View {
         ZStack {
@@ -23,7 +26,7 @@ struct SeacrhView: View {
                         .foregroundColor(.primaryWhite)
                         .padding(.leading, 10)
                     
-                    TextField("", text: $text)
+                    TextField("", text: $searchText)
                         .font(Font.mainFont(20))
                         .fontWeight(.regular)
                         .tracking(1)
@@ -33,6 +36,9 @@ struct SeacrhView: View {
                                 .stroke(Color.gray, lineWidth: 0)
                         )
                         .padding(5)
+                        .onSubmit {
+                           
+                        }
                     
                     
                     
@@ -41,8 +47,35 @@ struct SeacrhView: View {
                 .cornerRadius(30)
                 .padding(.horizontal, 10)
                 
+                ScrollView {
+                    if searchText != "" {
+                        VStack {
+                            ForEach(notes) { note in
+                                if note.wrappedTitle.contains(searchText) || note.wrappedContents.contains(searchText) {
+                                    NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
+                                        SearchResults(note: note)
+                                            
+                                    }
+                                    .simultaneousGesture(TapGesture().onEnded {
+                                        selectedNoteId = note.id
+                                        editMode.editMode = true
+                                    })
+                                      
+                                    Divider()
+                                        .frame(height: 1)
+                                        .overlay(Color.primaryGray)
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                
+                
+                
                 Spacer()
             }
+            .padding([.top], 10)
             
             
            
@@ -70,6 +103,33 @@ struct SeacrhView: View {
                 
             }
         }
+    }
+}
+
+struct SearchResults: View {
+    let note: Note
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(note.wrappedTitle)
+                .font(Font.mainFont(20))
+                .foregroundColor(.primaryWhite)
+                .bold()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(1)
+                .tracking(1)
+            Text(note.wrappedContents)
+                .foregroundColor(.primaryWhite)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(1)
+                .tracking(0.5)
+           
+               
+            
+        }
+        .padding(.trailing, 20)
+        .padding(.leading, 25)
+        .padding(.top, 10)
+        .padding(.bottom, 3)
     }
 }
 

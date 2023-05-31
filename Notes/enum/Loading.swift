@@ -11,4 +11,5 @@ enum Loading {
     case loading
     case success
     case error
+    case idle
 }
