@@ -133,8 +133,8 @@ struct SearchResults: View {
     }
 }
 
-struct SeacrhView_Previews: PreviewProvider {
-    static var previews: some View {
-        SeacrhView()
-    }
-}
+//struct SeacrhView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SeacrhView()
+//    }
+//}

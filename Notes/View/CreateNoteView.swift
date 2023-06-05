@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+class SheetManager: ObservableObject {
+    @Published var fileNameState = ""
+    @Published var fileUrlState: URL? = nil
+}
+
 struct CreateNoteView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment (\.managedObjectContext) var moc
@@ -20,6 +25,8 @@ struct CreateNoteView: View {
     @State var selectedColor = Color.primaryOrange
     @State var showColorSheet = false
     @Binding var noteId: UUID?
+    @StateObject var sheetManager = SheetManager()
+    @State var isSharePresented = false
     
     let columns = [
         GridItem(.flexible()),
@@ -61,27 +68,42 @@ struct CreateNoteView: View {
                 
                 
             }
+            .sheet(isPresented: $isSharePresented, onDismiss: {
+                if let removeUrl = sheetManager.fileUrlState {
+                    do {
+                        try FileManager.default.removeItem(at: removeUrl)
+                    } catch {
+                        print(error.localizedDescription, "when deleting txt")
+                    }
+                    
+                }
+            }, content: {
+                ActivityViewController(activityItems: [sheetManager.fileUrlState])
+                    .presentationDetents([.fraction(0.7), .large])
+                    .ignoresSafeArea()
+            })
             .padding([.trailing, .leading], 20)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 20) {
-                        
-                        
                         Circle()
                             .fill(selectedColor)
                             .frame(width: 20, height: 20)
                             .onTapGesture {
                                 showColorSheet.toggle()
                             }
-                        
-                        
                         Image(systemName: "square.and.arrow.up")
                             .resizable()
                             .frame(width: 20, height: 25)
                             .foregroundColor(.primaryWhite)
-                        
+                            .onTapGesture {
+                                if titleValue == "" {
+                                    return
+                                }
+                                createTxtFile()
+                            }
                         
                         
                     }
@@ -138,8 +160,10 @@ struct CreateNoteView: View {
                         }
                 }
             }
-                .presentationDetents([.height(150)])
-                }
+            .presentationDetents([.height(150)])
+            .presentationBackground(Color.primaryGray)
+            
+        }
         .onAppear {
             if editMode.editMode {
                 if let editNote = notes.first (where: {$0.id == noteId}){
@@ -154,6 +178,24 @@ struct CreateNoteView: View {
                 
             }
         }
+    }
+    
+    private func createTxtFile() {
+        let fileName = "\(titleValue).txt"
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Documents directory not found.")
+            return
+        }
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        sheetManager.fileNameState = fileName
+        sheetManager.fileUrlState = fileURL
+        do {
+            try contentValue.write(to: fileURL, atomically: true, encoding: .utf8)
+            isSharePresented.toggle()
+        } catch {
+            print("Failed to create text file. Error: \(error)")
+        }
+       
     }
     
     func saveNote() {
@@ -192,25 +234,6 @@ struct CreateNoteView: View {
         newNote.folder = folderValue
         newNote.color = getColorString(color: selectedColor)
         
-//        var colorString: String
-//
-//        switch selectedColor{
-//        case .primaryOrange :
-//            colorString = NoteColors.orange.rawValue
-//        case .primaryPurple :
-//            colorString = NoteColors.purple.rawValue
-//        case .primaryYellow :
-//            colorString = NoteColors.yellow.rawValue
-//        case .primaryGreen :
-//            colorString = NoteColors.green.rawValue
-//        default:
-//            colorString = NoteColors.orange.rawValue
-//        }
-        
-        
-    
-        
-        
         do {
             try moc.save()
             presentationMode.wrappedValue.dismiss()
@@ -227,9 +250,9 @@ struct CreateNoteView: View {
         case .primaryPurple :
             return NoteColors.purple.rawValue
         case .primaryYellow :
-             return NoteColors.yellow.rawValue
+            return NoteColors.yellow.rawValue
         case .primaryGreen :
-           return NoteColors.green.rawValue
+            return NoteColors.green.rawValue
         default:
             return NoteColors.orange.rawValue
         }
@@ -248,6 +271,18 @@ struct CreateNoteView: View {
         default:
             return .primaryOrange
         }
+    }
+    
+}
+
+
+struct ActivityViewController: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
     }
 }
 
