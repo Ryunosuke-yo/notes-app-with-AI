@@ -4,7 +4,7 @@
 //
 //  Created by Ryunosuke Yokokawa on 2023-05-01.
 //
-import AudioKit
+
 import SwiftUI
 import AVKit
 
@@ -14,10 +14,10 @@ struct NoteView: View {
     @State private var selectedFolder = ""
     @EnvironmentObject private var editMode:EditMode
     @State private var selectedNoteId: UUID? = nil
-    @State private var recordings: [URL] = []
     
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     @Environment (\.managedObjectContext) var moc
     
     
@@ -25,8 +25,7 @@ struct NoteView: View {
     @State var session: AVAudioSession!
     @State var recorder :AVAudioRecorder!
     @State var audioPlayer: AVPlayer!
-    let audioEngine = AVAudioEngine()
-    let audioPlayerNode = AVAudioPlayerNode()
+    
     
     let columns = [
         GridItem(.flexible()),
@@ -79,52 +78,57 @@ struct NoteView: View {
                 .padding(.top, 15)
                 
                 Text(isRecording ? "true" : "false")
+                                Button {
+                                    do {
+                                        if isRecording {
+                                            recorder.stop()
+                                            isRecording.toggle()
+                                            return
+                                        }
+                                        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                        let fileName = url.appendingPathComponent("myRec\(recordings.count + 1).m4a")
+                                        let settings = [
+                                            AVFormatIDKey: Int(kAudioFormatLinearPCM),
+                                            AVLinearPCMBitDepthKey: 24,
+                                            AVSampleRateKey: 48000,
+                                            AVNumberOfChannelsKey: 2,
+                                            AVEncoderBitRateKey: 128000,
+                                            AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue]
+                                        recorder = try AVAudioRecorder(url: fileName, settings: settings)
+                                        recorder.record()
+                                        isRecording.toggle()
+                                        let newRecoding = Recording()
+                                        newRecoding.title = "record title"
+                                        newRecoding.folder = "folder"
+                                        newRecoding.url = fileName
+                                        
+                                        try moc.save()
+                                    } catch {
+                                        print(error.localizedDescription, "when record")
+                                    }
+                                } label: {
+                                    Text("start")
+                                }
                 
-                //                Button {
-                //                    do {
-                //                        if isRecording {
-                //                            recorder.stop()
-                //                            isRecording.toggle()
-                //                            return
-                //                        }
-                //                        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                //                        let fileName = url.appendingPathComponent("myRec\(recordings.count + 1).m4a")
-                //                        let settings = [
-                //                            AVFormatIDKey: Int(kAudioFormatLinearPCM),
-                //                            AVLinearPCMBitDepthKey: 24,
-                //                            AVSampleRateKey: 48000,
-                //                            AVNumberOfChannelsKey: 2,
-                //                            AVEncoderBitRateKey: 128000,
-                //                            AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue]
-                //                        recorder = try AVAudioRecorder(url: fileName, settings: settings)
-                //                        recorder.record()
-                //                        isRecording.toggle()
-                //                        getRecordings()
-                //                    } catch {
-                //                        print(error.localizedDescription, "when record")
-                //                    }
-                //                } label: {
-                //                    Text("start")
-                //                }
+                Text(String(recordings.count))
+                    .foregroundColor(.white)
                 
-                //                Text(String(recordings.count))
-                //                    .foregroundColor(.white)
-                //
-                //                if recordings.count == 0 {
-                //                    Text("zero")
-                //                        .foregroundColor(.white)
-                //                } else {
-                //                                        List(recordings, id: \.self) { rec in
-                //                                            Text(rec.relativeString)
-                //                                                .foregroundColor(.white)
-                //                                                .onTapGesture {
-                //                                                }
-                //
-                //                                        }
-                //
-                //                }
+//                if recordings.count == 0 {
+//                    Text("zero")
+//                        .foregroundColor(.white)
+//                } else {
+//                    List(recordings, id: \.self) { rec in
+//                        Text(rec.relativeString)
+//                            .foregroundColor(.white)
+//                            .onTapGesture {
+//                                playRecordedAudio(url: rec)
+//                            }
+//
+//                    }
+//
+//                }
                 
-             
+                
                 
                 
                 ScrollView {
@@ -140,17 +144,17 @@ struct NoteView: View {
                                 note in
                                 NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
                                     MemoGridItem(note: note)
-                                    
+
                                 }
                                 .simultaneousGesture(TapGesture().onEnded {
                                     selectedNoteId = note.id
                                     editMode.editMode = true
-                                    
+
                                 })
-                                
+
                             }
-                            
-                            
+
+
                         }
                         .padding(.bottom, 80)
                     }
@@ -216,7 +220,7 @@ struct NoteView: View {
         .onAppear {
             do {
                 self.session = AVAudioSession.sharedInstance()
-                try self.session.setCategory(.playAndRecord)
+                try self.session.setCategory(.playAndRecord, options: .defaultToSpeaker)
                 
                 
                 self.session.requestRecordPermission {
@@ -289,11 +293,11 @@ struct NoteView: View {
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let results = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .producesRelativePathURLs)
             
-            recordings.removeAll()
-            
-            for rec in results {
-                recordings.append(rec)
-            }
+//            recordings.removeAll()
+//
+//            for rec in results {
+//                recordings.append(rec)
+//            }
         } catch {
             print(error.localizedDescription, "when getting recordings")
         }
@@ -301,11 +305,11 @@ struct NoteView: View {
     
     func playRecordedAudio(url: URL) {
         let playerItem = AVPlayerItem(url: url)
-        
+
         audioPlayer = AVPlayer(playerItem: playerItem)
         audioPlayer.volume = 1.0
         audioPlayer?.play()
-        
+
     }
     
     

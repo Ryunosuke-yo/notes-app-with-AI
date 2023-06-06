@@ -61,12 +61,6 @@ struct CreateNoteView: View {
                     .foregroundColor(.primaryWhite)
                     .background(Color.primaryBlcak)
                     .scrollBounceBehavior(.always)
-                
-                
-                
-                
-                
-                
             }
             .sheet(isPresented: $isSharePresented, onDismiss: {
                 if let removeUrl = sheetManager.fileUrlState {

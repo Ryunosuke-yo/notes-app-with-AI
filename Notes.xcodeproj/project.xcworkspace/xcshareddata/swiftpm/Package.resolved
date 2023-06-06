@@ -8,15 +8,6 @@
         "revision" : "9970fd0bb7a05dad0b6566ae1f56937716686b24",
         "version" : "1.1.1"
       }
-    },
-    {
-      "identity" : "audiokit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AudioKit/AudioKit",
-      "state" : {
-        "revision" : "c30a151fea40696ad0a45c60c2bba29112bb4279",
-        "version" : "5.6.1"
-      }
     }
   ],
   "version" : 2

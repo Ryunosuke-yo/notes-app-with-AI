@@ -6,46 +6,72 @@
 //
 
 import SwiftUI
+import ActivityIndicatorView
 
 struct VoiceMemoModal: View {
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
+    @State private var titleValue = ""
+    @State private var folder = ""
+    @State private var isRecording = false
+    @State private var minutes = 0
+    @State private var seconds = 0
+    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
     var body: some View {
         ZStack {
             Color.primaryGray.ignoresSafeArea()
             VStack(spacing: 0) {
-                HStack(spacing: 0) {
+                HStack {
                     Spacer()
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .frame(width: 15, height: 15)
+                    TextField("New Voice Memo", text: $titleValue)
+                        .font(Font.mainFont(30))
                         .foregroundColor(.primaryWhite)
+                        .tracking(1)
+                        .bold()
+                        .frame(width: UIScreen.screenWidth - 30)
+                        .multilineTextAlignment(TextAlignment.center)
+                    Spacer()
                 }
-                .padding(.trailing, 20)
                 
                 
-                
-                Text("New Voice Memo")
-                    .font(Font.mainFont(30))
-                    .foregroundColor(.primaryWhite)
-                    .tracking(1)
-                    .bold()
-                
-                Text("01:23:32")
+                Text("\(minutes < 10 ? "0\(minutes)" : String(minutes)):\(seconds < 10 ? "0\(seconds)" : String(seconds))")
                     .font(Font.mainFont(18))
                     .foregroundColor(.primaryWhite)
                     .tracking(1)
                     .padding(.top, 10)
+                    .onReceive(timer) { _ in
+                        if isRecording {
+                            seconds += 1
+                            if seconds == 60 {
+                                seconds = 0
+                                minutes += 1
+                            }
+                        }
+                    }
                 
-                Image(systemName: "waveform")
-                    .resizable()
+                ActivityIndicatorView(isVisible: $isRecording, type: .equalizer(count: 7))
                     .frame(width: 80, height: 90)
                     .foregroundColor(.primaryWhite)
                     .padding(.top, 20)
                 
+                if !isRecording {
+                    Image(systemName: "waveform")
+                        .resizable()
+                        .frame(width: 80, height: 90)
+                        .foregroundColor(.primaryWhite)
+                        .padding(.top, 20)
+                }
+                
+                
+                
                 Circle()
-                    .foregroundColor(.recordRed)
+                    .foregroundColor(isRecording ?  .recordRed : .secondaryWhite)
                     .frame(width: 90, height: 90)
                     .padding(.top, 20)
+                    .onTapGesture {
+                        isRecording.toggle()
+                       
+                    }
                 
                 
                 if folders.count == 0 {
@@ -86,7 +112,7 @@ struct VoiceMemoModal: View {
                     .padding(.leading, 10)
                     .padding(.bottom, 25)
                     Spacer()
-
+                    
                 }
             }
             
@@ -95,9 +121,14 @@ struct VoiceMemoModal: View {
             
             
         }
+        .onDisappear {
+            isRecording = false
+        }
         
         
     }
+    
+  
     
 }
 
