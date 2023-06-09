@@ -24,7 +24,13 @@ extension Folder {
         folderName ?? ""
     }
     
-    
+    public var getNoteFolder: [Note] {
+        let set = note as? Set<Note> ?? []
+        
+        return set.filter {
+             $0.wrappedFolder == folderName
+        }
+    }
 
 
 }

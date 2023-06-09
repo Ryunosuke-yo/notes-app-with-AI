@@ -5,33 +5,35 @@
 //  Created by Ryunosuke Yokokawa on 2023-05-01.
 //
 
+
 import SwiftUI
 import AVKit
 
 struct NoteView: View {
     @State private var seactText: String = ""
     @State private var showVoiceRec = false
-    @State private var selectedFolder = ""
+    @State private var selectedFolder: Folder?
     @EnvironmentObject private var editMode:EditMode
     @State private var selectedNoteId: UUID? = nil
+    @State private var isPlaying = false
     
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     @Environment (\.managedObjectContext) var moc
     
-    
-    @State var isRecording = false
     @State var session: AVAudioSession!
     @State var recorder :AVAudioRecorder!
-    @State var audioPlayer: AVPlayer!
-    
-    
+    @State var audioPlayer: AVAudioPlayer!
+
+
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
     var body: some View {
+        
+//        let combinedNotesAndRecordings = notes + recordings
         ZStack {
             Color.primaryBlcak
                 .ignoresSafeArea()
@@ -50,7 +52,7 @@ struct NoteView: View {
                             .background(Color.primaryBlcak)
                             .foregroundColor(getFolderTextColor(cuurentFolder: ""))
                             .onTapGesture {
-                                selectedFolder = ""
+                                selectedFolder = nil
                             }
                         ForEach(folders, id: \.self) { item in
                             Text(item.folderName ?? "")
@@ -65,7 +67,7 @@ struct NoteView: View {
                                 .background(Color.primaryBlcak)
                                 .foregroundColor(getFolderTextColor(cuurentFolder: item.wrappedFolderNeme))
                                 .onTapGesture {
-                                    selectedFolder = item.wrappedFolderNeme
+                                    selectedFolder = item
                                 }
                             
                             
@@ -77,91 +79,49 @@ struct NoteView: View {
                 .scrollIndicators(.hidden)
                 .padding(.top, 15)
                 
-                Text(isRecording ? "true" : "false")
-                                Button {
-                                    do {
-                                        if isRecording {
-                                            recorder.stop()
-                                            isRecording.toggle()
-                                            return
-                                        }
-                                        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                                        let fileName = url.appendingPathComponent("myRec\(recordings.count + 1).m4a")
-                                        let settings = [
-                                            AVFormatIDKey: Int(kAudioFormatLinearPCM),
-                                            AVLinearPCMBitDepthKey: 24,
-                                            AVSampleRateKey: 48000,
-                                            AVNumberOfChannelsKey: 2,
-                                            AVEncoderBitRateKey: 128000,
-                                            AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue]
-                                        recorder = try AVAudioRecorder(url: fileName, settings: settings)
-                                        recorder.record()
-                                        isRecording.toggle()
-                                        let newRecoding = Recording()
-                                        newRecoding.title = "record title"
-                                        newRecoding.folder = "folder"
-                                        newRecoding.url = fileName
-                                        
-                                        try moc.save()
-                                    } catch {
-                                        print(error.localizedDescription, "when record")
-                                    }
-                                } label: {
-                                    Text("start")
-                                }
-                
-                Text(String(recordings.count))
-                    .foregroundColor(.white)
-                
-//                if recordings.count == 0 {
-//                    Text("zero")
-//                        .foregroundColor(.white)
-//                } else {
-//                    List(recordings, id: \.self) { rec in
-//                        Text(rec.relativeString)
-//                            .foregroundColor(.white)
-//                            .onTapGesture {
-//                                playRecordedAudio(url: rec)
+                ScrollView {
+//                    if (notes.count == 0) {
+//                        Text("No contents")
+//                            .font(Font.mainFont(20))
+//                            .tracking(0.2)
+//                            .foregroundColor(.primaryWhite)
+//                            .padding(.top, 20)
+//                    } else {
+//                        LazyVGrid(columns: columns, spacing: 2) {
+//                            ForEach(getNotesInFolder() ?? [], id: \.self) {
+//                                note in
+//                                NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
+//                                    MemoGridItem(note: note)
+//
+//                                }
+//                                .simultaneousGesture(TapGesture().onEnded {
+//                                    selectedNoteId = note.id
+//                                    editMode.editMode = true
+//
+//                                })
+//
 //                            }
 //
-//                    }
 //
-//                }
-                
-                
-                
-                
-                ScrollView {
-                    if (notes.count == 0) {
-                        Text("No contents")
-                            .font(Font.mainFont(20))
-                            .tracking(0.2)
-                            .foregroundColor(.primaryWhite)
-                            .padding(.top, 20)
-                    } else {
-                        LazyVGrid(columns: columns, spacing: 2) {
-                            ForEach(getNotesInFolder(), id: \.self) {
-                                note in
-                                NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
-                                    MemoGridItem(note: note)
-
+//                        }
+//                        .padding(.bottom, 80)
+//                    }
+                    
+                    LazyVGrid(columns: columns, spacing: 2) {
+                        ForEach(recordings) { recording in
+                            Text(recording.title ?? "Error")
+                                .onTapGesture {
+                                    if let url = recording.url {
+                                        isPlaying ? pauseRecording() : playRecordedAudio(url: url)
+                                    }
+                                    
                                 }
-                                .simultaneousGesture(TapGesture().onEnded {
-                                    selectedNoteId = note.id
-                                    editMode.editMode = true
-
-                                })
-
-                            }
-
-
                         }
-                        .padding(.bottom, 80)
                     }
                 }
                 .onAppear {
                     if folders.count == 0 {
-                        selectedFolder = ""
+                        selectedFolder = nil
                     }
                 }
             }
@@ -227,8 +187,6 @@ struct NoteView: View {
                     status in
                     if !status {
                         print("permisiion denied")
-                    } else {
-                        getRecordings()
                     }
                 }
             } catch {
@@ -270,46 +228,47 @@ struct NoteView: View {
         }
     }
     
-    private func getNotesInFolder()-> [Note] {
-        if selectedFolder == "" {
+    private func getNotesInFolder()-> [Note]? {
+        if selectedFolder == nil {
             return Array(notes)
         }
         
-        return  notes.filter { note in
-            note.wrappedFolder == selectedFolder
+        if let s = selectedFolder {
+            return  notes.filter { note in
+                note.wrappedFolder == s.wrappedFolderNeme
+            }
         }
+
+        return nil
     }
-    
+
     private func getFolderStrokeColor(cuurentFolder: String)-> Color {
-        selectedFolder == cuurentFolder ? .primaryOrange : .secondaryWhite
+        if let s = selectedFolder {
+            return s.wrappedFolderNeme == cuurentFolder ? .primaryOrange : .secondaryWhite
+        }
+        return .secondaryWhite
     }
     
     private func getFolderTextColor(cuurentFolder: String)-> Color {
-        selectedFolder == cuurentFolder ? .primaryOrange : .primaryWhite
-    }
-    
-    func getRecordings() {
-        do {
-            let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let results = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .producesRelativePathURLs)
-            
-//            recordings.removeAll()
-//
-//            for rec in results {
-//                recordings.append(rec)
-//            }
-        } catch {
-            print(error.localizedDescription, "when getting recordings")
+        if let s = selectedFolder {
+            return s.wrappedFolderNeme == cuurentFolder ? .primaryOrange : .primaryWhite
         }
+        return .primaryWhite
     }
     
     func playRecordedAudio(url: URL) {
-        let playerItem = AVPlayerItem(url: url)
-
-        audioPlayer = AVPlayer(playerItem: playerItem)
-        audioPlayer.volume = 1.0
-        audioPlayer?.play()
-
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer.volume = 1.0
+            audioPlayer.play()
+        } catch {
+            print(error.localizedDescription, "play")
+        }
+    }
+    
+    func pauseRecording() {
+        audioPlayer.pause()
+        isPlaying.toggle()
     }
     
     
@@ -343,6 +302,8 @@ struct MemoGridItem :View {
                 .tracking(0.2)
                 .foregroundColor(.primaryWhite)
                 .padding([.top, .bottom], 10)
+                .padding([.leading, .trailing], 5)
+                .lineLimit(1)
             
             
             

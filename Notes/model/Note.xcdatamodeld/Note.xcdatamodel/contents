@@ -26,6 +26,7 @@
     </entity>
     <entity name="Recording" representedClassName="Recording" syncable="YES" codeGenerationType="class">
         <attribute name="folder" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="time" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
