@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AVKit
+import ActivityIndicatorView
 
 struct NoteView: View {
     @State private var seactText: String = ""
@@ -25,19 +26,43 @@ struct NoteView: View {
     @State var session: AVAudioSession!
     @State var recorder :AVAudioRecorder!
     @State var audioPlayer: AVAudioPlayer!
-
-
+    
+    
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
     ]
     var body: some View {
         
-//        let combinedNotesAndRecordings = notes + recordings
+        //        let combinedNotesAndRecordings = notes + recordings
         ZStack {
             Color.primaryBlcak
                 .ignoresSafeArea()
             VStack(spacing: 10) {
+                HStack {
+                    Spacer()
+                    
+                    Image(systemName: "doc")
+                        .resizable()
+                        .foregroundColor(.secondaryWhite)
+                        .frame(width: 17, height: 20)
+                    
+                    
+                    Spacer()
+                    Divider()
+                        .overlay(Color.secondaryWhite)
+                        .frame(height: 10)
+                    Spacer()
+                  
+                    Image(systemName: "mic.circle")
+                        .resizable()
+                        .foregroundColor(.secondaryWhite)
+                        .frame(width: 20, height: 20)
+                    Spacer()
+                    
+                }
+                .padding([.top], 15)
+                
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
                         Text("All")
@@ -54,6 +79,7 @@ struct NoteView: View {
                             .onTapGesture {
                                 selectedFolder = nil
                             }
+                        
                         ForEach(folders, id: \.self) { item in
                             Text(item.folderName ?? "")
                                 .padding(.horizontal, 20)
@@ -77,45 +103,52 @@ struct NoteView: View {
                     
                 }
                 .scrollIndicators(.hidden)
-                .padding(.top, 15)
+                .padding(.top, 10)
+                
                 
                 ScrollView {
-//                    if (notes.count == 0) {
-//                        Text("No contents")
-//                            .font(Font.mainFont(20))
-//                            .tracking(0.2)
-//                            .foregroundColor(.primaryWhite)
-//                            .padding(.top, 20)
-//                    } else {
-//                        LazyVGrid(columns: columns, spacing: 2) {
-//                            ForEach(getNotesInFolder() ?? [], id: \.self) {
-//                                note in
-//                                NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
-//                                    MemoGridItem(note: note)
-//
-//                                }
-//                                .simultaneousGesture(TapGesture().onEnded {
-//                                    selectedNoteId = note.id
-//                                    editMode.editMode = true
-//
-//                                })
-//
-//                            }
-//
-//
-//                        }
-//                        .padding(.bottom, 80)
-//                    }
+                    //                    if (notes.count == 0) {
+                    //                        Text("No contents")
+                    //                            .font(Font.mainFont(20))
+                    //                            .tracking(0.2)
+                    //                            .foregroundColor(.primaryWhite)
+                    //                            .padding(.top, 20)
+                    //                    } else {
+                    //                        LazyVGrid(columns: columns, spacing: 2) {
+                    //                            ForEach(getNotesInFolder() ?? [], id: \.self) {
+                    //                                note in
+                    //                                NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
+                    //                                    MemoGridItem(note: note)
+                    //
+                    //                                }
+                    //                                .simultaneousGesture(TapGesture().onEnded {
+                    //                                    selectedNoteId = note.id
+                    //                                    editMode.editMode = true
+                    //
+                    //                                })
+                    //
+                    //                            }
+                    //
+                    //
+                    //                        }
+                    //                        .padding(.bottom, 80)
+                    //                    }
                     
                     LazyVGrid(columns: columns, spacing: 2) {
                         ForEach(recordings) { recording in
-                            Text(recording.title ?? "Error")
-                                .onTapGesture {
-                                    if let url = recording.url {
-                                        isPlaying ? pauseRecording() : playRecordedAudio(url: url)
+                            VocieMemoGridItem(voiceMemo: recording) {
+                                if let url = recording.url {
+                                    if isPlaying == true {
+                                        pauseRecording()
+                                        isPlaying = false
+                                    } else {
+                                        playRecordedAudio(url: url)
+                                        isPlaying = true
                                     }
                                     
                                 }
+                            }
+                            
                         }
                     }
                 }
@@ -238,10 +271,10 @@ struct NoteView: View {
                 note.wrappedFolder == s.wrappedFolderNeme
             }
         }
-
+        
         return nil
     }
-
+    
     private func getFolderStrokeColor(cuurentFolder: String)-> Color {
         if let s = selectedFolder {
             return s.wrappedFolderNeme == cuurentFolder ? .primaryOrange : .secondaryWhite
@@ -267,8 +300,15 @@ struct NoteView: View {
     }
     
     func pauseRecording() {
+        //        do {
+        //            audioPlayer = try AVAudioPlayer(contentsOf: url)
+        //            audioPlayer.pause()
+        //        } catch {
+        //            print(error.localizedDescription, "play")
+        //        }
+        
         audioPlayer.pause()
-        isPlaying.toggle()
+        
     }
     
     
@@ -380,32 +420,48 @@ struct MemoGridItem :View {
 
 
 struct VocieMemoGridItem: View {
+    @State var showDeleteAlert = false
+    let voiceMemo: Recording
+    let onTapRecording: ()-> Void
+    @State var thisIsPlaying = false
+    @Environment (\.managedObjectContext) var moc
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     var body: some View {
         VStack(spacing: 0) {
-            
-            Text("This is the title")
-                .font(Font.mainFont(20))
-                .fontWeight(.bold)
-                .tracking(0.2)
-                .foregroundColor(.primaryWhite)
-                .frame(height: 20, alignment: .leading)
-                .padding(.top, 25)
-                .padding(.leading, 10)
-            
-            
-            
-            
-            
-            Image(systemName: "waveform")
-                .resizable()
-                .foregroundColor(Color.primaryWhite)
-                .frame(width: 90, height: 100)
-                .padding(.vertical, 10)
-            
-            
-            
-            
-            
+            VStack {
+                Text(voiceMemo.title ?? "Unknown")
+                    .font(Font.mainFont(20))
+                    .fontWeight(.bold)
+                    .tracking(0.2)
+                    .foregroundColor(.primaryWhite)
+                    .frame(height: 20, alignment: .leading)
+                    .padding(.top, 25)
+                    .padding(.leading, 10)
+                
+                Text(voiceMemo.time ?? "Error")
+                    .font(Font.mainFont(13))
+                    .tracking(0.3)
+                    .foregroundColor(.primaryWhite)
+                    .padding([.top], 5)
+                
+                
+                ActivityIndicatorView(isVisible: $thisIsPlaying, type: .equalizer(count: 7))
+                    .frame(width: 90, height: 100)
+                    .foregroundColor(.primaryWhite)
+                    .padding(.top, 20)
+                
+                if thisIsPlaying == false {
+                    Image(systemName: "waveform")
+                        .resizable()
+                        .foregroundColor(Color.primaryWhite)
+                        .frame(width: 90, height: 100)
+                        .padding(.vertical, 10)
+                }
+            }
+            .onTapGesture {
+                onTapRecording()
+                thisIsPlaying.toggle()
+            }
             HStack {
                 Spacer()
                 Image(systemName: "trash")
@@ -413,6 +469,17 @@ struct VocieMemoGridItem: View {
                     .foregroundColor(Color.primaryWhite)
                     .frame(width: 25, height: 25)
                     .padding([.trailing, .bottom], 20)
+                    .onTapGesture {
+                        showDeleteAlert = true
+                    }
+                    .alert("Sure to delete?", isPresented: $showDeleteAlert) {
+                        Button("delete", role: .destructive) {
+                            deleteRecording(recording: voiceMemo
+                            )
+                        }
+                        Button("Cancel", role:.cancel) {}
+                        
+                    }
             }
             
             
@@ -424,6 +491,20 @@ struct VocieMemoGridItem: View {
         .padding(.horizontal, 5)
         .padding(.top, 5)
         
+        
+    }
+    
+    private func deleteRecording(recording: Recording) {
+        moc.delete(recording)
+        saveContext()
+    }
+    
+    private func saveContext() {
+        do {
+            try moc.save()
+        } catch {
+            print(error.localizedDescription, "when saving context")
+        }
     }
 }
 

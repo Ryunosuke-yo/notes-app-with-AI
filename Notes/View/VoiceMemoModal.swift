@@ -29,6 +29,7 @@ struct VoiceMemoModal: View {
     @State var audioPlayer: AVPlayer!
     
     var body: some View {
+        let timeString = "\(minutes < 10 ? "0\(minutes)" : String(minutes)):\(seconds < 10 ? "0\(seconds)" : String(seconds))"
         ZStack {
             Color.primaryGray.ignoresSafeArea()
             VStack(spacing: 0) {
@@ -45,7 +46,7 @@ struct VoiceMemoModal: View {
                 }
                 
                 
-                Text("\(minutes < 10 ? "0\(minutes)" : String(minutes)):\(seconds < 10 ? "0\(seconds)" : String(seconds))")
+                Text(timeString)
                     .font(Font.mainFont(18))
                     .foregroundColor(.primaryWhite)
                     .tracking(1)
@@ -138,7 +139,7 @@ struct VoiceMemoModal: View {
         .onDisappear {
             isRecording = false
             if recodingComplted {
-                saveRecording()
+                saveRecording(timeString: timeString)
                 
             }
             
@@ -179,7 +180,7 @@ struct VoiceMemoModal: View {
     }
     
     
-    func saveRecording() {
+    func saveRecording(timeString: String) {
         let title = titleValue == "" ? "New Vocie memo\(recordings.count + 1)" : titleValue
         let newRecoding = Recording(context: moc)
         newRecoding.title = title
@@ -187,6 +188,7 @@ struct VoiceMemoModal: View {
         newRecoding.url = fileUrl
         newRecoding.id = UUID()
         newRecoding.folder = selectedFolder == nil ? "" : selectedFolder?.wrappedFolderNeme
+        newRecoding.time = timeString
         
         do {
             try moc.save()
