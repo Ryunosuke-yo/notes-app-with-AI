@@ -19,4 +19,50 @@ extension Color {
     static let secondaryWhite = Color("secondaryWhite")
     static let primaryPurple = Color("primaryPurple")
     static let recordRed = Color("recordRed")
+    
+    
+    static func getColorString(color: Color)-> String {
+        switch color {
+        case .primaryOrange :
+            return NoteColors.orange.rawValue
+        case .primaryPurple :
+            return NoteColors.purple.rawValue
+        case .primaryYellow :
+            return NoteColors.yellow.rawValue
+        case .primaryGreen :
+            return NoteColors.green.rawValue
+        default:
+            return NoteColors.orange.rawValue
+        }
+    }
+    
+    static func getColorValue(colorString: String)-> Color {
+        switch colorString {
+        case NoteColors.orange.rawValue:
+            return .primaryOrange
+        case NoteColors.green.rawValue:
+            return .primaryGreen
+        case NoteColors.purple.rawValue:
+            return .primaryPurple
+        case NoteColors.yellow.rawValue:
+            return . primaryYellow
+        default:
+            return .primaryOrange
+        }
+    }
+    
+    static func convertNoteColorString(colorString: String)-> Color {
+        switch colorString {
+        case NoteColors.orange.rawValue:
+            return .primaryOrange
+        case NoteColors.green.rawValue:
+            return .primaryGreen
+        case NoteColors.purple.rawValue:
+            return .primaryPurple
+        case NoteColors.yellow.rawValue:
+            return . primaryYellow
+        default:
+            return .primaryOrange
+        }
+    }
 }

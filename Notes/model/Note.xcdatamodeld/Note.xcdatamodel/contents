@@ -25,6 +25,7 @@
         <relationship name="noteInFolder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Folder" inverseName="note" inverseEntity="Folder"/>
     </entity>
     <entity name="Recording" representedClassName="Recording" syncable="YES" codeGenerationType="class">
+        <attribute name="color" optional="YES" attributeType="String"/>
         <attribute name="folder" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="time" optional="YES" attributeType="String"/>

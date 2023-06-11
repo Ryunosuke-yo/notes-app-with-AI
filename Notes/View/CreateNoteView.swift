@@ -164,7 +164,7 @@ struct CreateNoteView: View {
                     titleValue = editNote.wrappedTitle
                     contentValue = editNote.wrappedContents
                     folderValue = editNote.wrappedFolder
-                    selectedColor = getColorValue(colorString: editNote.wrappedColor)
+                    selectedColor = Color.getColorValue(colorString: editNote.wrappedColor)
                     
                     
                 }
@@ -201,7 +201,7 @@ struct CreateNoteView: View {
                 editNote.title = titleValue
                 editNote.contents = contentValue
                 editNote.folder = folderValue
-                editNote.color = getColorString(color: selectedColor)
+                editNote.color = Color.getColorString(color: selectedColor)
             }
             
             do {
@@ -226,7 +226,7 @@ struct CreateNoteView: View {
         newNote.timestamp = timestamp
         newNote.contents = contentValue
         newNote.folder = folderValue
-        newNote.color = getColorString(color: selectedColor)
+        newNote.color = Color.getColorString(color: selectedColor)
         
         do {
             try moc.save()
@@ -237,35 +237,35 @@ struct CreateNoteView: View {
     }
     
     
-    private func getColorString(color: Color)-> String {
-        switch selectedColor {
-        case .primaryOrange :
-            return NoteColors.orange.rawValue
-        case .primaryPurple :
-            return NoteColors.purple.rawValue
-        case .primaryYellow :
-            return NoteColors.yellow.rawValue
-        case .primaryGreen :
-            return NoteColors.green.rawValue
-        default:
-            return NoteColors.orange.rawValue
-        }
-    }
-    
-    private func getColorValue(colorString: String)-> Color {
-        switch colorString {
-        case NoteColors.orange.rawValue:
-            return .primaryOrange
-        case NoteColors.green.rawValue:
-            return .primaryGreen
-        case NoteColors.purple.rawValue:
-            return .primaryPurple
-        case NoteColors.yellow.rawValue:
-            return . primaryYellow
-        default:
-            return .primaryOrange
-        }
-    }
+//    private func getColorString(color: Color)-> String {
+//        switch selectedColor {
+//        case .primaryOrange :
+//            return NoteColors.orange.rawValue
+//        case .primaryPurple :
+//            return NoteColors.purple.rawValue
+//        case .primaryYellow :
+//            return NoteColors.yellow.rawValue
+//        case .primaryGreen :
+//            return NoteColors.green.rawValue
+//        default:
+//            return NoteColors.orange.rawValue
+//        }
+//    }
+//
+//    private func getColorValue(colorString: String)-> Color {
+//        switch colorString {
+//        case NoteColors.orange.rawValue:
+//            return .primaryOrange
+//        case NoteColors.green.rawValue:
+//            return .primaryGreen
+//        case NoteColors.purple.rawValue:
+//            return .primaryPurple
+//        case NoteColors.yellow.rawValue:
+//            return . primaryYellow
+//        default:
+//            return .primaryOrange
+//        }
+//    }
     
 }
 

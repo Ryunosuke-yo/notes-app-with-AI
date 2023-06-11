@@ -19,6 +19,7 @@ struct VoiceMemoModal: View {
     @State private var fileUrl: URL?
     @State private var selectedFolder: Folder?
     @State private var recodingComplted = false
+    @State private var selectedColor = Color.primaryOrange
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @Environment (\.managedObjectContext) var moc
     
@@ -27,6 +28,13 @@ struct VoiceMemoModal: View {
     @State var session: AVAudioSession!
     @State var recorder :AVAudioRecorder!
     @State var audioPlayer: AVPlayer!
+    
+    let colorSelection: [Color] = [
+        .primaryGreen,
+        .primaryOrange,
+        .primaryPurple,
+        .primaryYellow,
+    ]
     
     var body: some View {
         let timeString = "\(minutes < 10 ? "0\(minutes)" : String(minutes)):\(seconds < 10 ? "0\(seconds)" : String(seconds))"
@@ -91,6 +99,30 @@ struct VoiceMemoModal: View {
                         
                     }
                 
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(colorSelection, id: \.self) { color in
+                            Circle()
+                                .fill(color)
+                                .frame(width: 40, height: 40)
+                                .onTapGesture {
+                                    selectedColor = color
+                                }
+                                .background {
+                                    if selectedColor == color {
+                                        Circle()
+                                            .foregroundColor(.primaryWhite)
+                                            .frame(width: 44, height: 44)
+                                    }
+                                }
+                        }
+                        .padding(.leading, 10)
+                        .padding(.bottom, 5)
+                    }
+                    .padding(.leading, 5)
+                    .padding(.top, 15)
+                }
+                
                 
                 if folders.count == 0 {
                     Text("No folders")
@@ -126,12 +158,15 @@ struct VoiceMemoModal: View {
                         
                     }
                     .scrollIndicators(.hidden)
-                    .padding(.top, 30)
+                    .padding(.top, 20)
                     .padding(.leading, 10)
-                    .padding(.bottom, 25)
-                    Spacer()
+                    .padding(.bottom, 10)
+                   
                     
                 }
+                
+
+                Spacer()
             }
             .padding(.top, 20)
             
@@ -189,6 +224,7 @@ struct VoiceMemoModal: View {
         newRecoding.id = UUID()
         newRecoding.folder = selectedFolder == nil ? "" : selectedFolder?.wrappedFolderNeme
         newRecoding.time = timeString
+        newRecoding.color = Color.getColorString(color:selectedColor)
         
         do {
             try moc.save()

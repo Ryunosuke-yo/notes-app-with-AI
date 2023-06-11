@@ -10,6 +10,7 @@ import SwiftUI
 struct SeacrhView: View {
     @Environment(\.presentationMode) var presentationMode
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     @EnvironmentObject var editMode: EditMode
     @State private var searchText = ""
     @State private var selectedNoteId: UUID? = nil
@@ -69,6 +70,8 @@ struct SeacrhView: View {
                         }
                     }
                 }
+                
+                
                 
                 
                 

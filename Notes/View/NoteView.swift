@@ -17,6 +17,8 @@ struct NoteView: View {
     @EnvironmentObject private var editMode:EditMode
     @State private var selectedNoteId: UUID? = nil
     @State private var isPlaying = false
+    @State private var isNoteMode = true
+    @State private var appMode: AppMode = .noteMode
     
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
@@ -33,8 +35,6 @@ struct NoteView: View {
         GridItem(.flexible()),
     ]
     var body: some View {
-        
-        //        let combinedNotesAndRecordings = notes + recordings
         ZStack {
             Color.primaryBlcak
                 .ignoresSafeArea()
@@ -44,8 +44,11 @@ struct NoteView: View {
                     
                     Image(systemName: "doc")
                         .resizable()
-                        .foregroundColor(.secondaryWhite)
+                        .foregroundColor(appMode == .noteMode ? .primaryOrange : .secondaryWhite)
                         .frame(width: 17, height: 20)
+                        .onTapGesture {
+                            appMode = .noteMode
+                        }
                     
                     
                     Spacer()
@@ -56,8 +59,11 @@ struct NoteView: View {
                   
                     Image(systemName: "mic.circle")
                         .resizable()
-                        .foregroundColor(.secondaryWhite)
+                        .foregroundColor(appMode == .voiceMemo ? .primaryOrange : .secondaryWhite)
                         .frame(width: 20, height: 20)
+                        .onTapGesture {
+                            appMode = .voiceMemo
+                        }
                     Spacer()
                     
                 }
@@ -72,10 +78,10 @@ struct NoteView: View {
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .inset(by: 2)
-                                    .stroke(getFolderStrokeColor(cuurentFolder: ""), lineWidth: 2)
+                                    .stroke(selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite, lineWidth: 2)
                             )
                             .background(Color.primaryBlcak)
-                            .foregroundColor(getFolderTextColor(cuurentFolder: ""))
+                            .foregroundColor(selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite)
                             .onTapGesture {
                                 selectedFolder = nil
                             }
@@ -107,50 +113,53 @@ struct NoteView: View {
                 
                 
                 ScrollView {
-                    //                    if (notes.count == 0) {
-                    //                        Text("No contents")
-                    //                            .font(Font.mainFont(20))
-                    //                            .tracking(0.2)
-                    //                            .foregroundColor(.primaryWhite)
-                    //                            .padding(.top, 20)
-                    //                    } else {
-                    //                        LazyVGrid(columns: columns, spacing: 2) {
-                    //                            ForEach(getNotesInFolder() ?? [], id: \.self) {
-                    //                                note in
-                    //                                NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
-                    //                                    MemoGridItem(note: note)
-                    //
-                    //                                }
-                    //                                .simultaneousGesture(TapGesture().onEnded {
-                    //                                    selectedNoteId = note.id
-                    //                                    editMode.editMode = true
-                    //
-                    //                                })
-                    //
-                    //                            }
-                    //
-                    //
-                    //                        }
-                    //                        .padding(.bottom, 80)
-                    //                    }
-                    
-                    LazyVGrid(columns: columns, spacing: 2) {
-                        ForEach(recordings) { recording in
-                            VocieMemoGridItem(voiceMemo: recording) {
-                                if let url = recording.url {
-                                    if isPlaying == true {
-                                        pauseRecording()
-                                        isPlaying = false
-                                    } else {
-                                        playRecordedAudio(url: url)
-                                        isPlaying = true
+                    if appMode == .noteMode {
+                        if (notes.count == 0) {
+                            Text("No contents")
+                                .font(Font.mainFont(20))
+                                .tracking(0.2)
+                                .foregroundColor(.primaryWhite)
+                                .padding(.top, 20)
+                        } else {
+                            LazyVGrid(columns: columns, spacing: 2) {
+                                ForEach(getNotesInFolder() ?? [], id: \.self) {
+                                    note in
+                                    NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
+                                        MemoGridItem(note: note)
+    
                                     }
-                                    
+                                    .simultaneousGesture(TapGesture().onEnded {
+                                        selectedNoteId = note.id
+                                        editMode.editMode = true
+    
+                                    })
+    
                                 }
+    
+    
                             }
-                            
+                            .padding(.bottom, 80)
+                        }
+                    } else {
+                        LazyVGrid(columns: columns, spacing: 2) {
+                            ForEach(getRecordingsInFolder() ?? []) { recording in
+                                VocieMemoGridItem(voiceMemo: recording) {
+                                    if let url = recording.url {
+                                        if isPlaying == true {
+                                            pauseRecording()
+                                            isPlaying = false
+                                        } else {
+                                            playRecordedAudio(url: url)
+                                            isPlaying = true
+                                        }
+                                        
+                                    }
+                                }
+                                
+                            }
                         }
                     }
+
                 }
                 .onAppear {
                     if folders.count == 0 {
@@ -201,7 +210,7 @@ struct NoteView: View {
                             }
                             .sheet(isPresented: $showVoiceRec) {
                                 VoiceMemoModal()
-                                    .presentationDetents([.height(430), .large])
+                                    .presentationDetents([.height(450), .large])
                                 
                             }
                     }
@@ -269,6 +278,20 @@ struct NoteView: View {
         if let s = selectedFolder {
             return  notes.filter { note in
                 note.wrappedFolder == s.wrappedFolderNeme
+            }
+        }
+        
+        return nil
+    }
+    
+    private func getRecordingsInFolder()-> [Recording]? {
+        if selectedFolder == nil {
+            return Array(recordings)
+        }
+        
+        if let s = selectedFolder {
+            return  recordings.filter { recording in
+                recording.folder == s.wrappedFolderNeme
             }
         }
         
@@ -375,7 +398,7 @@ struct MemoGridItem :View {
             
             
         }
-        .background(convertNoteColorString(colorString: noteColorString))
+        .background(Color.convertNoteColorString(colorString: noteColorString))
         .cornerRadius(20)
         .padding(.horizontal, 5)
         .padding(.top, 5)
@@ -402,20 +425,7 @@ struct MemoGridItem :View {
         }
     }
     
-    private func convertNoteColorString(colorString: String)-> Color {
-        switch colorString {
-        case NoteColors.orange.rawValue:
-            return .primaryOrange
-        case NoteColors.green.rawValue:
-            return .primaryGreen
-        case NoteColors.purple.rawValue:
-            return .primaryPurple
-        case NoteColors.yellow.rawValue:
-            return . primaryYellow
-        default:
-            return .primaryOrange
-        }
-    }
+
 }
 
 
@@ -486,7 +496,7 @@ struct VocieMemoGridItem: View {
             
             
         }
-        .background(Color.primaryPurple)
+        .background(Color.getColorValue(colorString: voiceMemo.color ?? "primaryOrange"))
         .cornerRadius(20)
         .padding(.horizontal, 5)
         .padding(.top, 5)
