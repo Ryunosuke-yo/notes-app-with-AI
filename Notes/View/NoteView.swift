@@ -16,18 +16,15 @@ struct NoteView: View {
     @State private var selectedFolder: Folder?
     @EnvironmentObject private var editMode:EditMode
     @State private var selectedNoteId: UUID? = nil
-    @State private var isPlaying = false
     @State private var isNoteMode = true
     @State private var appMode: AppMode = .noteMode
+    @State var nowPlayingId: UUID?
+    @EnvironmentObject private var audioManager: AudioManager
     
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     @Environment (\.managedObjectContext) var moc
-    
-    @State var session: AVAudioSession!
-    @State var recorder :AVAudioRecorder!
-    @State var audioPlayer: AVAudioPlayer!
     
     
     let columns = [
@@ -143,18 +140,21 @@ struct NoteView: View {
                     } else {
                         LazyVGrid(columns: columns, spacing: 2) {
                             ForEach(getRecordingsInFolder() ?? []) { recording in
-                                VocieMemoGridItem(voiceMemo: recording) {
-                                    if let url = recording.url {
-                                        if isPlaying == true {
-                                            pauseRecording()
-                                            isPlaying = false
-                                        } else {
-                                            playRecordedAudio(url: url)
-                                            isPlaying = true
-                                        }
-                                        
+                                NavigationLink(destination: PlayAudioView()) {
+                                    VocieMemoGridItem(nowPlayingId : nowPlayingId,
+                                                      voiceMemo: recording) {
+    //                                    if let url = recording.url {
+    //                                        if audioManager.isPlaying == true {
+    //                                            audioManager.pauseRecording()
+    //                                        } else {
+    //                                            audioManager.startPlaying(url: url)
+    //                                        }
+    //
+    //                                    }
+//                                        nowPlayingId = recording.id
                                     }
                                 }
+
                                 
                             }
                         }
@@ -220,20 +220,7 @@ struct NoteView: View {
             
         }
         .onAppear {
-            do {
-                self.session = AVAudioSession.sharedInstance()
-                try self.session.setCategory(.playAndRecord, options: .defaultToSpeaker)
-                
-                
-                self.session.requestRecordPermission {
-                    status in
-                    if !status {
-                        print("permisiion denied")
-                    }
-                }
-            } catch {
-                print(error.localizedDescription, "when setting audio session")
-            }
+            audioManager.requestPermissionAndSetUp()
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -311,31 +298,6 @@ struct NoteView: View {
         }
         return .primaryWhite
     }
-    
-    func playRecordedAudio(url: URL) {
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer.volume = 1.0
-            audioPlayer.play()
-        } catch {
-            print(error.localizedDescription, "play")
-        }
-    }
-    
-    func pauseRecording() {
-        //        do {
-        //            audioPlayer = try AVAudioPlayer(contentsOf: url)
-        //            audioPlayer.pause()
-        //        } catch {
-        //            print(error.localizedDescription, "play")
-        //        }
-        
-        audioPlayer.pause()
-        
-    }
-    
-    
-    
 }
 
 
@@ -431,9 +393,12 @@ struct MemoGridItem :View {
 
 struct VocieMemoGridItem: View {
     @State var showDeleteAlert = false
+    var nowPlayingId: UUID?
     let voiceMemo: Recording
     let onTapRecording: ()-> Void
-    @State var thisIsPlaying = false
+    @State var isPlaying = false
+    
+    @EnvironmentObject private var audioManager: AudioManager
     @Environment (\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     var body: some View {
@@ -454,23 +419,19 @@ struct VocieMemoGridItem: View {
                     .foregroundColor(.primaryWhite)
                     .padding([.top], 5)
                 
-                
-                ActivityIndicatorView(isVisible: $thisIsPlaying, type: .equalizer(count: 7))
-                    .frame(width: 90, height: 100)
-                    .foregroundColor(.primaryWhite)
-                    .padding(.top, 20)
-                
-                if thisIsPlaying == false {
+                if isPlaying == true {
+                    ActivityIndicatorView(isVisible: $isPlaying, type: .equalizer(count: 7))
+                        .frame(width: 90, height: 100)
+                        .foregroundColor(.primaryWhite)
+                        .padding(.top, 20)
+                }
+                if isPlaying == false {
                     Image(systemName: "waveform")
                         .resizable()
                         .foregroundColor(Color.primaryWhite)
                         .frame(width: 90, height: 100)
                         .padding(.vertical, 10)
                 }
-            }
-            .onTapGesture {
-                onTapRecording()
-                thisIsPlaying.toggle()
             }
             HStack {
                 Spacer()
@@ -502,6 +463,19 @@ struct VocieMemoGridItem: View {
         .padding(.top, 5)
         
         
+    }
+    
+    private func handlePlyaing() {
+        if isPlaying == true {
+            audioManager.stopPlaying()
+            isPlaying.toggle()
+        } else {
+            if let url = voiceMemo.url {
+                audioManager.startPlaying(url: url)
+                isPlaying.toggle()
+            }
+            
+        }
     }
     
     private func deleteRecording(recording: Recording) {

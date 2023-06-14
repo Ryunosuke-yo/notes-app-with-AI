@@ -18,6 +18,7 @@ struct NotesApp: App {
             ContentView()
                 .environment(\.managedObjectContext, dataController.container.viewContext)
                 .environmentObject(EditMode())
+                .environmentObject(AudioManager())
         }
     }
 }

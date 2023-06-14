@@ -11,6 +11,7 @@
 		2B0559732A25EE4F000FCDB7 /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0559722A25EE4F000FCDB7 /* Loading.swift */; };
 		2B0559762A25F158000FCDB7 /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 2B0559752A25F158000FCDB7 /* ActivityIndicatorView */; };
 		2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B25827D2A023D7A00CE3BC6 /* ChatView.swift */; };
+		2B2CF0F72A39A2BF00A2F280 /* PlayAudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */; };
 		2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */; };
 		2B2FC8812A1B1FC200CBA7B0 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */; };
 		2B5326F12A02DE51006D297F /* FolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5326F02A02DE51006D297F /* FolderView.swift */; };
@@ -31,6 +32,7 @@
 		2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0D2A08CB44007532FC /* FolderModal.swift */; };
 		2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0F2A08D6CA007532FC /* UIScreen.swift */; };
 		2BC0D5F52A2C8120005272D6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC0D5F42A2C8120005272D6 /* AVFoundation.framework */; };
+		2BC5738A2A382DCB008D59A2 /* AudoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC573892A382DCB008D59A2 /* AudoManager.swift */; };
 		2BC772D82A1F645C001E4C44 /* EditMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC772D72A1F645C001E4C44 /* EditMode.swift */; };
 		2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */; };
 		2BFA673C2A1D95E0008A2460 /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA67382A1D95E0008A2460 /* Folder+CoreDataClass.swift */; };
@@ -45,6 +47,7 @@
 		2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponse.swift; sourceTree = "<group>"; };
 		2B0559722A25EE4F000FCDB7 /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
 		2B25827D2A023D7A00CE3BC6 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAudioView.swift; sourceTree = "<group>"; };
 		2B2FC87E2A1B1CCF00CBA7B0 /* Note.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Note.xcdatamodel; sourceTree = "<group>"; };
 		2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		2B5326F02A02DE51006D297F /* FolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderView.swift; sourceTree = "<group>"; };
@@ -67,6 +70,7 @@
 		2BBD9D0D2A08CB44007532FC /* FolderModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModal.swift; sourceTree = "<group>"; };
 		2BBD9D0F2A08D6CA007532FC /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
 		2BC0D5F42A2C8120005272D6 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		2BC573892A382DCB008D59A2 /* AudoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudoManager.swift; sourceTree = "<group>"; };
 		2BC772D72A1F645C001E4C44 /* EditMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMode.swift; sourceTree = "<group>"; };
 		2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMemoModal.swift; sourceTree = "<group>"; };
 		2BFA67382A1D95E0008A2460 /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Folder+CoreDataClass.swift"; path = "Notes/Folder+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -102,6 +106,7 @@
 				2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */,
 				2BC772D72A1F645C001E4C44 /* EditMode.swift */,
 				2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */,
+				2BC573892A382DCB008D59A2 /* AudoManager.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -178,6 +183,7 @@
 				2BBD9D0D2A08CB44007532FC /* FolderModal.swift */,
 				2B86206E2A183CD1004013DD /* DynamicHeightTextEditor.swift */,
 				2BABADFD2A2010D300A40041 /* SeacrhView.swift */,
+				2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -290,8 +296,10 @@
 				2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */,
 				2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */,
 				2B74065F29FF162200B99FFA /* NotesApp.swift in Sources */,
+				2BC5738A2A382DCB008D59A2 /* AudoManager.swift in Sources */,
 				2BFA673D2A1D95E0008A2460 /* Folder+CoreDataProperties.swift in Sources */,
 				2B8620722A184422004013DD /* LeftRight.swift in Sources */,
+				2B2CF0F72A39A2BF00A2F280 /* PlayAudioView.swift in Sources */,
 				2B05596E2A25CA03000FCDB7 /* ChatResponse.swift in Sources */,
 				2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */,
 				2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */,

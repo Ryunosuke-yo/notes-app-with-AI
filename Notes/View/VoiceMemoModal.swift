@@ -16,7 +16,7 @@ struct VoiceMemoModal: View {
     @State private var folder = ""
     @State private var minutes = 0
     @State private var seconds = 0
-    @State private var fileUrl: URL?
+//    @State private var fileUrl: URL?
     @State private var selectedFolder: Folder?
     @State private var recodingComplted = false
     @State private var selectedColor = Color.primaryOrange
@@ -25,9 +25,7 @@ struct VoiceMemoModal: View {
     
     
     @State private var isRecording = false
-    @State var session: AVAudioSession!
-    @State var recorder :AVAudioRecorder!
-    @State var audioPlayer: AVPlayer!
+    @EnvironmentObject private var audioManager: AudioManager
     
     let colorSelection: [Color] = [
         .primaryGreen,
@@ -38,6 +36,7 @@ struct VoiceMemoModal: View {
     
     var body: some View {
         let timeString = "\(minutes < 10 ? "0\(minutes)" : String(minutes)):\(seconds < 10 ? "0\(seconds)" : String(seconds))"
+        let title = titleValue == "" ? "New Vocie memo\(recordings.count + 1)" : titleValue
         ZStack {
             Color.primaryGray.ignoresSafeArea()
             VStack(spacing: 0) {
@@ -89,11 +88,12 @@ struct VoiceMemoModal: View {
                     .frame(width: 90, height: 90)
                     .padding(.top, 20)
                     .onTapGesture {
-                        
                         if isRecording {
-                            recorder.stop()
+                            audioManager.stopRecording()
+                           
                         } else {
-                            startRecording()
+                            audioManager.startRecording(title: title)
+                            recodingComplted = true
                         }
                         isRecording.toggle()
                         
@@ -172,12 +172,14 @@ struct VoiceMemoModal: View {
             
         }
         .onDisappear {
-            isRecording = false
+            if isRecording == true {
+                audioManager.stopRecording()
+            }
             if recodingComplted {
                 saveRecording(timeString: timeString)
                 
             }
-            
+            isRecording = false
         }
         
         
@@ -192,27 +194,7 @@ struct VoiceMemoModal: View {
         return .secondaryWhite
     }
     
-    
-    private func startRecording() {
-        do {
-            let title = titleValue == "" ? "New Vocie memo\(recordings.count + 1)" : titleValue
-            let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let fileName = url.appendingPathComponent("\(title).m4a")
-            fileUrl = fileName
-            let settings = [
-                AVFormatIDKey: Int(kAudioFormatLinearPCM),
-                AVLinearPCMBitDepthKey: 24,
-                AVSampleRateKey: 48000,
-                AVNumberOfChannelsKey: 2,
-                AVEncoderBitRateKey: 128000,
-                AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue]
-            recorder = try AVAudioRecorder(url: fileName, settings: settings)
-            recorder.record()
-            recodingComplted = true
-        } catch {
-            print(error.localizedDescription, "when record")
-        }
-    }
+
     
     
     func saveRecording(timeString: String) {
@@ -220,7 +202,7 @@ struct VoiceMemoModal: View {
         let newRecoding = Recording(context: moc)
         newRecoding.title = title
         newRecoding.folder = "folder"
-        newRecoding.url = fileUrl
+        newRecoding.url = audioManager.fileUrl
         newRecoding.id = UUID()
         newRecoding.folder = selectedFolder == nil ? "" : selectedFolder?.wrappedFolderNeme
         newRecoding.time = timeString
@@ -233,9 +215,6 @@ struct VoiceMemoModal: View {
         }
         
     }
-    
-    
-    
 }
 
 //struct VoiceMemoModal_Previews: PreviewProvider {

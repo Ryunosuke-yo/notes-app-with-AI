@@ -35,12 +35,15 @@ struct ChatView: View {
                             .resizable()
                             .frame(width: 10, height: 20)
                             .foregroundColor(.primaryWhite)
-                            .onTapGesture {
-                                selectedTab = 1
-                            }
-                            .padding(.trailing, 20)
+                           
+                            .padding([ .trailing, .leading])
+
                     }
-                    .frame(width: 50)
+                    .frame(width: 30)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedTab = 1
+                    }
                    
                        
                 Spacer()

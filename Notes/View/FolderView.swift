@@ -77,14 +77,19 @@ struct FolderView: View {
         }
         .toolbar {
             ToolbarItem (placement: .navigationBarLeading) {
-                Image(systemName: "chevron.left")
-                    .resizable()
-                    .frame(width: 10, height: 20)
-                    .foregroundColor(.primaryWhite)
-                    .onTapGesture {
-                        print("pressed")
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
+                HStack {
+                    Image(systemName: "chevron.left")
+                        .resizable()
+                        .frame(width: 10, height: 20)
+                        .foregroundColor(.primaryWhite)
+                        .padding([.leading, .trailing])
+                       
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+               
             }
             ToolbarItem(placement: .principal) {
                 

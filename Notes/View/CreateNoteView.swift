@@ -27,6 +27,7 @@ struct CreateNoteView: View {
     @Binding var noteId: UUID?
     @StateObject var sheetManager = SheetManager()
     @State var isSharePresented = false
+    @State var showDeleteAlert = false
     
     let columns = [
         GridItem(.flexible()),
@@ -81,7 +82,7 @@ struct CreateNoteView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack(spacing: 20) {
+                    HStack(spacing: 30) {
                         Circle()
                             .fill(selectedColor)
                             .frame(width: 20, height: 20)
@@ -99,9 +100,17 @@ struct CreateNoteView: View {
                                 createTxtFile()
                             }
                         
+                        if editMode.editMode == true {
+                            Image(systemName:  "trash")
+                                .resizable()
+                                .frame(width: 20, height: 23)
+                                .foregroundColor(.recordRed)
+                                .onTapGesture {
+                                    showDeleteAlert = true
+                                }
+                        }
                         
                     }
-                    .padding([.leading, .top], 20)
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -110,18 +119,19 @@ struct CreateNoteView: View {
                             .resizable()
                             .frame(width: 10, height: 20)
                             .foregroundColor(.primaryWhite)
-                            .simultaneousGesture(TapGesture().onEnded {
-                                if titleValue == "" && contentValue == "" {
-                                    presentationMode.wrappedValue.dismiss()
-                                    return
-                                }
-                                saveNote()
-                                
-                            })
-                        
-                        
+                            .padding([.leading, .trailing])
                         
                     }
+
+                    .contentShape(Rectangle())
+                    .simultaneousGesture(TapGesture().onEnded {
+                        if titleValue == "" && contentValue == "" {
+                            presentationMode.wrappedValue.dismiss()
+                            return
+                        }
+                        saveNote()
+                        
+                    })
                     
                 }
                 
@@ -130,16 +140,27 @@ struct CreateNoteView: View {
                         .foregroundColor(.secondaryWhite)
                         .tracking(1)
                         .font(Font.mainFont(20))
-                        .padding([ .top], 25)
                         .onTapGesture {
                             showFolderModal.toggle()
                         }
                         .sheet(isPresented: $showFolderModal) {
                             FolderModal(folderValue: $folderValue)
                         }
+                        .padding([.leading], 10)
                     
                 }
             }
+            
+        }
+        .alert("Sure to delete?", isPresented: $showDeleteAlert) {
+            Button("delete", role: .destructive) {
+                if let id = noteId {
+                    deleteNote(noteId: id)
+                    presentationMode.wrappedValue.dismiss()
+                }
+               
+            }
+            Button("Cancel", role:.cancel) {}
             
         }
         .sheet(isPresented: $showColorSheet) {
@@ -204,69 +225,48 @@ struct CreateNoteView: View {
                 editNote.color = Color.getColorString(color: selectedColor)
             }
             
-            do {
-                try moc.save()
-            } catch {
-                print("An error occurred: \(error)")
-            }
-            
+            saveContext()
             presentationMode.wrappedValue.dismiss()
             return
             
         }
-        
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let timestamp = formatter.string(from: date)
-        
-        let newNote = Note(context: moc)
-        newNote.id = UUID()
-        newNote.title = titleValue
-        newNote.timestamp = timestamp
-        newNote.contents = contentValue
-        newNote.folder = folderValue
-        newNote.color = Color.getColorString(color: selectedColor)
-        
+            
+            let date = Date()
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let timestamp = formatter.string(from: date)
+            
+            let newNote = Note(context: moc)
+            newNote.id = UUID()
+            newNote.title = titleValue
+            newNote.timestamp = timestamp
+            newNote.contents = contentValue
+            newNote.folder = folderValue
+            newNote.color = Color.getColorString(color: selectedColor)
+            
+            do {
+                try moc.save()
+                presentationMode.wrappedValue.dismiss()
+            } catch {
+                print("An error occurred: \(error)")
+            }
+        }
+    
+    
+    
+    func deleteNote(noteId: UUID) {
+        guard let noteToDelete = notes.first(where: {$0.id == noteId}) else {return}
+        moc.delete(noteToDelete)
+        saveContext()
+    }
+    
+    func saveContext() {
         do {
             try moc.save()
-            presentationMode.wrappedValue.dismiss()
         } catch {
             print("An error occurred: \(error)")
         }
     }
-    
-    
-//    private func getColorString(color: Color)-> String {
-//        switch selectedColor {
-//        case .primaryOrange :
-//            return NoteColors.orange.rawValue
-//        case .primaryPurple :
-//            return NoteColors.purple.rawValue
-//        case .primaryYellow :
-//            return NoteColors.yellow.rawValue
-//        case .primaryGreen :
-//            return NoteColors.green.rawValue
-//        default:
-//            return NoteColors.orange.rawValue
-//        }
-//    }
-//
-//    private func getColorValue(colorString: String)-> Color {
-//        switch colorString {
-//        case NoteColors.orange.rawValue:
-//            return .primaryOrange
-//        case NoteColors.green.rawValue:
-//            return .primaryGreen
-//        case NoteColors.purple.rawValue:
-//            return .primaryPurple
-//        case NoteColors.yellow.rawValue:
-//            return . primaryYellow
-//        default:
-//            return .primaryOrange
-//        }
-//    }
-    
 }
 
 
