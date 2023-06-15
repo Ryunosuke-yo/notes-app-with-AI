@@ -38,7 +38,7 @@ struct SeacrhView: View {
                         )
                         .padding(5)
                         .onSubmit {
-                           
+                            
                         }
                     
                     
@@ -51,37 +51,71 @@ struct SeacrhView: View {
                 ScrollView {
                     if searchText != "" {
                         VStack {
+                            HStack {
+                                Text("Notes")
+                                    .font(Font.mainFont(20))
+                                    .foregroundColor(.secondaryWhite)
+                                    .padding([.top, .leading], 10)
+                                    .padding([.bottom], 5)
+                                Spacer()
+                            }
+                            
+                            
                             ForEach(notes) { note in
                                 if note.wrappedTitle.contains(searchText) || note.wrappedContents.contains(searchText) {
                                     NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
-                                        SearchResults(note: note)
-                                            
+                                        SearchNoteResults(note: note)
+                                        
                                     }
                                     .simultaneousGesture(TapGesture().onEnded {
                                         selectedNoteId = note.id
                                         editMode.editMode = true
                                     })
-                                      
+                                    
                                     Divider()
                                         .frame(height: 1)
                                         .overlay(Color.primaryGray)
+                                } else {
+                                    NoMachesView()
                                 }
+                                
+                            }
+                            
+                            HStack {
+                                Text("Recordings")
+                                    .font(Font.mainFont(20))
+                                    .foregroundColor(.secondaryWhite)
+                                    .padding([.top, .leading], 10)
+                                    .padding([.bottom], 5)
+                                Spacer()
+                            }
+                            
+                            ForEach(recordings) { recording in
+                                if  recording.title != nil && recording.title!.contains(searchText)  {
+                                    NavigationLink(destination: PlayAudioView(recording: recording)) {
+                                        SearchRecordingResults(recording: recording)
+                                        
+                                    }
+                                    
+                                    Divider()
+                                        .frame(height: 1)
+                                        .overlay(Color.primaryGray)
+                                    
+                                } else {
+                                    NoMachesView()
+                                }
+                                
                             }
                         }
                     }
                 }
-                
-                
-                
-                
-                
                 
                 Spacer()
             }
             .padding([.top], 10)
             
             
-           
+            
             
             
         }
@@ -93,7 +127,7 @@ struct SeacrhView: View {
                         .frame(width: 10, height: 20)
                         .foregroundColor(.primaryWhite)
                         .padding([.leading, .trailing])
-                       
+                    
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -115,7 +149,23 @@ struct SeacrhView: View {
     }
 }
 
-struct SearchResults: View {
+struct NoMachesView: View {
+    var body: some View {
+        HStack {
+            Text("No matches")
+                .font(Font.mainFont(15))
+                .foregroundColor(.secondaryWhite)
+                .padding([.top, .leading], 10)
+                .padding([.bottom], 5)
+            
+            Spacer()
+        }
+    }
+    
+    
+}
+
+struct SearchNoteResults: View {
     let note: Note
     var body: some View {
         VStack(spacing: 3) {
@@ -131,14 +181,42 @@ struct SearchResults: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(1)
                 .tracking(0.5)
-           
-               
+            
+            
             
         }
         .padding(.trailing, 20)
         .padding(.leading, 25)
         .padding(.top, 10)
         .padding(.bottom, 3)
+    }
+}
+
+struct SearchRecordingResults: View {
+    let recording: Recording
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(recording.title ?? "")
+                .font(Font.mainFont(20))
+                .foregroundColor(.primaryWhite)
+                .bold()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(1)
+                .tracking(1)
+            Text(recording.time ?? "")
+                .foregroundColor(.primaryWhite)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(1)
+                .tracking(0.5)
+            
+            
+            
+        }
+        .padding(.trailing, 20)
+        .padding(.leading, 25)
+        .padding(.top, 10)
+        .padding(.bottom, 3)
+        
     }
 }
 

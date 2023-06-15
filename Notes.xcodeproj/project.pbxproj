@@ -28,6 +28,8 @@
 		2BA4D34329FF30F500BA22FF /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA4D34229FF30F500BA22FF /* UIColor.swift */; };
 		2BA4D34629FF360700BA22FF /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA4D34529FF360700BA22FF /* Color.swift */; };
 		2BABADFE2A2010D300A40041 /* SeacrhView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BABADFD2A2010D300A40041 /* SeacrhView.swift */; };
+		2BB71A3F2A3AED850081F855 /* ColorSheetModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB71A3E2A3AED850081F855 /* ColorSheetModal.swift */; };
+		2BB71A412A3AF0710081F855 /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB71A402A3AF0710081F855 /* ActivityViewController.swift */; };
 		2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0B2A08BD45007532FC /* CreateNoteView.swift */; };
 		2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0D2A08CB44007532FC /* FolderModal.swift */; };
 		2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBD9D0F2A08D6CA007532FC /* UIScreen.swift */; };
@@ -66,6 +68,8 @@
 		2BA4D34229FF30F500BA22FF /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		2BA4D34529FF360700BA22FF /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		2BABADFD2A2010D300A40041 /* SeacrhView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeacrhView.swift; sourceTree = "<group>"; };
+		2BB71A3E2A3AED850081F855 /* ColorSheetModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSheetModal.swift; sourceTree = "<group>"; };
+		2BB71A402A3AF0710081F855 /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		2BBD9D0B2A08BD45007532FC /* CreateNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNoteView.swift; sourceTree = "<group>"; };
 		2BBD9D0D2A08CB44007532FC /* FolderModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModal.swift; sourceTree = "<group>"; };
 		2BBD9D0F2A08D6CA007532FC /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
@@ -184,6 +188,8 @@
 				2B86206E2A183CD1004013DD /* DynamicHeightTextEditor.swift */,
 				2BABADFD2A2010D300A40041 /* SeacrhView.swift */,
 				2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */,
+				2BB71A3E2A3AED850081F855 /* ColorSheetModal.swift */,
+				2BB71A402A3AF0710081F855 /* ActivityViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -283,6 +289,7 @@
 				2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */,
 				2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */,
 				2BC772D82A1F645C001E4C44 /* EditMode.swift in Sources */,
+				2BB71A3F2A3AED850081F855 /* ColorSheetModal.swift in Sources */,
 				2BFB311B2A27255E000F17D1 /* NoteColors.swift in Sources */,
 				2B5326F12A02DE51006D297F /* FolderView.swift in Sources */,
 				2BFA67412A1DA7B6008A2460 /* View.swift in Sources */,
@@ -291,6 +298,7 @@
 				2BABADFE2A2010D300A40041 /* SeacrhView.swift in Sources */,
 				2B2FC8812A1B1FC200CBA7B0 /* DataController.swift in Sources */,
 				2B86206F2A183CD1004013DD /* DynamicHeightTextEditor.swift in Sources */,
+				2BB71A412A3AF0710081F855 /* ActivityViewController.swift in Sources */,
 				2BFA673F2A1D95E0008A2460 /* Note+CoreDataProperties.swift in Sources */,
 				2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */,
 				2BBD9D102A08D6CA007532FC /* UIScreen.swift in Sources */,

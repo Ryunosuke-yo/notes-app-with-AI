@@ -140,7 +140,7 @@ struct NoteView: View {
                     } else {
                         LazyVGrid(columns: columns, spacing: 2) {
                             ForEach(getRecordingsInFolder() ?? []) { recording in
-                                NavigationLink(destination: PlayAudioView()) {
+                                NavigationLink(destination: PlayAudioView(recording: recording)) {
                                     VocieMemoGridItem(nowPlayingId : nowPlayingId,
                                                       voiceMemo: recording) {
     //                                    if let url = recording.url {

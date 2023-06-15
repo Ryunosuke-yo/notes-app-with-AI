@@ -35,26 +35,26 @@ struct ChatView: View {
                             .resizable()
                             .frame(width: 10, height: 20)
                             .foregroundColor(.primaryWhite)
-                           
+                        
                             .padding([ .trailing, .leading])
-
+                        
                     }
                     .frame(width: 30)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         selectedTab = 1
                     }
-                   
-                       
-                Spacer()
+                    
+                    
+                    Spacer()
                     Text("Chat")
                         .font(Font.mainFont(32))
                         .tracking(4)
                         .foregroundColor(Color.primaryWhite)
                         .bold()
                     
-                Spacer()
-                
+                    Spacer()
+                    
                     Text("Clear")
                         .font(Font.mainFont(13))
                         .tracking(1.5)
@@ -67,62 +67,57 @@ struct ChatView: View {
                     
                 }
                 .padding([.leading, .trailing], 20)
-                    ScrollViewReader { proxy in
-                        ScrollView {
-                            if chats.count == 0 {
-                                Text("No chats")
-                                    .font(Font.mainFont(20))
-                                    .tracking(1)
-                                    .foregroundColor(.primaryGray)
-                                    .padding(.top, 10)
-                            } else {
-                                LazyVStack {
-                                    ForEach(chats, id: \.self) {
-                                        chat in
-                                        ChatBubble(leftRight: chat.user == true ? .right : .left, content: chat.content ?? "Error loading message")
-                                    }
-                                    
-                                   
-                                    if loadingState == .loading {
-                                        ActivityIndicatorView(isVisible: $isLoadingForIndicator, type: .rotatingDots(count: 5))
-                                            .frame(width: 50.0, height: 50.0)
-                                            .foregroundColor(.primaryOrange)
-
-                                    }
-    
-                                    if loadingState == .error {
-                                        Text("Error happend")
-                                            .font(Font.mainFont(12))
-                                            .foregroundColor(.primaryOrange)
-                                            .tracking(1)
-
-                                    }
-                                    Color.clear
-                                        .id(chats.count)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        if chats.count == 0 {
+                            Text("No chats")
+                                .font(Font.mainFont(20))
+                                .tracking(1)
+                                .foregroundColor(.primaryGray)
+                                .padding(.top, 10)
+                        } else {
+                            LazyVStack {
+                                ForEach(chats, id: \.self) {
+                                    chat in
+                                    ChatBubble(leftRight: chat.user == true ? .right : .left, content: chat.content ?? "Error loading message")
                                 }
+                                
+                                
+                                if loadingState == .loading {
+                                    ActivityIndicatorView(isVisible: $isLoadingForIndicator, type: .rotatingDots(count: 5))
+                                        .frame(width: 50.0, height: 50.0)
+                                        .foregroundColor(.primaryOrange)
+                                    
+                                }
+                                
+                                if loadingState == .error {
+                                    Text("Error happend")
+                                        .font(Font.mainFont(12))
+                                        .foregroundColor(.primaryOrange)
+                                        .tracking(1)
+                                    
+                                }
+                                Color.clear
+                                    .id(chats.count)
                             }
-                            
                         }
                         
-                        .scrollIndicators(.hidden)
-                        .onTapGesture {
-                            focused = false
-                        }
-                        .onChange(of: chats.count) { _ in
-                            withAnimation {
-                                proxy.scrollTo(chats.count)
-                            }
-                         
-                              
-                        }
-                        .onAppear {
+                    }
+                    
+                    .scrollIndicators(.hidden)
+                    .onTapGesture {
+                        focused = false
+                    }
+                    .onChange(of: chats.count) { _ in
+                        withAnimation {
                             proxy.scrollTo(chats.count)
                         }
                         
                         
-                      
-                        
-                    
+                    }
+                    .onAppear {
+                        proxy.scrollTo(chats.count)
+                    }
                     
                 }
                 
@@ -160,9 +155,9 @@ struct ChatView: View {
                     if chats.count != 0 {
                         deletelAllChats()
                     }
-                  
+                    
                 }
-               
+                
             }
             
         }
@@ -235,7 +230,7 @@ struct ChatView: View {
                 print(error)
                 loadingState = .error
             }
-          
+            
         }
         task.resume()
     }
@@ -251,7 +246,7 @@ struct ChatView: View {
         } catch {
             print(error.localizedDescription, "when deletinf history")
         }
-       
+        
     }
     
 }

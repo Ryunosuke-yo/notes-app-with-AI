@@ -164,16 +164,9 @@ struct CreateNoteView: View {
             
         }
         .sheet(isPresented: $showColorSheet) {
-            LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(colorSelection, id: \.self) { color in
-                    Circle()
-                        .fill(color)
-                        .frame(width: 40, height: 40)
-                        .onTapGesture {
-                            selectedColor = color
-                            showColorSheet.toggle()
-                        }
-                }
+            ColorSheetModal { color in
+                selectedColor = color
+                showColorSheet.toggle()
             }
             .presentationDetents([.height(150)])
             .presentationBackground(Color.primaryGray)
@@ -270,15 +263,7 @@ struct CreateNoteView: View {
 }
 
 
-struct ActivityViewController: UIViewControllerRepresentable {
-    var activityItems: [Any]
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-    }
-    
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
-    }
-}
+
 
 //struct CreateNoteView_Previews: PreviewProvider {
 //    static var previews: some View {
