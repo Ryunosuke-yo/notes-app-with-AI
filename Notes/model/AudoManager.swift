@@ -24,6 +24,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func requestPermissionAndSetUp() {
         do {
             try self.session.setCategory(.playAndRecord, options: .defaultToSpeaker)
+            try self.session.setActive(true)
             
             self.session.requestRecordPermission {
                 status in
@@ -32,6 +33,8 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 } else {
                     self.approved = true
                 }
+                
+                
             }
         } catch {
             print(error.localizedDescription, "when")
@@ -42,13 +45,14 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Need permisiion for mic")
             return
         }
+        print(url, "play")
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer.delegate = self
-            audioPlayer.volume = 1.0
-            audioPlayer.play()
-            isPlaying = true
+                audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer.delegate = self
+                audioPlayer.volume = 1.0
+                audioPlayer.play()
         } catch {
+            print("errrrr")
             print(error.localizedDescription, "play")
         }
     }
@@ -58,8 +62,9 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Need permisiion for mic")
             return
         }
+        
         audioPlayer.pause()
-        isPlaying = false
+       
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
@@ -76,6 +81,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         do {
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileName = url.appendingPathComponent("\(title).m4a")
+            print(fileName, "original")
             fileUrl = fileName
             let settings = [
                 AVFormatIDKey: Int(kAudioFormatLinearPCM),

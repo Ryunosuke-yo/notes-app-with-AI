@@ -8,7 +8,7 @@
 
 import SwiftUI
 import AVKit
-import ActivityIndicatorView
+
 
 struct NoteView: View {
     @State private var seactText: String = ""
@@ -18,8 +18,8 @@ struct NoteView: View {
     @State private var selectedNoteId: UUID? = nil
     @State private var isNoteMode = true
     @State private var appMode: AppMode = .noteMode
-    @State var nowPlayingId: UUID?
     @EnvironmentObject private var audioManager: AudioManager
+    
     
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
@@ -53,7 +53,7 @@ struct NoteView: View {
                         .overlay(Color.secondaryWhite)
                         .frame(height: 10)
                     Spacer()
-                  
+                    
                     Image(systemName: "mic.circle")
                         .resizable()
                         .foregroundColor(appMode == .voiceMemo ? .primaryOrange : .secondaryWhite)
@@ -123,17 +123,17 @@ struct NoteView: View {
                                     note in
                                     NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
                                         MemoGridItem(note: note)
-    
+                                        
                                     }
                                     .simultaneousGesture(TapGesture().onEnded {
                                         selectedNoteId = note.id
                                         editMode.editMode = true
-    
+                                        
                                     })
-    
+                                    
                                 }
-    
-    
+                                
+                                
                             }
                             .padding(.bottom, 80)
                         }
@@ -141,25 +141,14 @@ struct NoteView: View {
                         LazyVGrid(columns: columns, spacing: 2) {
                             ForEach(getRecordingsInFolder() ?? []) { recording in
                                 NavigationLink(destination: PlayAudioView(recording: recording)) {
-                                    VocieMemoGridItem(nowPlayingId : nowPlayingId,
-                                                      voiceMemo: recording) {
-    //                                    if let url = recording.url {
-    //                                        if audioManager.isPlaying == true {
-    //                                            audioManager.pauseRecording()
-    //                                        } else {
-    //                                            audioManager.startPlaying(url: url)
-    //                                        }
-    //
-    //                                    }
-//                                        nowPlayingId = recording.id
-                                    }
+                                    VocieMemoGridItem(voiceMemo: recording)
                                 }
-
+                                
                                 
                             }
                         }
                     }
-
+                    
                 }
                 .onAppear {
                     if folders.count == 0 {
@@ -387,15 +376,13 @@ struct MemoGridItem :View {
         }
     }
     
-
+    
 }
 
 
 struct VocieMemoGridItem: View {
     @State var showDeleteAlert = false
-    var nowPlayingId: UUID?
     let voiceMemo: Recording
-    let onTapRecording: ()-> Void
     @State var isPlaying = false
     
     @EnvironmentObject private var audioManager: AudioManager
@@ -413,25 +400,18 @@ struct VocieMemoGridItem: View {
                     .padding(.top, 25)
                     .padding(.leading, 10)
                 
+                Image(systemName: "waveform")
+                    .resizable()
+                    .foregroundColor(Color.primaryWhite)
+                    .frame(width: 90, height: 100)
+                    .padding(.vertical, 10)
+                
                 Text(voiceMemo.time ?? "Error")
                     .font(Font.mainFont(13))
                     .tracking(0.3)
                     .foregroundColor(.primaryWhite)
                     .padding([.top], 5)
                 
-                if isPlaying == true {
-                    ActivityIndicatorView(isVisible: $isPlaying, type: .equalizer(count: 7))
-                        .frame(width: 90, height: 100)
-                        .foregroundColor(.primaryWhite)
-                        .padding(.top, 20)
-                }
-                if isPlaying == false {
-                    Image(systemName: "waveform")
-                        .resizable()
-                        .foregroundColor(Color.primaryWhite)
-                        .frame(width: 90, height: 100)
-                        .padding(.vertical, 10)
-                }
             }
             HStack {
                 Spacer()
@@ -465,22 +445,19 @@ struct VocieMemoGridItem: View {
         
     }
     
-    private func handlePlyaing() {
-        if isPlaying == true {
-            audioManager.stopPlaying()
-            isPlaying.toggle()
-        } else {
-            if let url = voiceMemo.url {
-                audioManager.startPlaying(url: url)
-                isPlaying.toggle()
-            }
-            
-        }
-    }
+    
     
     private func deleteRecording(recording: Recording) {
         moc.delete(recording)
         saveContext()
+        if let removeUrl = recording.url {
+            do {
+                try FileManager.default.removeItem(at: removeUrl)
+            } catch {
+                print(error.localizedDescription, "when deleting txt")
+            }
+            
+        }
     }
     
     private func saveContext() {

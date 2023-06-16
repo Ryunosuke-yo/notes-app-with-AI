@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import ActivityIndicatorView
+
 
 struct PlayAudioView: View {
     @State var titleValue = ""
@@ -13,11 +15,17 @@ struct PlayAudioView: View {
     @State var showColorSheet = false
     @State var showFolderModal = false
     @State var folderValue = ""
+    @State var isSharePresented = false
+    @StateObject var sheetManager = SheetManager()
+    @State var showDeleteAlert = false
+    @State var indicator = true
     var recording: Recording
+    @EnvironmentObject private var audioManager: AudioManager
     
     
     @Environment(\.presentationMode) var presentationMode
     @Environment (\.managedObjectContext) var moc
+    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     
     
     
@@ -37,12 +45,19 @@ struct PlayAudioView: View {
                 
                 Spacer()
                     .frame(height: 50)
-                Image(systemName: "waveform")
-                    .resizable()
-                    .foregroundColor(selectedColor)
-                    .frame(width: 130, height: 140)
-                    .foregroundColor(.primaryWhite)
-                    .padding(.top, 20)
+                if audioManager.isPlaying {
+                    ActivityIndicatorView(isVisible: $indicator, type: .equalizer(count: 7))
+                        .foregroundColor(selectedColor)
+                        .frame(width: 130, height: 140)
+                        .padding(.top, 20)
+                } else {
+                    Image(systemName: "waveform")
+                        .resizable()
+                        .foregroundColor(selectedColor)
+                        .frame(width: 130, height: 140)
+                        .padding(.top, 20)
+                }
+                
                 
                 Text(recording.time ?? "")
                     .font(Font.mainFont(20))
@@ -51,12 +66,32 @@ struct PlayAudioView: View {
                 
                 Spacer()
                     .frame(height: 20)
-                Image(systemName: "play.circle")
-                    .resizable()
-                    .foregroundColor(selectedColor)
-                    .frame(width: 80, height: 80)
-                    .foregroundColor(.primaryWhite)
-                    .padding(.top, 20)
+                
+                if audioManager.isPlaying {
+                    Image(systemName: "stop.circle")
+                        .resizable()
+                        .foregroundColor(selectedColor)
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(.primaryWhite)
+                        .padding(.top, 20)
+                        .onTapGesture {
+                            audioManager.stopPlaying()
+                            audioManager.isPlaying.toggle()
+                        }
+                } else {
+                    Image(systemName: "play.circle")
+                        .resizable()
+                        .foregroundColor(selectedColor)
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(.primaryWhite)
+                        .padding(.top, 20)
+                        .onTapGesture {
+                            if let url = recording.url {
+                                audioManager.startPlaying(url: url)
+                            }
+                            audioManager.isPlaying.toggle()
+                        }
+                }
                 Spacer()
             }
             
@@ -68,6 +103,14 @@ struct PlayAudioView: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Sure to delete?", isPresented: $showDeleteAlert) {
+            Button("delete", role: .destructive) {
+                deleteRecording()
+                
+            }
+            Button("Cancel", role:.cancel) {}
+            
+        }
         .sheet(isPresented: $showColorSheet) {
             ColorSheetModal { color in
                 selectedColor = color
@@ -77,6 +120,13 @@ struct PlayAudioView: View {
             .presentationBackground(Color.primaryGray)
             
         }
+        .sheet(isPresented: $isSharePresented, onDismiss: {
+        }, content: {
+            ActivityViewController(activityItems: [sheetManager.fileUrlState])
+                .presentationDetents([.fraction(0.7), .large])
+                .ignoresSafeArea()
+        })
+        
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 25) {
@@ -91,16 +141,17 @@ struct PlayAudioView: View {
                         .frame(width: 20, height: 25)
                         .foregroundColor(.primaryWhite)
                         .onTapGesture {
-                            //                            if titleValue == "" {
-                            //                                return
-                            //                            }
-                            //                            createTxtFile()
+                            sheetManager.fileUrlState = recording.url
+                            isSharePresented = true
                         }
                     
                     Image(systemName:  "trash")
                         .resizable()
                         .frame(width: 20, height: 23)
                         .foregroundColor(.recordRed)
+                        .onTapGesture {
+                            showDeleteAlert = true
+                        }
                     
                     
                 }
@@ -116,15 +167,14 @@ struct PlayAudioView: View {
                     
                 }
                 .contentShape(Rectangle())
-                .simultaneousGesture(TapGesture().onEnded {
-                    //                            if titleValue == "" && contentValue == "" {
-                    presentationMode.wrappedValue.dismiss()
-                    //                                return
-                    //                            }
-                    //                            saveNote()
-                    
-                })
-                
+                .onTapGesture {
+                    updateRecording()
+                    if audioManager.isPlaying {
+                        audioManager.stopPlaying()
+                        audioManager.isPlaying.toggle()
+                    }
+                   
+                }
             }
             
             ToolbarItem(placement: .principal) {
@@ -140,6 +190,46 @@ struct PlayAudioView: View {
                     }
                 
             }
+        }
+    }
+    
+    func updateRecording() {
+        if let index = recordings.firstIndex(of: recording) {
+            let recordingToEdit = recordings[index]
+            
+            recordingToEdit.title = titleValue
+            recordingToEdit.color = Color.getColorString(color: selectedColor)
+            recordingToEdit.folder = folderValue
+            
+            saveContext()
+            presentationMode.wrappedValue.dismiss()
+            return
+        }
+        
+    }
+    
+    func deleteRecording() {
+        moc.delete(recording)
+        saveContext()
+        presentationMode.wrappedValue.dismiss()
+        if let removeUrl = sheetManager.fileUrlState {
+            do {
+                try FileManager.default.removeItem(at: removeUrl)
+            } catch {
+                print(error.localizedDescription, "when deleting txt")
+            }
+            
+        } else {
+            print("null")
+        }
+    }
+    
+    
+    func saveContext() {
+        do {
+            try moc.save()
+        } catch {
+            print("An error occurred: \(error)")
         }
     }
 }

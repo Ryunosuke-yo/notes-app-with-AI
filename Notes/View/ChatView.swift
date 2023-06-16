@@ -8,6 +8,7 @@
 import SwiftUI
 import ActivityIndicatorView
 
+
 struct ChatView: View {
     @State private var textEditorHeight : CGFloat = 100
     @State var prompt = ""

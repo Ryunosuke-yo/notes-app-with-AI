@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		2B05596E2A25CA03000FCDB7 /* ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */; };
 		2B0559732A25EE4F000FCDB7 /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0559722A25EE4F000FCDB7 /* Loading.swift */; };
-		2B0559762A25F158000FCDB7 /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 2B0559752A25F158000FCDB7 /* ActivityIndicatorView */; };
+		2B183AC92A3BF4E00037E36E /* SheetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B183AC82A3BF4E00037E36E /* SheetManager.swift */; };
 		2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B25827D2A023D7A00CE3BC6 /* ChatView.swift */; };
 		2B2CF0F72A39A2BF00A2F280 /* PlayAudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */; };
 		2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */; };
 		2B2FC8812A1B1FC200CBA7B0 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */; };
+		2B4DC2542A3C53B000F46413 /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 2B4DC2532A3C53B000F46413 /* ActivityIndicatorView */; };
 		2B5326F12A02DE51006D297F /* FolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5326F02A02DE51006D297F /* FolderView.swift */; };
 		2B74065F29FF162200B99FFA /* NotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74065E29FF162200B99FFA /* NotesApp.swift */; };
 		2B74066129FF162200B99FFA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74066029FF162200B99FFA /* ContentView.swift */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponse.swift; sourceTree = "<group>"; };
 		2B0559722A25EE4F000FCDB7 /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
+		2B183AC82A3BF4E00037E36E /* SheetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetManager.swift; sourceTree = "<group>"; };
 		2B25827D2A023D7A00CE3BC6 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAudioView.swift; sourceTree = "<group>"; };
 		2B2FC87E2A1B1CCF00CBA7B0 /* Note.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Note.xcdatamodel; sourceTree = "<group>"; };
@@ -91,7 +93,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B9FF2E12A2AC6690089CC08 /* AVKit.framework in Frameworks */,
-				2B0559762A25F158000FCDB7 /* ActivityIndicatorView in Frameworks */,
+				2B4DC2542A3C53B000F46413 /* ActivityIndicatorView in Frameworks */,
 				2BC0D5F52A2C8120005272D6 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -190,6 +192,7 @@
 				2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */,
 				2BB71A3E2A3AED850081F855 /* ColorSheetModal.swift */,
 				2BB71A402A3AF0710081F855 /* ActivityViewController.swift */,
+				2B183AC82A3BF4E00037E36E /* SheetManager.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -223,7 +226,7 @@
 			);
 			name = Notes;
 			packageProductDependencies = (
-				2B0559752A25F158000FCDB7 /* ActivityIndicatorView */,
+				2B4DC2532A3C53B000F46413 /* ActivityIndicatorView */,
 			);
 			productName = Notes;
 			productReference = 2B74065B29FF162200B99FFA /* Notes.app */;
@@ -283,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BFA673C2A1D95E0008A2460 /* Folder+CoreDataClass.swift in Sources */,
+				2B183AC92A3BF4E00037E36E /* SheetManager.swift in Sources */,
 				2B74066129FF162200B99FFA /* ContentView.swift in Sources */,
 				2B7C86F72A35909900C137D7 /* AppMode.swift in Sources */,
 				2B0559732A25EE4F000FCDB7 /* Loading.swift in Sources */,
@@ -534,7 +538,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2B0559752A25F158000FCDB7 /* ActivityIndicatorView */ = {
+		2B4DC2532A3C53B000F46413 /* ActivityIndicatorView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2B0559742A25F158000FCDB7 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */;
 			productName = ActivityIndicatorView;

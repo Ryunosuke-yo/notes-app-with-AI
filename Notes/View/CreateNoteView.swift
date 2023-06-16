@@ -7,10 +7,7 @@
 
 import SwiftUI
 
-class SheetManager: ObservableObject {
-    @Published var fileNameState = ""
-    @Published var fileUrlState: URL? = nil
-}
+
 
 struct CreateNoteView: View {
     @Environment(\.presentationMode) var presentationMode
