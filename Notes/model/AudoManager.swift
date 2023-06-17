@@ -23,6 +23,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func requestPermissionAndSetUp() {
         do {
+            
             try self.session.setCategory(.playAndRecord, options: .defaultToSpeaker)
             try self.session.setActive(true)
             
@@ -45,12 +46,17 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Need permisiion for mic")
             return
         }
-        print(url, "play")
+       
+        let fileName = url.lastPathComponent
         do {
-                audioPlayer = try AVAudioPlayer(contentsOf: url)
-                audioPlayer.delegate = self
-                audioPlayer.volume = 1.0
-                audioPlayer.play()
+            guard let audio = getAuidos().first(where: {$0.lastPathComponent == fileName}) else {
+                print("No maches")
+                return
+            }
+            audioPlayer = try AVAudioPlayer(contentsOf: audio)
+            audioPlayer.delegate = self
+            audioPlayer.volume = 1.0
+            audioPlayer.play()
         } catch {
             print("errrrr")
             print(error.localizedDescription, "play")
@@ -64,7 +70,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
         
         audioPlayer.pause()
-       
+        
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
@@ -74,15 +80,19 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
         isPlaying = false
         print("called")
-       
+        
     }
-
+    
     func startRecording(title: String) {
         do {
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileName = url.appendingPathComponent("\(title).m4a")
-            print(fileName, "original")
+            
+//            let res = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .producesRelativePathURLs)
+            
+            
             fileUrl = fileName
+            
             let settings = [
                 AVFormatIDKey: Int(kAudioFormatLinearPCM),
                 AVLinearPCMBitDepthKey: 24,
@@ -101,6 +111,18 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         recorder.stop()
     }
     
-    
-    
+    func getAuidos()-> [URL] {
+        do {
+            let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            print(url)
+            
+            let res = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .producesRelativePathURLs)
+            return res
+            
+        } catch {
+            print(error.localizedDescription, "when get audios")
+        }
+        
+        return []
+    }
 }

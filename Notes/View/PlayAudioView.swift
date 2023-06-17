@@ -87,9 +87,13 @@ struct PlayAudioView: View {
                         .padding(.top, 20)
                         .onTapGesture {
                             if let url = recording.url {
-                                audioManager.startPlaying(url: url)
+                                if url.isFileURL {
+                                    audioManager.startPlaying(url: url)
+                                    audioManager.isPlaying.toggle()
+                                }
+                               
                             }
-                            audioManager.isPlaying.toggle()
+                           
                         }
                 }
                 Spacer()

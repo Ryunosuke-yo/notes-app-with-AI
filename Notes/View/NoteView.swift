@@ -20,6 +20,8 @@ struct NoteView: View {
     @State private var appMode: AppMode = .noteMode
     @EnvironmentObject private var audioManager: AudioManager
     
+//    @State var audios: [URL] = []
+    
     
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
@@ -143,8 +145,8 @@ struct NoteView: View {
                                 NavigationLink(destination: PlayAudioView(recording: recording)) {
                                     VocieMemoGridItem(voiceMemo: recording)
                                 }
-                                
-                                
+
+
                             }
                         }
                     }
@@ -155,6 +157,20 @@ struct NoteView: View {
                         selectedFolder = nil
                     }
                 }
+                
+//                if appMode == .voiceMemo {
+//                    List(audios, id: \.self) { audio in
+//                        Text( audio.absoluteString)
+//                            .foregroundColor(.primaryWhite)
+//                            .onTapGesture {
+//                                if audioManager.isPlaying {
+//                                    audioManager.stopPlaying()
+//                                } else {
+//                                    audioManager.startPlaying(url: audio)
+//                                }
+//                            }
+//                    }
+//                }
             }
             
             
@@ -245,6 +261,7 @@ struct NoteView: View {
             
         }
     }
+    
     
     private func getNotesInFolder()-> [Note]? {
         if selectedFolder == nil {
