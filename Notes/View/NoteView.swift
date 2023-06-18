@@ -20,7 +20,7 @@ struct NoteView: View {
     @State private var appMode: AppMode = .noteMode
     @EnvironmentObject private var audioManager: AudioManager
     
-//    @State var audios: [URL] = []
+    @State var audios: [URL] = []
     
     
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
@@ -158,19 +158,19 @@ struct NoteView: View {
                     }
                 }
                 
-//                if appMode == .voiceMemo {
-//                    List(audios, id: \.self) { audio in
-//                        Text( audio.absoluteString)
-//                            .foregroundColor(.primaryWhite)
-//                            .onTapGesture {
-//                                if audioManager.isPlaying {
-//                                    audioManager.stopPlaying()
-//                                } else {
-//                                    audioManager.startPlaying(url: audio)
-//                                }
-//                            }
-//                    }
-//                }
+                if appMode == .voiceMemo {
+                    List(audios, id: \.self) { audio in
+                        Text( audio.absoluteString)
+                            .foregroundColor(.primaryWhite)
+                            .onTapGesture {
+                                if audioManager.isPlaying {
+                                    audioManager.stopPlaying()
+                                } else {
+                                    audioManager.startPlaying(url: audio)
+                                }
+                            }
+                    }
+                }
             }
             
             
@@ -226,6 +226,17 @@ struct NoteView: View {
         }
         .onAppear {
             audioManager.requestPermissionAndSetUp()
+            let  files = audioManager.getAuidos()
+            
+            for file in files {
+                audios.append(file.absoluteURL)
+//                do {
+//                    try FileManager.default.removeItem(at: file)
+//                } catch {
+//                    print("error")
+//                }
+               
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -465,13 +476,10 @@ struct VocieMemoGridItem: View {
     
     
     private func deleteRecording(recording: Recording) {
-        moc.delete(recording)
-        saveContext()
         if let removeUrl = recording.url {
-            do {
-                try FileManager.default.removeItem(at: removeUrl)
-            } catch {
-                print(error.localizedDescription, "when deleting txt")
+            audioManager.deleteRecordingFromDirectory(url: removeUrl) {
+                moc.delete(recording)
+                saveContext()
             }
             
         }

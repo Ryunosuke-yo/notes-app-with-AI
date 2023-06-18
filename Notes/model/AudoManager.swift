@@ -46,14 +46,13 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Need permisiion for mic")
             return
         }
+        guard let correctUrl = getCorrectUrlFrom(url: url) else {
+            return
+        }
+        
        
-        let fileName = url.lastPathComponent
         do {
-            guard let audio = getAuidos().first(where: {$0.lastPathComponent == fileName}) else {
-                print("No maches")
-                return
-            }
-            audioPlayer = try AVAudioPlayer(contentsOf: audio)
+            audioPlayer = try AVAudioPlayer(contentsOf: correctUrl)
             audioPlayer.delegate = self
             audioPlayer.volume = 1.0
             audioPlayer.play()
@@ -88,9 +87,6 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileName = url.appendingPathComponent("\(title).m4a")
             
-//            let res = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .producesRelativePathURLs)
-            
-            
             fileUrl = fileName
             
             let settings = [
@@ -109,6 +105,29 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func stopRecording() {
         recorder.stop()
+    }
+    
+    
+    func deleteRecordingFromDirectory(url: URL, onComplete: ()-> Void) {
+        guard let correctUrl = getCorrectUrlFrom(url: url) else {
+            return
+        }
+        
+        do {
+            try FileManager.default.removeItem(at: correctUrl)
+            onComplete()
+        } catch {
+            print(error.localizedDescription, "error when deleting audio")
+        }
+    }
+    
+    func getCorrectUrlFrom(url: URL)-> URL? {
+        guard let audio = getAuidos().first(where: {$0.lastPathComponent == url.lastPathComponent}) else {
+            print("No maches")
+            return nil
+        }
+        
+        return audio
     }
     
     func getAuidos()-> [URL] {

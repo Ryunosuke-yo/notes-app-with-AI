@@ -15,8 +15,7 @@ struct PlayAudioView: View {
     @State var showColorSheet = false
     @State var showFolderModal = false
     @State var folderValue = ""
-    @State var isSharePresented = false
-    @StateObject var sheetManager = SheetManager()
+//    @State var isSharePresented = false
     @State var showDeleteAlert = false
     @State var indicator = true
     var recording: Recording
@@ -124,12 +123,20 @@ struct PlayAudioView: View {
             .presentationBackground(Color.primaryGray)
             
         }
-        .sheet(isPresented: $isSharePresented, onDismiss: {
-        }, content: {
-            ActivityViewController(activityItems: [sheetManager.fileUrlState])
-                .presentationDetents([.fraction(0.7), .large])
-                .ignoresSafeArea()
-        })
+//        .sheet(isPresented: $isSharePresented, onDismiss: {
+//        }, content: {
+//            if let url = recording.url {
+//                if let correctUrl = audioManager.getCorrectUrlFrom(url: url)  {
+//                    ActivityViewController(activityItems: [correctUrl])
+//                        .presentationDetents([.fraction(0.7), .large])
+//                        .ignoresSafeArea()
+//                } else {
+//                    Text("Error getting audio file")
+//                }
+//            } else {
+//                Text("Error getting audio file")
+//            }
+//        })
         
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -140,14 +147,14 @@ struct PlayAudioView: View {
                         .onTapGesture {
                             showColorSheet = true
                         }
-                    Image(systemName: "square.and.arrow.up")
-                        .resizable()
-                        .frame(width: 20, height: 25)
-                        .foregroundColor(.primaryWhite)
-                        .onTapGesture {
-                            sheetManager.fileUrlState = recording.url
-                            isSharePresented = true
-                        }
+//                    Image(systemName: "square.and.arrow.up")
+//                        .resizable()
+//                        .frame(width: 20, height: 25)
+//                        .foregroundColor(.primaryWhite)
+//                        .onTapGesture {
+//                            sheetManager.fileUrlState = recording.url
+//                            isSharePresented = true
+//                        }
                     
                     Image(systemName:  "trash")
                         .resizable()
@@ -172,11 +179,13 @@ struct PlayAudioView: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    updateRecording()
                     if audioManager.isPlaying {
                         audioManager.stopPlaying()
                         audioManager.isPlaying.toggle()
                     }
+                    updateRecording()
+                    presentationMode.wrappedValue.dismiss()
+                   
                    
                 }
             }
@@ -199,32 +208,38 @@ struct PlayAudioView: View {
     
     func updateRecording() {
         if let index = recordings.firstIndex(of: recording) {
+        
             let recordingToEdit = recordings[index]
             
-            recordingToEdit.title = titleValue
-            recordingToEdit.color = Color.getColorString(color: selectedColor)
-            recordingToEdit.folder = folderValue
+            if recordingToEdit.title != titleValue {
+                recordingToEdit.title = titleValue
+                
+            }
+            
+            if recordingToEdit.color !=  Color.getColorString(color: selectedColor) {
+                recordingToEdit.color = Color.getColorString(color: selectedColor)
+            }
+            
+            if recordingToEdit.folder != folderValue {
+                recordingToEdit.folder = folderValue
+            }
             
             saveContext()
-            presentationMode.wrappedValue.dismiss()
-            return
         }
+        
+      
         
     }
     
     func deleteRecording() {
-        moc.delete(recording)
-        saveContext()
-        presentationMode.wrappedValue.dismiss()
-        if let removeUrl = sheetManager.fileUrlState {
-            do {
-                try FileManager.default.removeItem(at: removeUrl)
-            } catch {
-                print(error.localizedDescription, "when deleting txt")
+        if let removeUrl = recording.url {
+            audioManager.deleteRecordingFromDirectory(url: removeUrl) {
+                moc.delete(recording)
+                saveContext()
+                presentationMode.wrappedValue.dismiss()
             }
-            
         } else {
-            print("null")
+            print("coundn")
         }
     }
     
