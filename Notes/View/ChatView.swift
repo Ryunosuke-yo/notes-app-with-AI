@@ -150,12 +150,13 @@ struct ChatView: View {
             }
             .padding([.bottom], 20)
             .alert("Sure to clear chats history?", isPresented: $showAlert) {
-                Button("Cancel", role: .destructive) {}
-                    .foregroundColor(.red)
-                Button("OK", role: .cancel) {
+                Button("OK", role: .destructive) {
                     if chats.count != 0 {
                         deletelAllChats()
                     }
+                Button("Cancel", role: .cancel) {}
+                   
+               
                     
                 }
                 

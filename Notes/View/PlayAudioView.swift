@@ -15,9 +15,11 @@ struct PlayAudioView: View {
     @State var showColorSheet = false
     @State var showFolderModal = false
     @State var folderValue = ""
-//    @State var isSharePresented = false
+    @State var currentFileName = ""
+    //    @State var isSharePresented = false
     @State var showDeleteAlert = false
     @State var indicator = true
+    @State var showFileNameAlert = false
     var recording: Recording
     @EnvironmentObject private var audioManager: AudioManager
     
@@ -90,9 +92,9 @@ struct PlayAudioView: View {
                                     audioManager.startPlaying(url: url)
                                     audioManager.isPlaying.toggle()
                                 }
-                               
+                                
                             }
-                           
+                            
                         }
                 }
                 Spacer()
@@ -103,15 +105,26 @@ struct PlayAudioView: View {
             titleValue = recording.title ?? ""
             folderValue = recording.folder ?? ""
             selectedColor = Color.getColorValue(colorString: recording.color ?? "primaryOrange")
+            currentFileName = recording.title ?? ""
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .alert("Sure to delete?", isPresented: $showDeleteAlert) {
-            Button("delete", role: .destructive) {
+            Button("Delete", role: .destructive) {
                 deleteRecording()
                 
             }
             Button("Cancel", role:.cancel) {}
+            
+        }
+        .alert("File name already exits", isPresented: $showFileNameAlert) {
+            Button("OK", role: .cancel) {}
+            
+            Button("Reset file name", role: .destructive) {
+                titleValue = currentFileName
+            }
+            .foregroundColor(.blue)
+            
             
         }
         .sheet(isPresented: $showColorSheet) {
@@ -123,20 +136,20 @@ struct PlayAudioView: View {
             .presentationBackground(Color.primaryGray)
             
         }
-//        .sheet(isPresented: $isSharePresented, onDismiss: {
-//        }, content: {
-//            if let url = recording.url {
-//                if let correctUrl = audioManager.getCorrectUrlFrom(url: url)  {
-//                    ActivityViewController(activityItems: [correctUrl])
-//                        .presentationDetents([.fraction(0.7), .large])
-//                        .ignoresSafeArea()
-//                } else {
-//                    Text("Error getting audio file")
-//                }
-//            } else {
-//                Text("Error getting audio file")
-//            }
-//        })
+        //        .sheet(isPresented: $isSharePresented, onDismiss: {
+        //        }, content: {
+        //            if let url = recording.url {
+        //                if let correctUrl = audioManager.getCorrectUrlFrom(url: url)  {
+        //                    ActivityViewController(activityItems: [correctUrl])
+        //                        .presentationDetents([.fraction(0.7), .large])
+        //                        .ignoresSafeArea()
+        //                } else {
+        //                    Text("Error getting audio file")
+        //                }
+        //            } else {
+        //                Text("Error getting audio file")
+        //            }
+        //        })
         
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -147,14 +160,14 @@ struct PlayAudioView: View {
                         .onTapGesture {
                             showColorSheet = true
                         }
-//                    Image(systemName: "square.and.arrow.up")
-//                        .resizable()
-//                        .frame(width: 20, height: 25)
-//                        .foregroundColor(.primaryWhite)
-//                        .onTapGesture {
-//                            sheetManager.fileUrlState = recording.url
-//                            isSharePresented = true
-//                        }
+                    //                    Image(systemName: "square.and.arrow.up")
+                    //                        .resizable()
+                    //                        .frame(width: 20, height: 25)
+                    //                        .foregroundColor(.primaryWhite)
+                    //                        .onTapGesture {
+                    //                            sheetManager.fileUrlState = recording.url
+                    //                            isSharePresented = true
+                    //                        }
                     
                     Image(systemName:  "trash")
                         .resizable()
@@ -184,9 +197,9 @@ struct PlayAudioView: View {
                         audioManager.isPlaying.toggle()
                     }
                     updateRecording()
-                    presentationMode.wrappedValue.dismiss()
                    
-                   
+                    
+                    
                 }
             }
             
@@ -208,13 +221,34 @@ struct PlayAudioView: View {
     
     func updateRecording() {
         if let index = recordings.firstIndex(of: recording) {
-        
             let recordingToEdit = recordings[index]
+            if titleValue != currentFileName {
+                if let url = recording.url  {
+                    if audioManager.fileNameExtits(fileName: "\(titleValue).m4a") {
+                        showFileNameAlert = true
+                        return
+                    } else {
+                        if let correctUrl = audioManager.getCorrectUrlFrom(url: url) {
+                            print("updated")
+                            if let newUrl =  audioManager.updateFileName(url: correctUrl, newFileName: "\(titleValue).m4a") {
+                                recordingToEdit.url = newUrl
+                            }
+                            
+                        }
+                    }
+                    
+                }
+                
+                
+            }
+            
+           
             
             if recordingToEdit.title != titleValue {
                 recordingToEdit.title = titleValue
-                
             }
+            
+
             
             if recordingToEdit.color !=  Color.getColorString(color: selectedColor) {
                 recordingToEdit.color = Color.getColorString(color: selectedColor)
@@ -223,11 +257,12 @@ struct PlayAudioView: View {
             if recordingToEdit.folder != folderValue {
                 recordingToEdit.folder = folderValue
             }
+            presentationMode.wrappedValue.dismiss()
             
             saveContext()
         }
         
-      
+        
         
     }
     

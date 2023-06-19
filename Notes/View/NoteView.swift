@@ -228,6 +228,8 @@ struct NoteView: View {
             audioManager.requestPermissionAndSetUp()
             let  files = audioManager.getAuidos()
             
+            
+            // reset all audios
             for file in files {
                 audios.append(file.absoluteURL)
 //                do {
@@ -235,8 +237,20 @@ struct NoteView: View {
 //                } catch {
 //                    print("error")
 //                }
-               
+
             }
+
+//            for recording in recordings {
+//                moc.delete(recording)
+//            }
+//
+//            do {
+//                try moc.save()
+//            } catch {
+//                print(error.localizedDescription, "when saving context")
+//            }
+            
+            
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

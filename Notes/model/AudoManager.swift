@@ -133,7 +133,6 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func getAuidos()-> [URL] {
         do {
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            print(url)
             
             let res = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .producesRelativePathURLs)
             return res
@@ -143,5 +142,29 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
         
         return []
+    }
+    
+    func updateFileName(url: URL, newFileName: String)-> URL? {
+      do {
+          let newURL  = url.deletingLastPathComponent().appendingPathComponent(newFileName)
+            
+            try FileManager.default.moveItem(at: url, to: newURL)
+          
+          return newURL
+        } catch {
+            print(error.localizedDescription, "when moving item")
+            return nil
+        }
+    }
+    
+    func fileNameExtits(fileName: String)-> Bool {
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let newURL  = url.appendingPathComponent(fileName)
+   
+        if let exstingUrl = getCorrectUrlFrom(url: newURL) {
+            return true
+        } else {
+            return false
+        }
     }
 }
