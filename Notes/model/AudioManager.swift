@@ -85,7 +85,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func startRecording(title: String) {
         do {
             let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let fileName = url.appendingPathComponent("\(title).m4a")
+            let fileName = url.appendingPathComponent("\(UUID())_\(title).m4a")
             
             fileUrl = fileName
             

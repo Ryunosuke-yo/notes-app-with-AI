@@ -257,6 +257,7 @@ struct PlayAudioView: View {
             if recordingToEdit.folder != folderValue {
                 recordingToEdit.folder = folderValue
             }
+          
             presentationMode.wrappedValue.dismiss()
             
             saveContext()

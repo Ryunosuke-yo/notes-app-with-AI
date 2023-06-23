@@ -23,6 +23,7 @@ extension Note {
     @NSManaged public var timestamp: String?
     @NSManaged public var title: String?
     @NSManaged public var noteInFolder: Folder?
+    @NSManaged public var date: Date?
   
     
     
@@ -39,7 +40,7 @@ extension Note {
     }
     
     public var wrappedTimestamp: String {
-        timestamp ?? "Unknown"
+        timestamp ?? ""
     }
     
     public var wrappedColor: String {

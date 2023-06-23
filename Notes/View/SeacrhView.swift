@@ -14,6 +14,8 @@ struct SeacrhView: View {
     @EnvironmentObject var editMode: EditMode
     @State private var searchText = ""
     @State private var selectedNoteId: UUID? = nil
+    @State private var searchResultForRecording = false
+    @State private var searchResultForNote = false
     
     var body: some View {
         ZStack {
@@ -67,6 +69,9 @@ struct SeacrhView: View {
                                         SearchNoteResults(note: note)
                                         
                                     }
+                                    .onAppear {
+                                        searchResultForNote = true
+                                    }
                                     .simultaneousGesture(TapGesture().onEnded {
                                         selectedNoteId = note.id
                                         editMode.editMode = true
@@ -75,10 +80,11 @@ struct SeacrhView: View {
                                     Divider()
                                         .frame(height: 1)
                                         .overlay(Color.primaryGray)
-                                } else {
-                                    NoMachesView()
                                 }
-                                
+                            }
+                            
+                            if !searchResultForNote {
+                                NoMachesView()
                             }
                             
                             HStack {
@@ -94,18 +100,23 @@ struct SeacrhView: View {
                                 if  recording.title != nil && recording.title!.contains(searchText)  {
                                     NavigationLink(destination: PlayAudioView(recording: recording)) {
                                         SearchRecordingResults(recording: recording)
-                                        
+                                    }
+                                    .onAppear {
+                                        searchResultForRecording = true
                                     }
                                     
                                     Divider()
                                         .frame(height: 1)
                                         .overlay(Color.primaryGray)
                                     
-                                } else {
-                                    NoMachesView()
                                 }
-                                
                             }
+                            
+                            if !searchResultForRecording  {
+                                NoMachesView()
+                            }
+                            
+                            
                         }
                     }
                 }

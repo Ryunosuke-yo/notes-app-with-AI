@@ -23,9 +23,9 @@ struct NoteView: View {
     @State var audios: [URL] = []
     
     
-    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
-    @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)], animation: .easeInOut) var recordings: FetchedResults<Recording>
     @Environment (\.managedObjectContext) var moc
     
     
@@ -157,20 +157,20 @@ struct NoteView: View {
                         selectedFolder = nil
                     }
                 }
-                
-                if appMode == .voiceMemo {
-                    List(audios, id: \.self) { audio in
-                        Text( audio.absoluteString)
-                            .foregroundColor(.primaryWhite)
-                            .onTapGesture {
-                                if audioManager.isPlaying {
-                                    audioManager.stopPlaying()
-                                } else {
-                                    audioManager.startPlaying(url: audio)
-                                }
-                            }
-                    }
-                }
+//
+//                if appMode == .voiceMemo {
+//                    List(audios, id: \.self) { audio in
+//                        Text( audio.absoluteString)
+//                            .foregroundColor(.primaryWhite)
+//                            .onTapGesture {
+//                                if audioManager.isPlaying {
+//                                    audioManager.stopPlaying()
+//                                } else {
+//                                    audioManager.startPlaying(url: audio)
+//                                }
+//                            }
+//                    }
+//                }
             }
             
             
@@ -214,10 +214,12 @@ struct NoteView: View {
                                 showVoiceRec.toggle()
                             }
                             .sheet(isPresented: $showVoiceRec) {
-                                VoiceMemoModal()
+                                VoiceMemoModal(isPresented: $showVoiceRec)
                                     .presentationDetents([.height(450), .large])
-                                
+
                             }
+                            
+                          
                     }
                     
                 }
@@ -230,8 +232,8 @@ struct NoteView: View {
             
             
             // reset all audios
-            for file in files {
-                audios.append(file.absoluteURL)
+//            for file in files {
+//                audios.append(file.absoluteURL)
 //                do {
 //                    try FileManager.default.removeItem(at: file)
 //                } catch {
@@ -249,9 +251,9 @@ struct NoteView: View {
 //            } catch {
 //                print(error.localizedDescription, "when saving context")
 //            }
+//
             
-            
-        }
+//        }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {

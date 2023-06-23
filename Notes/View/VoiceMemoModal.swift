@@ -13,15 +13,20 @@ import ActivityIndicatorView
 struct VoiceMemoModal: View {
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
-    @State private var titleValue = ""
+    @State private var titleValue = "New Recording"
     @State private var folder = ""
     @State private var minutes = 0
     @State private var seconds = 0
-//    @State private var fileUrl: URL?
+    //    @State private var fileUrl: URL?
     @State private var selectedFolder: Folder?
+    @State var fileName = ""
     @State private var recodingComplted = false
     @State private var selectedColor = Color.primaryOrange
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var showFilenameAlert = false
+    @Binding var isPresented:Bool
+    
+    //    @State var updatedUrl: URL? = nil
     @Environment (\.managedObjectContext) var moc
     
     
@@ -43,7 +48,7 @@ struct VoiceMemoModal: View {
             VStack(spacing: 0) {
                 HStack {
                     Spacer()
-                    TextField("New Voice Memo", text: $titleValue)
+                    TextField("", text: $titleValue)
                         .font(Font.mainFont(30))
                         .foregroundColor(.primaryWhite)
                         .tracking(1)
@@ -91,10 +96,11 @@ struct VoiceMemoModal: View {
                     .onTapGesture {
                         if isRecording {
                             audioManager.stopRecording()
-                           
+                            
                         } else {
                             audioManager.startRecording(title: title)
                             recodingComplted = true
+                            fileName = "\(title).m4a"
                         }
                         isRecording.toggle()
                         
@@ -162,28 +168,56 @@ struct VoiceMemoModal: View {
                     .padding(.top, 20)
                     .padding(.leading, 10)
                     .padding(.bottom, 10)
-                   
+                    
                     
                 }
                 
-
+                
                 Spacer()
             }
             .padding(.top, 20)
             
         }
         .onDisappear {
-            if isRecording == true {
-                audioManager.stopRecording()
+            saveAudifile(timeString: timeString)
+        }
+        .alert("File name already exits", isPresented: $showFilenameAlert) {
+            Button("cencel", role: .cancel) {
+            
             }
-            if recodingComplted {
-                saveRecording(timeString: timeString)
-                
-            }
-            isRecording = false
+           
+            
         }
         
         
+    }
+    
+    
+    func saveAudifile(timeString: String) {
+        if isRecording == true {
+            audioManager.stopRecording()
+        }
+        if fileName != titleValue  {
+            if audioManager.fileNameExtits(fileName: fileName) {
+                    showFilenameAlert = true
+                return
+            } else {
+                if let url = audioManager.fileUrl {
+                    if let coorectUrl = audioManager.getCorrectUrlFrom(url: url) {
+                        audioManager.fileUrl = audioManager.updateFileName(url: coorectUrl, newFileName: "\(UUID())_\(titleValue)")
+                    }
+
+                }
+
+            }
+
+        }
+        if recodingComplted {
+            saveRecording(timeString: timeString)
+
+        }
+        isRecording = false
+        isPresented = false
     }
     
     func getStrokeColor(item: Folder)-> Color {
@@ -195,7 +229,7 @@ struct VoiceMemoModal: View {
         return .secondaryWhite
     }
     
-
+    
     
     
     func saveRecording(timeString: String) {
@@ -208,6 +242,8 @@ struct VoiceMemoModal: View {
         newRecoding.folder = selectedFolder == nil ? "" : selectedFolder?.wrappedFolderNeme
         newRecoding.time = timeString
         newRecoding.color = Color.getColorString(color:selectedColor)
+        newRecoding.date = Date()
+        newRecoding.timestamp = Date().timeIntervalSince1970
         
         do {
             try moc.save()

@@ -213,6 +213,7 @@ struct CreateNoteView: View {
                 editNote.contents = contentValue
                 editNote.folder = folderValue
                 editNote.color = Color.getColorString(color: selectedColor)
+               
             }
             
             saveContext()
@@ -233,6 +234,8 @@ struct CreateNoteView: View {
             newNote.contents = contentValue
             newNote.folder = folderValue
             newNote.color = Color.getColorString(color: selectedColor)
+            newNote.date = Date()
+        
             
             do {
                 try moc.save()
