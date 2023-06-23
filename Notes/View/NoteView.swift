@@ -228,7 +228,7 @@ struct NoteView: View {
         }
         .onAppear {
             audioManager.requestPermissionAndSetUp()
-            let  files = audioManager.getAuidos()
+//            let  files = audioManager.getAuidos()
             
             
             // reset all audios

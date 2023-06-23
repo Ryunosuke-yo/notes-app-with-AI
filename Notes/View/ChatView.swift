@@ -21,7 +21,7 @@ struct ChatView: View {
     @Binding var selectedTab: Int
     @FocusState private var focused: Bool
     @FetchRequest(sortDescriptors: [
-        SortDescriptor(\.timestamp)], animation: .easeInOut) var chats: FetchedResults<Chats>
+        SortDescriptor(\.date)], animation: .easeInOut) var chats: FetchedResults<Chats>
     @Environment(\.managedObjectContext) var moc
     @Namespace var bottomID
     
@@ -173,6 +173,7 @@ struct ChatView: View {
             newUserChat.timestamp = Date().timeIntervalSince1970
             newUserChat.user = true
             newUserChat.id = UUID()
+            newUserChat.date = Date()
             callOpenAIChatEndpoint()
             prompt = ""
         }
@@ -217,6 +218,7 @@ struct ChatView: View {
                 newChat.user = false
                 newChat.content = res.choices[0].message.content
                 newChat.id = UUID()
+                newChat.date = Date()
                 
                 let timestamp = Date().timeIntervalSince1970
                 newChat.timestamp = timestamp
