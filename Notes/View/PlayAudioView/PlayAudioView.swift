@@ -10,16 +10,7 @@ import ActivityIndicatorView
 
 
 struct PlayAudioView: View {
-    @State var titleValue = ""
-    @State var selectedColor = Color.primaryOrange
-    @State var showColorSheet = false
-    @State var showFolderModal = false
-    @State var folderValue = ""
-    @State var currentFileName = ""
-    //    @State var isSharePresented = false
-    @State var showDeleteAlert = false
-    @State var indicator = true
-    @State var showFileNameAlert = false
+    @StateObject var viewModel = PlayAudioViewModel()
     var recording: Recording
     @EnvironmentObject private var audioManager: AudioManager
     
@@ -36,7 +27,7 @@ struct PlayAudioView: View {
             VStack {
                 Spacer()
                     .frame(height: 50)
-                TextField("Title", text: $titleValue)
+                TextField("Title", text: $viewModel.titleValue)
                     .font(Font.headerFont(34))
                     .fontWeight(Font.Weight.medium)
                     .tracking(2)
@@ -47,14 +38,14 @@ struct PlayAudioView: View {
                 Spacer()
                     .frame(height: 50)
                 if audioManager.isPlaying {
-                    ActivityIndicatorView(isVisible: $indicator, type: .equalizer(count: 7))
-                        .foregroundColor(selectedColor)
+                    ActivityIndicatorView(isVisible: $viewModel.indicator, type: .equalizer(count: 7))
+                        .foregroundColor(viewModel.selectedColor)
                         .frame(width: 130, height: 140)
                         .padding(.top, 20)
                 } else {
                     Image(systemName: "waveform")
                         .resizable()
-                        .foregroundColor(selectedColor)
+                        .foregroundColor(viewModel.selectedColor)
                         .frame(width: 130, height: 140)
                         .padding(.top, 20)
                 }
@@ -71,7 +62,7 @@ struct PlayAudioView: View {
                 if audioManager.isPlaying {
                     Image(systemName: "stop.circle")
                         .resizable()
-                        .foregroundColor(selectedColor)
+                        .foregroundColor(viewModel.selectedColor)
                         .frame(width: 80, height: 80)
                         .foregroundColor(.primaryWhite)
                         .padding(.top, 20)
@@ -82,7 +73,7 @@ struct PlayAudioView: View {
                 } else {
                     Image(systemName: "play.circle")
                         .resizable()
-                        .foregroundColor(selectedColor)
+                        .foregroundColor(viewModel.selectedColor)
                         .frame(width: 80, height: 80)
                         .foregroundColor(.primaryWhite)
                         .padding(.top, 20)
@@ -102,14 +93,14 @@ struct PlayAudioView: View {
             
         }
         .onAppear {
-            titleValue = recording.title ?? ""
-            folderValue = recording.folder ?? ""
-            selectedColor = Color.getColorValue(colorString: recording.color ?? "primaryOrange")
-            currentFileName = recording.title ?? ""
+            viewModel.titleValue = recording.title ?? ""
+            viewModel.folderValue = recording.folder ?? ""
+            viewModel.selectedColor = Color.getColorValue(colorString: recording.color ?? "primaryOrange")
+            viewModel.currentFileName = recording.title ?? ""
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Sure to delete?", isPresented: $showDeleteAlert) {
+        .alert("Sure to delete?", isPresented: $viewModel.showDeleteAlert) {
             Button("Delete", role: .destructive) {
                 deleteRecording()
                 
@@ -117,20 +108,20 @@ struct PlayAudioView: View {
             Button("Cancel", role:.cancel) {}
             
         }
-        .alert("File name already exits", isPresented: $showFileNameAlert) {
+        .alert("File name already exits", isPresented: $viewModel.showFileNameAlert) {
             Button("OK", role: .cancel) {}
             
             Button("Reset file name", role: .destructive) {
-                titleValue = currentFileName
+                viewModel.titleValue = viewModel.currentFileName
             }
             .foregroundColor(.blue)
             
             
         }
-        .sheet(isPresented: $showColorSheet) {
+        .sheet(isPresented: $viewModel.showColorSheet) {
             ColorSheetModal { color in
-                selectedColor = color
-                showColorSheet.toggle()
+                viewModel.selectedColor = color
+                viewModel.showColorSheet.toggle()
             }
             .presentationDetents([.height(150)])
             .presentationBackground(Color.primaryGray)
@@ -155,10 +146,10 @@ struct PlayAudioView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 25) {
                     Circle()
-                        .fill(selectedColor)
+                        .fill(viewModel.selectedColor)
                         .frame(width: 20, height: 20)
                         .onTapGesture {
-                            showColorSheet = true
+                            viewModel.showColorSheet = true
                         }
                     //                    Image(systemName: "square.and.arrow.up")
                     //                        .resizable()
@@ -174,7 +165,7 @@ struct PlayAudioView: View {
                         .frame(width: 20, height: 23)
                         .foregroundColor(.recordRed)
                         .onTapGesture {
-                            showDeleteAlert = true
+                            viewModel.showDeleteAlert = true
                         }
                     
                     
@@ -204,15 +195,15 @@ struct PlayAudioView: View {
             }
             
             ToolbarItem(placement: .principal) {
-                Text(folderValue == "" ? "All" : folderValue)
+                Text(viewModel.folderValue == "" ? "All" : viewModel.folderValue)
                     .foregroundColor(.secondaryWhite)
                     .tracking(1)
                     .font(Font.mainFont(20))
                     .onTapGesture {
-                        showFolderModal.toggle()
+                        viewModel.showFolderModal.toggle()
                     }
-                    .sheet(isPresented: $showFolderModal) {
-                        FolderModal(folderValue: $folderValue)
+                    .sheet(isPresented: $viewModel.showFolderModal) {
+                        FolderModal(folderValue: $viewModel.folderValue)
                     }
                 
             }
@@ -222,15 +213,15 @@ struct PlayAudioView: View {
     func updateRecording() {
         if let index = recordings.firstIndex(of: recording) {
             let recordingToEdit = recordings[index]
-            if titleValue != currentFileName {
+            if viewModel.titleValue != viewModel.currentFileName {
                 if let url = recording.url  {
-                    if audioManager.fileNameExtits(fileName: "\(titleValue).m4a") {
-                        showFileNameAlert = true
+                    if audioManager.fileNameExtits(fileName: "\(viewModel.titleValue).m4a") {
+                        viewModel.showFileNameAlert = true
                         return
                     } else {
                         if let correctUrl = audioManager.getCorrectUrlFrom(url: url) {
                             print("updated")
-                            if let newUrl =  audioManager.updateFileName(url: correctUrl, newFileName: "\(titleValue).m4a") {
+                            if let newUrl =  audioManager.updateFileName(url: correctUrl, newFileName: "\(viewModel.titleValue).m4a") {
                                 recordingToEdit.url = newUrl
                             }
                             
@@ -244,18 +235,18 @@ struct PlayAudioView: View {
             
            
             
-            if recordingToEdit.title != titleValue {
-                recordingToEdit.title = titleValue
+            if recordingToEdit.title != viewModel.titleValue {
+                recordingToEdit.title = viewModel.titleValue
             }
             
 
             
-            if recordingToEdit.color !=  Color.getColorString(color: selectedColor) {
-                recordingToEdit.color = Color.getColorString(color: selectedColor)
+            if recordingToEdit.color !=  Color.getColorString(color: viewModel.selectedColor) {
+                recordingToEdit.color = Color.getColorString(color: viewModel.selectedColor)
             }
             
-            if recordingToEdit.folder != folderValue {
-                recordingToEdit.folder = folderValue
+            if recordingToEdit.folder != viewModel.folderValue {
+                recordingToEdit.folder = viewModel.folderValue
             }
           
             presentationMode.wrappedValue.dismiss()

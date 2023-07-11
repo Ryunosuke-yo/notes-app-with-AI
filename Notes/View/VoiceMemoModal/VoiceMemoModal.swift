@@ -13,24 +13,9 @@ import ActivityIndicatorView
 struct VoiceMemoModal: View {
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
-    @State private var titleValue = "New Recording"
-    @State private var folder = ""
-    @State private var minutes = 0
-    @State private var seconds = 0
-    //    @State private var fileUrl: URL?
-    @State private var selectedFolder: Folder?
-    @State var fileName = ""
-    @State private var recodingComplted = false
-    @State private var selectedColor = Color.primaryOrange
-    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State var showFilenameAlert = false
+    @StateObject var viewModel = VoiceMemoModalViewModel()
     @Binding var isPresented:Bool
-    
-    //    @State var updatedUrl: URL? = nil
     @Environment (\.managedObjectContext) var moc
-    
-    
-    @State private var isRecording = false
     @EnvironmentObject private var audioManager: AudioManager
     
     let colorSelection: [Color] = [
@@ -41,14 +26,14 @@ struct VoiceMemoModal: View {
     ]
     
     var body: some View {
-        let timeString = "\(minutes < 10 ? "0\(minutes)" : String(minutes)):\(seconds < 10 ? "0\(seconds)" : String(seconds))"
-        let title = titleValue == "" ? "New Vocie memo\(recordings.count + 1)" : titleValue
+        let timeString = "\(viewModel.minutes < 10 ? "0\(viewModel.minutes)" : String(viewModel.minutes)):\(viewModel.seconds < 10 ? "0\(viewModel.seconds)" : String(viewModel.seconds))"
+        let title = viewModel.titleValue == "" ? "New Vocie memo\(recordings.count + 1)" : viewModel.titleValue
         ZStack {
             Color.primaryGray.ignoresSafeArea()
             VStack(spacing: 0) {
                 HStack {
                     Spacer()
-                    TextField("", text: $titleValue)
+                    TextField("", text: $viewModel.titleValue)
                         .font(Font.mainFont(30))
                         .foregroundColor(.primaryWhite)
                         .tracking(1)
@@ -64,22 +49,22 @@ struct VoiceMemoModal: View {
                     .foregroundColor(.primaryWhite)
                     .tracking(1)
                     .padding(.top, 10)
-                    .onReceive(timer) { _ in
-                        if isRecording {
-                            seconds += 1
-                            if seconds == 60 {
-                                seconds = 0
-                                minutes += 1
+                    .onReceive(viewModel.timer) { _ in
+                        if viewModel.isRecording {
+                            viewModel.seconds += 1
+                            if viewModel.seconds == 60 {
+                                viewModel.seconds = 0
+                                viewModel.minutes += 1
                             }
                         }
                     }
                 
-                ActivityIndicatorView(isVisible: $isRecording, type: .equalizer(count: 7))
+                ActivityIndicatorView(isVisible: $viewModel.isRecording, type: .equalizer(count: 7))
                     .frame(width: 80, height: 90)
                     .foregroundColor(.primaryWhite)
                     .padding(.top, 20)
                 
-                if !isRecording {
+                if !viewModel.isRecording {
                     Image(systemName: "waveform")
                         .resizable()
                         .frame(width: 80, height: 90)
@@ -90,19 +75,19 @@ struct VoiceMemoModal: View {
                 
                 
                 Circle()
-                    .foregroundColor(isRecording ?  .recordRed : .secondaryWhite)
+                    .foregroundColor(viewModel.isRecording ?  .recordRed : .secondaryWhite)
                     .frame(width: 90, height: 90)
                     .padding(.top, 20)
                     .onTapGesture {
-                        if isRecording {
+                        if viewModel.isRecording {
                             audioManager.stopRecording()
                             
                         } else {
                             audioManager.startRecording(title: title)
-                            recodingComplted = true
-                            fileName = "\(title).m4a"
+                            viewModel.recodingComplted = true
+                            viewModel.fileName = "\(title).m4a"
                         }
-                        isRecording.toggle()
+                        viewModel.isRecording.toggle()
                         
                     }
                 
@@ -113,10 +98,10 @@ struct VoiceMemoModal: View {
                                 .fill(color)
                                 .frame(width: 40, height: 40)
                                 .onTapGesture {
-                                    selectedColor = color
+                                    viewModel.selectedColor = color
                                 }
                                 .background {
-                                    if selectedColor == color {
+                                    if viewModel.selectedColor == color {
                                         Circle()
                                             .foregroundColor(.primaryWhite)
                                             .frame(width: 44, height: 44)
@@ -158,7 +143,7 @@ struct VoiceMemoModal: View {
                                         .stroke(getStrokeColor(item: folder), lineWidth: 2)
                                 )
                                 .onTapGesture {
-                                    selectedFolder = folder
+                                    viewModel.selectedFolder = folder
                                 }
                             }
                         }
@@ -179,9 +164,9 @@ struct VoiceMemoModal: View {
             
         }
         .onDisappear {
-            saveAudifile(timeString: timeString)
+            saveAudiofile(timeString: timeString)
         }
-        .alert("File name already exits", isPresented: $showFilenameAlert) {
+        .alert("File name already exits", isPresented: $viewModel.showFilenameAlert) {
             Button("cencel", role: .cancel) {
             
             }
@@ -193,18 +178,18 @@ struct VoiceMemoModal: View {
     }
     
     
-    func saveAudifile(timeString: String) {
-        if isRecording == true {
+    func saveAudiofile(timeString: String) {
+        if viewModel.isRecording == true {
             audioManager.stopRecording()
         }
-        if fileName != titleValue  {
-            if audioManager.fileNameExtits(fileName: fileName) {
-                    showFilenameAlert = true
+        if viewModel.fileName != viewModel.titleValue  {
+            if audioManager.fileNameExtits(fileName: viewModel.fileName) {
+                viewModel.showFilenameAlert = true
                 return
             } else {
                 if let url = audioManager.fileUrl {
                     if let coorectUrl = audioManager.getCorrectUrlFrom(url: url) {
-                        audioManager.fileUrl = audioManager.updateFileName(url: coorectUrl, newFileName: "\(UUID())_\(titleValue)")
+                        audioManager.fileUrl = audioManager.updateFileName(url: coorectUrl, newFileName: "\(UUID())_\(viewModel.titleValue)")
                     }
 
                 }
@@ -212,16 +197,16 @@ struct VoiceMemoModal: View {
             }
 
         }
-        if recodingComplted {
+        if viewModel.recodingComplted {
             saveRecording(timeString: timeString)
 
         }
-        isRecording = false
+        viewModel.isRecording = false
         isPresented = false
     }
     
     func getStrokeColor(item: Folder)-> Color {
-        if let sFolder = selectedFolder {
+        if let sFolder = viewModel.selectedFolder {
             return sFolder == item ? .primaryOrange : .secondaryWhite
         }
         
@@ -233,15 +218,15 @@ struct VoiceMemoModal: View {
     
     
     func saveRecording(timeString: String) {
-        let title = titleValue == "" ? "New Vocie memo\(recordings.count + 1)" : titleValue
+        let title = viewModel.titleValue == "" ? "New Vocie memo\(recordings.count + 1)" : viewModel.titleValue
         let newRecoding = Recording(context: moc)
         newRecoding.title = title
         newRecoding.folder = "folder"
         newRecoding.url = audioManager.fileUrl
         newRecoding.id = UUID()
-        newRecoding.folder = selectedFolder == nil ? "" : selectedFolder?.wrappedFolderNeme
+        newRecoding.folder = viewModel.selectedFolder == nil ? "" : viewModel.selectedFolder?.wrappedFolderNeme
         newRecoding.time = timeString
-        newRecoding.color = Color.getColorString(color:selectedColor)
+        newRecoding.color = Color.getColorString(color:viewModel.selectedColor)
         newRecoding.date = Date()
         newRecoding.timestamp = Date().timeIntervalSince1970
         

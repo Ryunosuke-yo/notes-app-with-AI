@@ -39,6 +39,14 @@
 		2BC5738A2A382DCB008D59A2 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC573892A382DCB008D59A2 /* AudioManager.swift */; };
 		2BC772D82A1F645C001E4C44 /* EditMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC772D72A1F645C001E4C44 /* EditMode.swift */; };
 		2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */; };
+		2BD5203B2A5274450052A809 /* NoteView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD5203A2A5274450052A809 /* NoteView-ViewModel.swift */; };
+		2BD5203E2A5293E70052A809 /* CreateNoteView-viewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD5203D2A5293E70052A809 /* CreateNoteView-viewModel.swift */; };
+		2BD520402A52987F0052A809 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD5203F2A52987F0052A809 /* ChatViewModel.swift */; };
+		2BD520442A529E140052A809 /* FolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD520432A529E140052A809 /* FolderViewModel.swift */; };
+		2BD520462A52A0760052A809 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD520452A52A0760052A809 /* SearchViewModel.swift */; };
+		2BEEAFC82A5CD60F00967643 /* VoiceMemoModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEEAFC72A5CD60F00967643 /* VoiceMemoModalViewModel.swift */; };
+		2BEEAFCB2A5CD8F500967643 /* PlayAudioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEEAFCA2A5CD8F500967643 /* PlayAudioViewModel.swift */; };
+		2BEEAFCD2A5CE1BF00967643 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEEAFCC2A5CE1BF00967643 /* Keys.swift */; };
 		2BFA673C2A1D95E0008A2460 /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA67382A1D95E0008A2460 /* Folder+CoreDataClass.swift */; };
 		2BFA673D2A1D95E0008A2460 /* Folder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA67392A1D95E0008A2460 /* Folder+CoreDataProperties.swift */; };
 		2BFA673E2A1D95E0008A2460 /* Note+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA673A2A1D95E0008A2460 /* Note+CoreDataClass.swift */; };
@@ -81,6 +89,14 @@
 		2BC573892A382DCB008D59A2 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		2BC772D72A1F645C001E4C44 /* EditMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMode.swift; sourceTree = "<group>"; };
 		2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMemoModal.swift; sourceTree = "<group>"; };
+		2BD5203A2A5274450052A809 /* NoteView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteView-ViewModel.swift"; sourceTree = "<group>"; };
+		2BD5203D2A5293E70052A809 /* CreateNoteView-viewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CreateNoteView-viewModel.swift"; sourceTree = "<group>"; };
+		2BD5203F2A52987F0052A809 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		2BD520432A529E140052A809 /* FolderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderViewModel.swift; sourceTree = "<group>"; };
+		2BD520452A52A0760052A809 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		2BEEAFC72A5CD60F00967643 /* VoiceMemoModalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMemoModalViewModel.swift; sourceTree = "<group>"; };
+		2BEEAFCA2A5CD8F500967643 /* PlayAudioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAudioViewModel.swift; sourceTree = "<group>"; };
+		2BEEAFCC2A5CE1BF00967643 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		2BFA67382A1D95E0008A2460 /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Folder+CoreDataClass.swift"; path = "Notes/Folder+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		2BFA67392A1D95E0008A2460 /* Folder+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Folder+CoreDataProperties.swift"; path = "Notes/Folder+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		2BFA673A2A1D95E0008A2460 /* Note+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Note+CoreDataClass.swift"; path = "Notes/Note+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -148,6 +164,7 @@
 				2B74066029FF162200B99FFA /* ContentView.swift */,
 				2B74066229FF162300B99FFA /* Assets.xcassets */,
 				2B74066429FF162300B99FFA /* Preview Content */,
+				2BEEAFCC2A5CE1BF00967643 /* Keys.swift */,
 			);
 			path = Notes;
 			sourceTree = "<group>";
@@ -184,15 +201,15 @@
 		2BA4D34029FF30BD00BA22FF /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2B9F3B212A00D45500F55754 /* NoteView.swift */,
-				2BBD9D0B2A08BD45007532FC /* CreateNoteView.swift */,
-				2B25827D2A023D7A00CE3BC6 /* ChatView.swift */,
-				2B5326F02A02DE51006D297F /* FolderView.swift */,
-				2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */,
+				2BD5203C2A5293CA0052A809 /* CreateNoteView */,
+				2BD520392A5274250052A809 /* NoteView */,
+				2BD520412A5298890052A809 /* ChatView */,
+				2BD520422A529E000052A809 /* FolderView */,
+				2BEEAFC62A5CD5F000967643 /* VoiceMemoModal */,
 				2BBD9D0D2A08CB44007532FC /* FolderModal.swift */,
 				2B86206E2A183CD1004013DD /* DynamicHeightTextEditor.swift */,
-				2BABADFD2A2010D300A40041 /* SeacrhView.swift */,
-				2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */,
+				2BD520472A52A0A10052A809 /* SearchView */,
+				2BEEAFC92A5CD8E000967643 /* PlayAudioView */,
 				2BB71A3E2A3AED850081F855 /* ColorSheetModal.swift */,
 				2BB71A402A3AF0710081F855 /* ActivityViewController.swift */,
 				2B183AC82A3BF4E00037E36E /* SheetManager.swift */,
@@ -210,6 +227,69 @@
 				2BFA67402A1DA7B6008A2460 /* View.swift */,
 			);
 			path = extension;
+			sourceTree = "<group>";
+		};
+		2BD520392A5274250052A809 /* NoteView */ = {
+			isa = PBXGroup;
+			children = (
+				2B9F3B212A00D45500F55754 /* NoteView.swift */,
+				2BD5203A2A5274450052A809 /* NoteView-ViewModel.swift */,
+			);
+			path = NoteView;
+			sourceTree = "<group>";
+		};
+		2BD5203C2A5293CA0052A809 /* CreateNoteView */ = {
+			isa = PBXGroup;
+			children = (
+				2BD5203D2A5293E70052A809 /* CreateNoteView-viewModel.swift */,
+				2BBD9D0B2A08BD45007532FC /* CreateNoteView.swift */,
+			);
+			path = CreateNoteView;
+			sourceTree = "<group>";
+		};
+		2BD520412A5298890052A809 /* ChatView */ = {
+			isa = PBXGroup;
+			children = (
+				2BD5203F2A52987F0052A809 /* ChatViewModel.swift */,
+				2B25827D2A023D7A00CE3BC6 /* ChatView.swift */,
+			);
+			path = ChatView;
+			sourceTree = "<group>";
+		};
+		2BD520422A529E000052A809 /* FolderView */ = {
+			isa = PBXGroup;
+			children = (
+				2B5326F02A02DE51006D297F /* FolderView.swift */,
+				2BD520432A529E140052A809 /* FolderViewModel.swift */,
+			);
+			path = FolderView;
+			sourceTree = "<group>";
+		};
+		2BD520472A52A0A10052A809 /* SearchView */ = {
+			isa = PBXGroup;
+			children = (
+				2BABADFD2A2010D300A40041 /* SeacrhView.swift */,
+				2BD520452A52A0760052A809 /* SearchViewModel.swift */,
+			);
+			path = SearchView;
+			sourceTree = "<group>";
+		};
+		2BEEAFC62A5CD5F000967643 /* VoiceMemoModal */ = {
+			isa = PBXGroup;
+			children = (
+				2BD178BB2A0624EA002FC661 /* VoiceMemoModal.swift */,
+				2BEEAFC72A5CD60F00967643 /* VoiceMemoModalViewModel.swift */,
+			);
+			path = VoiceMemoModal;
+			sourceTree = "<group>";
+		};
+		2BEEAFC92A5CD8E000967643 /* PlayAudioView */ = {
+			isa = PBXGroup;
+			children = (
+				2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */,
+				2BEEAFCA2A5CD8F500967643 /* PlayAudioViewModel.swift */,
+			);
+			path = PlayAudioView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,12 +370,19 @@
 			files = (
 				2BFA673C2A1D95E0008A2460 /* Folder+CoreDataClass.swift in Sources */,
 				2B183AC92A3BF4E00037E36E /* SheetManager.swift in Sources */,
+				2BD520442A529E140052A809 /* FolderViewModel.swift in Sources */,
 				2B74066129FF162200B99FFA /* ContentView.swift in Sources */,
+				2BD520462A52A0760052A809 /* SearchViewModel.swift in Sources */,
+				2BD5203B2A5274450052A809 /* NoteView-ViewModel.swift in Sources */,
+				2BEEAFC82A5CD60F00967643 /* VoiceMemoModalViewModel.swift in Sources */,
+				2BEEAFCB2A5CD8F500967643 /* PlayAudioViewModel.swift in Sources */,
+				2BD5203E2A5293E70052A809 /* CreateNoteView-viewModel.swift in Sources */,
 				2B7C86F72A35909900C137D7 /* AppMode.swift in Sources */,
 				2B0559732A25EE4F000FCDB7 /* Loading.swift in Sources */,
 				2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */,
 				2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */,
 				2BC772D82A1F645C001E4C44 /* EditMode.swift in Sources */,
+				2BEEAFCD2A5CE1BF00967643 /* Keys.swift in Sources */,
 				2BB71A3F2A3AED850081F855 /* ColorSheetModal.swift in Sources */,
 				2BFB311B2A27255E000F17D1 /* NoteColors.swift in Sources */,
 				2B5326F12A02DE51006D297F /* FolderView.swift in Sources */,
@@ -320,6 +407,7 @@
 				2BBD9D0C2A08BD45007532FC /* CreateNoteView.swift in Sources */,
 				2BD178BC2A0624EA002FC661 /* VoiceMemoModal.swift in Sources */,
 				2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */,
+				2BD520402A52987F0052A809 /* ChatViewModel.swift in Sources */,
 				2BFA673E2A1D95E0008A2460 /* Note+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,18 +11,9 @@ import AVKit
 
 
 struct NoteView: View {
-    @State private var seactText: String = ""
-    @State private var showVoiceRec = false
-    @State private var selectedFolder: Folder?
-    @EnvironmentObject private var editMode:EditMode
-    @State private var selectedNoteId: UUID? = nil
-    @State private var isNoteMode = true
-    @State private var appMode: AppMode = .noteMode
+    @StateObject var viewModel = NoteViewModel()
+    @EnvironmentObject private var editMode:EditMode    
     @EnvironmentObject private var audioManager: AudioManager
-    
-    @State var audios: [URL] = []
-    
-    
     @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)], animation: .easeInOut) var recordings: FetchedResults<Recording>
@@ -43,10 +34,10 @@ struct NoteView: View {
                     
                     Image(systemName: "doc")
                         .resizable()
-                        .foregroundColor(appMode == .noteMode ? .primaryOrange : .secondaryWhite)
+                        .foregroundColor(viewModel.appMode == .noteMode ? .primaryOrange : .secondaryWhite)
                         .frame(width: 17, height: 20)
                         .onTapGesture {
-                            appMode = .noteMode
+                            viewModel.appMode = .noteMode
                         }
                     
                     
@@ -58,10 +49,10 @@ struct NoteView: View {
                     
                     Image(systemName: "mic.circle")
                         .resizable()
-                        .foregroundColor(appMode == .voiceMemo ? .primaryOrange : .secondaryWhite)
+                        .foregroundColor(viewModel.appMode == .voiceMemo ? .primaryOrange : .secondaryWhite)
                         .frame(width: 20, height: 20)
                         .onTapGesture {
-                            appMode = .voiceMemo
+                            viewModel.appMode = .voiceMemo
                         }
                     Spacer()
                     
@@ -77,12 +68,12 @@ struct NoteView: View {
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .inset(by: 2)
-                                    .stroke(selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite, lineWidth: 2)
+                                    .stroke(viewModel.selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite, lineWidth: 2)
                             )
                             .background(Color.primaryBlcak)
-                            .foregroundColor(selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite)
+                            .foregroundColor(viewModel.selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite)
                             .onTapGesture {
-                                selectedFolder = nil
+                                viewModel.selectedFolder = nil
                             }
                         
                         ForEach(folders, id: \.self) { item in
@@ -93,12 +84,12 @@ struct NoteView: View {
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
                                         .inset(by: 2)
-                                        .stroke(getFolderStrokeColor(cuurentFolder: item.wrappedFolderNeme), lineWidth: 2)
+                                        .stroke(viewModel.getFolderStrokeColor(cuurentFolder: item.wrappedFolderNeme), lineWidth: 2)
                                 )
                                 .background(Color.primaryBlcak)
-                                .foregroundColor(getFolderTextColor(cuurentFolder: item.wrappedFolderNeme))
+                                .foregroundColor(viewModel.getFolderTextColor(cuurentFolder: item.wrappedFolderNeme))
                                 .onTapGesture {
-                                    selectedFolder = item
+                                    viewModel.selectedFolder = item
                                 }
                             
                             
@@ -112,7 +103,7 @@ struct NoteView: View {
                 
                 
                 ScrollView {
-                    if appMode == .noteMode {
+                    if viewModel.appMode == .noteMode {
                         if (notes.count == 0) {
                             Text("No contents")
                                 .font(Font.mainFont(20))
@@ -123,12 +114,12 @@ struct NoteView: View {
                             LazyVGrid(columns: columns, spacing: 2) {
                                 ForEach(getNotesInFolder() ?? [], id: \.self) {
                                     note in
-                                    NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
+                                    NavigationLink(destination: CreateNoteView(noteId: $viewModel.selectedNoteId)) {
                                         MemoGridItem(note: note)
                                         
                                     }
                                     .simultaneousGesture(TapGesture().onEnded {
-                                        selectedNoteId = note.id
+                                        viewModel.selectedNoteId = note.id
                                         editMode.editMode = true
                                         
                                     })
@@ -154,7 +145,7 @@ struct NoteView: View {
                 }
                 .onAppear {
                     if folders.count == 0 {
-                        selectedFolder = nil
+                        viewModel.selectedFolder = nil
                     }
                 }
 //
@@ -181,7 +172,7 @@ struct NoteView: View {
                     Spacer()
                     
                     VStack {
-                        NavigationLink(destination: CreateNoteView(noteId:$selectedNoteId)) {
+                        NavigationLink(destination: CreateNoteView(noteId:$viewModel.selectedNoteId)) {
                             Image(systemName: "square.and.pencil")
                                 .resizable()
                                 .foregroundColor(.primaryBlcak)
@@ -211,10 +202,10 @@ struct NoteView: View {
                             .padding(.trailing, 16)
                             .padding(.bottom, 16)
                             .onTapGesture {
-                                showVoiceRec.toggle()
+                                viewModel.showVoiceRec.toggle()
                             }
-                            .sheet(isPresented: $showVoiceRec) {
-                                VoiceMemoModal(isPresented: $showVoiceRec)
+                            .sheet(isPresented: $viewModel.showVoiceRec) {
+                                VoiceMemoModal(isPresented: $viewModel.showVoiceRec)
                                     .presentationDetents([.height(450), .large])
 
                             }
@@ -291,11 +282,11 @@ struct NoteView: View {
     
     
     private func getNotesInFolder()-> [Note]? {
-        if selectedFolder == nil {
+        if viewModel.selectedFolder == nil {
             return Array(notes)
         }
         
-        if let s = selectedFolder {
+        if let s = viewModel.selectedFolder {
             return  notes.filter { note in
                 note.wrappedFolder == s.wrappedFolderNeme
             }
@@ -305,11 +296,11 @@ struct NoteView: View {
     }
     
     private func getRecordingsInFolder()-> [Recording]? {
-        if selectedFolder == nil {
+        if viewModel.selectedFolder == nil {
             return Array(recordings)
         }
         
-        if let s = selectedFolder {
+        if let s = viewModel.selectedFolder {
             return  recordings.filter { recording in
                 recording.folder == s.wrappedFolderNeme
             }
@@ -318,19 +309,7 @@ struct NoteView: View {
         return nil
     }
     
-    private func getFolderStrokeColor(cuurentFolder: String)-> Color {
-        if let s = selectedFolder {
-            return s.wrappedFolderNeme == cuurentFolder ? .primaryOrange : .secondaryWhite
-        }
-        return .secondaryWhite
-    }
-    
-    private func getFolderTextColor(cuurentFolder: String)-> Color {
-        if let s = selectedFolder {
-            return s.wrappedFolderNeme == cuurentFolder ? .primaryOrange : .primaryWhite
-        }
-        return .primaryWhite
-    }
+
 }
 
 

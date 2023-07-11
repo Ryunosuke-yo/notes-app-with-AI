@@ -12,10 +12,11 @@ struct SeacrhView: View {
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var recordings: FetchedResults<Recording>
     @EnvironmentObject var editMode: EditMode
-    @State private var searchText = ""
-    @State private var selectedNoteId: UUID? = nil
-    @State private var searchResultForRecording = false
-    @State private var searchResultForNote = false
+    @StateObject var viewModel = SearchViewModel()
+//    @State private var searchText = ""
+//    @State private var selectedNoteId: UUID? = nil
+//    @State private var searchResultForRecording = false
+//    @State private var searchResultForNote = false
     
     var body: some View {
         ZStack {
@@ -29,7 +30,7 @@ struct SeacrhView: View {
                         .foregroundColor(.primaryWhite)
                         .padding(.leading, 10)
                     
-                    TextField("", text: $searchText)
+                    TextField("", text: $viewModel.searchText)
                         .font(Font.mainFont(20))
                         .fontWeight(.regular)
                         .tracking(1)
@@ -51,7 +52,7 @@ struct SeacrhView: View {
                 .padding(.horizontal, 10)
                 
                 ScrollView {
-                    if searchText != "" {
+                    if viewModel.searchText != "" {
                         VStack {
                             HStack {
                                 Text("Notes")
@@ -64,16 +65,16 @@ struct SeacrhView: View {
                             
                             
                             ForEach(notes) { note in
-                                if note.wrappedTitle.contains(searchText) || note.wrappedContents.contains(searchText) {
-                                    NavigationLink(destination: CreateNoteView(noteId: $selectedNoteId)) {
+                                if note.wrappedTitle.contains(viewModel.searchText) || note.wrappedContents.contains(viewModel.searchText) {
+                                    NavigationLink(destination: CreateNoteView(noteId: $viewModel.selectedNoteId)) {
                                         SearchNoteResults(note: note)
                                         
                                     }
                                     .onAppear {
-                                        searchResultForNote = true
+                                        viewModel.searchResultForNote = true
                                     }
                                     .simultaneousGesture(TapGesture().onEnded {
-                                        selectedNoteId = note.id
+                                        viewModel.selectedNoteId = note.id
                                         editMode.editMode = true
                                     })
                                     
@@ -83,7 +84,7 @@ struct SeacrhView: View {
                                 }
                             }
                             
-                            if !searchResultForNote {
+                            if !viewModel.searchResultForNote {
                                 NoMachesView()
                             }
                             
@@ -97,12 +98,12 @@ struct SeacrhView: View {
                             }
                             
                             ForEach(recordings) { recording in
-                                if  recording.title != nil && recording.title!.contains(searchText)  {
+                                if  recording.title != nil && recording.title!.contains(viewModel.searchText)  {
                                     NavigationLink(destination: PlayAudioView(recording: recording)) {
                                         SearchRecordingResults(recording: recording)
                                     }
                                     .onAppear {
-                                        searchResultForRecording = true
+                                        viewModel.searchResultForRecording = true
                                     }
                                     
                                     Divider()
@@ -112,7 +113,7 @@ struct SeacrhView: View {
                                 }
                             }
                             
-                            if !searchResultForRecording  {
+                            if !viewModel.searchResultForRecording  {
                                 NoMachesView()
                             }
                             

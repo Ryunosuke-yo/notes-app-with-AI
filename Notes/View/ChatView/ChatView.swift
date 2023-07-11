@@ -10,20 +10,13 @@ import ActivityIndicatorView
 
 
 struct ChatView: View {
-    @State private var textEditorHeight : CGFloat = 100
-    @State var prompt = ""
-    @State var aiResponse = ""
-    @State var loadingState: Loading = .idle
-    @State var scrollToBottom = false
-    @State var isLoadingForIndicator = true
-    @State var showAlert = false
-    var maxHeight : CGFloat = 250
     @Binding var selectedTab: Int
     @FocusState private var focused: Bool
     @FetchRequest(sortDescriptors: [
         SortDescriptor(\.date)], animation: .easeInOut) var chats: FetchedResults<Chats>
     @Environment(\.managedObjectContext) var moc
     @Namespace var bottomID
+    @StateObject var viewModel = ChatViewModel()
     
     
     var body: some View {
@@ -63,7 +56,7 @@ struct ChatView: View {
                         .frame(width: 50)
                         .padding(.top, 5)
                         .onTapGesture {
-                            showAlert = true
+                            viewModel.showAlert = true
                         }
                     
                 }
@@ -84,14 +77,14 @@ struct ChatView: View {
                                 }
                                 
                                 
-                                if loadingState == .loading {
-                                    ActivityIndicatorView(isVisible: $isLoadingForIndicator, type: .rotatingDots(count: 5))
+                                if viewModel.loadingState == .loading {
+                                    ActivityIndicatorView(isVisible: $viewModel.isLoadingForIndicator, type: .rotatingDots(count: 5))
                                         .frame(width: 50.0, height: 50.0)
                                         .foregroundColor(.primaryOrange)
                                     
                                 }
                                 
-                                if loadingState == .error {
+                                if viewModel.loadingState == .error {
                                     Text("Error happend")
                                         .font(Font.mainFont(12))
                                         .foregroundColor(.primaryOrange)
@@ -125,7 +118,7 @@ struct ChatView: View {
                 
                 
                 HStack {
-                    DynamicHeightTextEditor(text: $prompt, placeholder: "Ask anything", maxHeight: maxHeight)
+                    DynamicHeightTextEditor(text: $viewModel.prompt, placeholder: "Ask anything", maxHeight: viewModel.maxHeight)
                         .background(Color.primaryGray)
                         .foregroundColor(.primaryWhite)
                         .padding([.leading], 15)
@@ -138,7 +131,15 @@ struct ChatView: View {
                         .padding(.trailing, 20)
                         .foregroundColor(.primaryOrange)
                         .onTapGesture {
-                            sendChat()
+                            Task {
+                                do {
+                                    try await viewModel.sendChat(moc: moc, chats: chats)
+                                } catch {
+                                    viewModel.isError()
+                                }
+                            }
+                            
+                            
                         }
                     
                 }
@@ -149,14 +150,14 @@ struct ChatView: View {
                 
             }
             .padding([.bottom], 20)
-            .alert("Sure to clear chats history?", isPresented: $showAlert) {
+            .alert("Sure to clear chats history?", isPresented: $viewModel.showAlert) {
                 Button("OK", role: .destructive) {
                     if chats.count != 0 {
-                        deletelAllChats()
+                        viewModel.deletelAllChats(moc: moc, chats: chats)
                     }
-                Button("Cancel", role: .cancel) {}
-                   
-               
+                    Button("Cancel", role: .cancel) {}
+                    
+                    
                     
                 }
                 
@@ -166,92 +167,6 @@ struct ChatView: View {
     }
     
     
-    func sendChat() {
-        if prompt != "" {
-            let newUserChat = Chats(context: moc)
-            newUserChat.content = prompt
-            newUserChat.timestamp = Date().timeIntervalSince1970
-            newUserChat.user = true
-            newUserChat.id = UUID()
-            newUserChat.date = Date()
-            callOpenAIChatEndpoint()
-            prompt = ""
-        }
-    }
-    
-    
-    
-    func callOpenAIChatEndpoint() {
-        scrollToBottom = true
-        loadingState = .loading
-        let apiKey = ""
-        let endpointURL = URL(string: "https://api.openai.com/v1/chat/completions")!
-        
-        var request = URLRequest(url: endpointURL)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        var messageArray = chats.map {
-            ["role" : $0.user == true ? "user" : "system", "content": $0.content ?? ""]
-        }
-        messageArray.append(["role" : "user", "content": prompt])
-        
-        let body: [String: AnyHashable] = [
-            "model": "gpt-3.5-turbo",
-            "messages": messageArray
-        ]
-        
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        
-        
-        
-        let task = URLSession.shared.dataTask(with: request) { (data, _, error) in
-            guard let data = data, error == nil else {
-                loadingState = .error
-                return
-            }
-            
-            do {
-                let res = try JSONDecoder().decode(ChatResponse.self, from: data)
-                let newChat = Chats(context: moc)
-                newChat.user = false
-                newChat.content = res.choices[0].message.content
-                newChat.id = UUID()
-                newChat.date = Date()
-                
-                let timestamp = Date().timeIntervalSince1970
-                newChat.timestamp = timestamp
-                do {
-                    try moc.save()
-                    
-                } catch {
-                    print(error.localizedDescription, "when saving chat")
-                }
-                loadingState = .success
-                
-            } catch {
-                print(error)
-                loadingState = .error
-            }
-            
-        }
-        task.resume()
-    }
-    
-    
-    func deletelAllChats() {
-        for chat in chats {
-            moc.delete(chat)
-        }
-        
-        do {
-            try moc.save()
-        } catch {
-            print(error.localizedDescription, "when deletinf history")
-        }
-        
-    }
     
 }
 

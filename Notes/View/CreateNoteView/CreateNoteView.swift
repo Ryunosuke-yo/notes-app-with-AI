@@ -15,16 +15,10 @@ struct CreateNoteView: View {
     @EnvironmentObject private var editMode: EditMode
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
-    @State var titleValue = ""
-    @State var contentValue = ""
-    @State var showFolderModal = false
-    @State var folderValue = ""
-    @State var selectedColor = Color.primaryOrange
-    @State var showColorSheet = false
     @Binding var noteId: UUID?
     @StateObject var sheetManager = SheetManager()
-    @State var isSharePresented = false
-    @State var showDeleteAlert = false
+    @StateObject var viewModel = CreateNoteViewModel()
+   
     
     let columns = [
         GridItem(.flexible()),
@@ -42,7 +36,7 @@ struct CreateNoteView: View {
         ZStack {
             Color.primaryBlcak.ignoresSafeArea()
             VStack {
-                TextField("Title", text: $titleValue)
+                TextField("Title", text: $viewModel.titleValue)
                     .font(Font.headerFont(34))
                     .fontWeight(Font.Weight.medium)
                     .tracking(2)
@@ -52,7 +46,7 @@ struct CreateNoteView: View {
                 
                 
                 
-                TextEditor(text: $contentValue)
+                TextEditor(text: $viewModel.contentValue)
                     .font(Font.mainFont(17))
                     .tracking(1.5)
                     .scrollContentBackground(.hidden)
@@ -60,7 +54,7 @@ struct CreateNoteView: View {
                     .background(Color.primaryBlcak)
                     .scrollBounceBehavior(.always)
             }
-            .sheet(isPresented: $isSharePresented, onDismiss: {
+            .sheet(isPresented: $viewModel.isSharePresented, onDismiss: {
                 if let removeUrl = sheetManager.fileUrlState {
                     do {
                         try FileManager.default.removeItem(at: removeUrl)
@@ -81,17 +75,17 @@ struct CreateNoteView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 30) {
                         Circle()
-                            .fill(selectedColor)
+                            .fill(viewModel.selectedColor)
                             .frame(width: 20, height: 20)
                             .onTapGesture {
-                                showColorSheet.toggle()
+                                viewModel.showColorSheet.toggle()
                             }
                         Image(systemName: "square.and.arrow.up")
                             .resizable()
                             .frame(width: 20, height: 25)
                             .foregroundColor(.primaryWhite)
                             .onTapGesture {
-                                if titleValue == "" {
+                                if viewModel.titleValue == "" {
                                     return
                                 }
                                 createTxtFile()
@@ -103,7 +97,7 @@ struct CreateNoteView: View {
                                 .frame(width: 20, height: 23)
                                 .foregroundColor(.recordRed)
                                 .onTapGesture {
-                                    showDeleteAlert = true
+                                    viewModel.showDeleteAlert = true
                                 }
                         }
                         
@@ -122,7 +116,7 @@ struct CreateNoteView: View {
 
                     .contentShape(Rectangle())
                     .simultaneousGesture(TapGesture().onEnded {
-                        if titleValue == "" && contentValue == "" {
+                        if viewModel.titleValue == "" && viewModel.contentValue == "" {
                             presentationMode.wrappedValue.dismiss()
                             return
                         }
@@ -133,15 +127,15 @@ struct CreateNoteView: View {
                 }
                 
                 ToolbarItem(placement: .principal) {
-                    Text(folderValue == "" ? "All" : folderValue)
+                    Text(viewModel.folderValue == "" ? "All" : viewModel.folderValue)
                         .foregroundColor(.secondaryWhite)
                         .tracking(1)
                         .font(Font.mainFont(20))
                         .onTapGesture {
-                            showFolderModal.toggle()
+                            viewModel.showFolderModal.toggle()
                         }
-                        .sheet(isPresented: $showFolderModal) {
-                            FolderModal(folderValue: $folderValue)
+                        .sheet(isPresented: $viewModel.showFolderModal) {
+                            FolderModal(folderValue: $viewModel.folderValue)
                         }
                         .padding([.leading], 10)
                     
@@ -149,7 +143,7 @@ struct CreateNoteView: View {
             }
             
         }
-        .alert("Sure to delete?", isPresented: $showDeleteAlert) {
+        .alert("Sure to delete?", isPresented: $viewModel.showDeleteAlert) {
             Button("delete", role: .destructive) {
                 if let id = noteId {
                     deleteNote(noteId: id)
@@ -160,10 +154,10 @@ struct CreateNoteView: View {
             Button("Cancel", role:.cancel) {}
             
         }
-        .sheet(isPresented: $showColorSheet) {
+        .sheet(isPresented: $viewModel.showColorSheet) {
             ColorSheetModal { color in
-                selectedColor = color
-                showColorSheet.toggle()
+                viewModel.selectedColor = color
+                viewModel.showColorSheet.toggle()
             }
             .presentationDetents([.height(150)])
             .presentationBackground(Color.primaryGray)
@@ -172,10 +166,10 @@ struct CreateNoteView: View {
         .onAppear {
             if editMode.editMode {
                 if let editNote = notes.first (where: {$0.id == noteId}){
-                    titleValue = editNote.wrappedTitle
-                    contentValue = editNote.wrappedContents
-                    folderValue = editNote.wrappedFolder
-                    selectedColor = Color.getColorValue(colorString: editNote.wrappedColor)
+                    viewModel.titleValue = editNote.wrappedTitle
+                    viewModel.contentValue = editNote.wrappedContents
+                    viewModel.folderValue = editNote.wrappedFolder
+                    viewModel.selectedColor = Color.getColorValue(colorString: editNote.wrappedColor)
                     
                     
                 }
@@ -186,7 +180,7 @@ struct CreateNoteView: View {
     }
     
     private func createTxtFile() {
-        let fileName = "\(titleValue).txt"
+        let fileName = "\(viewModel.titleValue).txt"
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             print("Documents directory not found.")
             return
@@ -195,12 +189,12 @@ struct CreateNoteView: View {
         sheetManager.fileNameState = fileName
         sheetManager.fileUrlState = fileURL
         do {
-            try contentValue.write(to: fileURL, atomically: true, encoding: .utf8)
-            isSharePresented.toggle()
+            try viewModel.contentValue.write(to: fileURL, atomically: true, encoding: .utf8)
+            viewModel.isSharePresented.toggle()
         } catch {
             print("Failed to create text file. Error: \(error)")
         }
-       
+
     }
     
     func saveNote() {
@@ -209,10 +203,10 @@ struct CreateNoteView: View {
             
             if let index = notes.firstIndex(of: noteToEdit) {
                 let editNote = notes[index]
-                editNote.title = titleValue
-                editNote.contents = contentValue
-                editNote.folder = folderValue
-                editNote.color = Color.getColorString(color: selectedColor)
+                editNote.title = viewModel.titleValue
+                editNote.contents = viewModel.contentValue
+                editNote.folder = viewModel.folderValue
+                editNote.color = Color.getColorString(color: viewModel.selectedColor)
                
             }
             
@@ -229,11 +223,11 @@ struct CreateNoteView: View {
             
             let newNote = Note(context: moc)
             newNote.id = UUID()
-            newNote.title = titleValue
+            newNote.title = viewModel.titleValue
             newNote.timestamp = timestamp
-            newNote.contents = contentValue
-            newNote.folder = folderValue
-            newNote.color = Color.getColorString(color: selectedColor)
+            newNote.contents = viewModel.contentValue
+            newNote.folder = viewModel.folderValue
+            newNote.color = Color.getColorString(color: viewModel.selectedColor)
             newNote.date = Date()
         
             

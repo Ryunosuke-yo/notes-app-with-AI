@@ -10,9 +10,9 @@ import SwiftUI
 struct FolderView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var moc
-    @State var folderNameValue = ""
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var folders: FetchedResults<Folder>
     @FetchRequest(sortDescriptors: [], animation: .easeInOut) var notes: FetchedResults<Note>
+    @StateObject var viewModel = FolderViewModel()
     
     var body: some View {
         ZStack {
@@ -21,7 +21,7 @@ struct FolderView: View {
             
             VStack {
                 HStack {
-                    TextField("", text: $folderNameValue)
+                    TextField("", text: $viewModel.folderNameValue)
                         .font(Font.mainFont(20))
                         .fontWeight(Font.Weight.medium)
                         .tracking(2)
@@ -37,7 +37,7 @@ struct FolderView: View {
                 .padding([.top], 40)
                 
                 Button {
-                    saveFolder()
+                    viewModel.saveFolder(moc: moc, folders: folders)
                 } label: {
                     Text("Add")
                         .font(Font.mainFont(20))
@@ -62,7 +62,9 @@ struct FolderView: View {
                                 .listRowBackground(Color.primaryGray)
                                 .foregroundColor(Color.primaryWhite)
                         }
-                        .onDelete(perform: deleteFolder)
+                        .onDelete { index in
+                            viewModel.deleteFolder(indexSet: index, moc: moc, folders: folders, notes: notes)
+                        }
                     }
                     .scrollContentBackground(.hidden)
                     .background(Color.primaryBlcak)
@@ -103,47 +105,31 @@ struct FolderView: View {
         }
     }
     
-    func saveFolder() {
-        
-        if folders.contains(where: {
-            $0.wrappedFolderNeme == folderNameValue
-        }) {
-            return
-        }
-        
-        let newFolder = Folder(context: moc)
-        newFolder.folderName = folderNameValue
-        
-        do {
-            try moc.save()
-        } catch {
-            print("An error occurred: \(error)")
-        }
-    }
+
     
-    func deleteFolder(at indexSet:IndexSet) {
-        var folderName: String?
-        
-        for index in indexSet {
-            let folder = folders[index]
-            folderName = folder.folderName ?? nil
-            moc.delete(folder)
-            
-            
-            do {
-                try moc.save()
-            } catch {
-                print(error.localizedDescription, "when deleteing folder"
-                )
-            }
-        }
-        
-        notes.forEach { note in
-            if note.folder == folderName {
-                note.folder = ""
-            }
-        }
-    }
+//    func deleteFolder(at indexSet:IndexSet) {
+//        var folderName: String?
+//        
+//        for index in indexSet {
+//            let folder = folders[index]
+//            folderName = folder.folderName ?? nil
+//            moc.delete(folder)
+//            
+//            
+//            do {
+//                try moc.save()
+//            } catch {
+//                print(error.localizedDescription, "when deleteing folder"
+//                )
+//            }
+//        }
+//        
+//        notes.forEach { note in
+//            if note.folder == folderName {
+//                note.folder = ""
+//            }
+//        }
+//    }
     
     
     
@@ -152,8 +138,8 @@ struct FolderView: View {
 
 
 
-struct FolderView_Previews: PreviewProvider {
-    static var previews: some View {
-        FolderView()
-    }
-}
+//struct FolderView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FolderView()
+//    }
+//}
