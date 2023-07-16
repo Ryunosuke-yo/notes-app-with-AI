@@ -47,7 +47,7 @@ extension ChatView {
         func callOpenAIChatEndpoint(moc: NSManagedObjectContext, chats: FetchedResults<Chats>) async throws -> Void {
             scrollToBottom = true
             loadingState = .loading
-            let apiKey = OPEN_AI_API_KKEY
+            let apiKey = OPEN_AI_API_KEY
             let endpointURL = URL(string: "https://api.openai.com/v1/chat/completions")!
             
             var request = URLRequest(url: endpointURL)
