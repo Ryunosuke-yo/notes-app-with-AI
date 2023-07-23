@@ -87,12 +87,11 @@ extension ChatView {
                     try moc.save()
                     
                 } catch {
-                    print(error.localizedDescription, "when saving chat")
+                 
                 }
                 loadingState = .success
                 
             } catch {
-                print(error)
                 loadingState = .error
             }
             
@@ -109,7 +108,7 @@ extension ChatView {
             do {
                 try moc.save()
             } catch {
-                print(error.localizedDescription, "when deletinf history")
+          
             }
             
         }

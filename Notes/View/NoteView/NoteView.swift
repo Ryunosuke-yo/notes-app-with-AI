@@ -59,47 +59,60 @@ struct NoteView: View {
                 }
                 .padding([.top], 15)
                 
-                ScrollView(.horizontal) {
-                    HStack(spacing: 12) {
-                        Text("All")
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .cornerRadius(20)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .inset(by: 2)
-                                    .stroke(viewModel.selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite, lineWidth: 2)
-                            )
-                            .background(Color.primaryBlcak)
-                            .foregroundColor(viewModel.selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite)
-                            .onTapGesture {
-                                viewModel.selectedFolder = nil
-                            }
-                        
-                        ForEach(folders, id: \.self) { item in
-                            Text(item.folderName ?? "")
+                HStack {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 12) {
+                            Text("All")
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 10)
                                 .cornerRadius(20)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
                                         .inset(by: 2)
-                                        .stroke(viewModel.getFolderStrokeColor(cuurentFolder: item.wrappedFolderNeme), lineWidth: 2)
+                                        .stroke(viewModel.selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite, lineWidth: 2)
                                 )
                                 .background(Color.primaryBlcak)
-                                .foregroundColor(viewModel.getFolderTextColor(cuurentFolder: item.wrappedFolderNeme))
+                                .foregroundColor(viewModel.selectedFolder == nil ? Color.primaryOrange : Color.secondaryWhite)
                                 .onTapGesture {
-                                    viewModel.selectedFolder = item
+                                    viewModel.selectedFolder = nil
                                 }
                             
-                            
+                            ForEach(folders, id: \.self) { item in
+                                Text(item.folderName ?? "")
+                                    .padding(.horizontal, 20)
+                                    .padding(.vertical, 10)
+                                    .cornerRadius(20)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .inset(by: 2)
+                                            .stroke(viewModel.getFolderStrokeColor(cuurentFolder: item.wrappedFolderNeme), lineWidth: 2)
+                                    )
+                                    .background(Color.primaryBlcak)
+                                    .foregroundColor(viewModel.getFolderTextColor(cuurentFolder: item.wrappedFolderNeme))
+                                    .onTapGesture {
+                                        viewModel.selectedFolder = item
+                                    }
+                                
+                                
+                            }
                         }
+                        .padding(.leading, 10)
+                        
                     }
-                    .padding(.leading, 10)
+                    .scrollIndicators(.hidden)
+                    .padding(.top, 10)
+            
+                    Image(systemName: "trash.circle")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .foregroundColor(.primaryOrange)
+                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 20))
+                        .onTapGesture {
+                            viewModel.showDeleteAllAlert = true
+                        }
+                    
                     
                 }
-                .scrollIndicators(.hidden)
-                .padding(.top, 10)
                 
                 
                 ScrollView {
@@ -246,6 +259,12 @@ struct NoteView: View {
             
 //        }
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Sure to delete all \(viewModel.appMode == .noteMode ? "notes" : "recordinmgs")", isPresented: $viewModel.showDeleteAllAlert) {
+            Button("Delete", role: .destructive) {
+                deleteAllItems()
+            }
+            Button("Cancel", role:.cancel) {}
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 NavigationLink(destination: SeacrhView().navigationBarBackButtonHidden(true)) {
@@ -279,6 +298,33 @@ struct NoteView: View {
             
         }
     }
+    
+    private func deleteAllItems() {
+        switch viewModel.appMode {
+        case .noteMode :
+            for note in notes {
+                moc.delete(note)
+            }
+        case .voiceMemo:
+            for recording in recordings {
+                moc.delete(recording)
+                
+                if let url = recording.url {
+                    audioManager.deleteRecordingFromDirectory(url: url) {
+                    }
+                }
+               
+            }
+        }
+        
+        do {
+            try moc.save()
+        } catch {
+        }
+        
+    }
+    
+   
     
     
     private func getNotesInFolder()-> [Note]? {
@@ -395,7 +441,6 @@ struct MemoGridItem :View {
         do {
             try moc.save()
         } catch {
-            print(error.localizedDescription, "when saving context")
         }
     }
     
@@ -484,7 +529,6 @@ struct VocieMemoGridItem: View {
         do {
             try moc.save()
         } catch {
-            print(error.localizedDescription, "when saving context")
         }
     }
 }

@@ -233,7 +233,6 @@ struct VoiceMemoModal: View {
         do {
             try moc.save()
         } catch {
-            print(error.localizedDescription, "save recroding")
         }
         
     }

@@ -15,7 +15,6 @@ class DataController: ObservableObject {
     init() {
         container.loadPersistentStores { desc, error in
             if let error = error {
-                print("Fatal error: \(error.localizedDescription)")
             }
         }
         
