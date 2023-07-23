@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		2B05596E2A25CA03000FCDB7 /* ChatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */; };
 		2B0559732A25EE4F000FCDB7 /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0559722A25EE4F000FCDB7 /* Loading.swift */; };
+		2B07CEE92A646DAD00E3E142 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B07CEE82A646DAD00E3E142 /* Keys.swift */; };
 		2B183AC92A3BF4E00037E36E /* SheetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B183AC82A3BF4E00037E36E /* SheetManager.swift */; };
+		2B1B28AC2A64708C000E619F /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 2B1B28AB2A64708C000E619F /* ActivityIndicatorView */; };
 		2B25827E2A023D7A00CE3BC6 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B25827D2A023D7A00CE3BC6 /* ChatView.swift */; };
 		2B2CF0F72A39A2BF00A2F280 /* PlayAudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */; };
 		2B2FC87F2A1B1CCF00CBA7B0 /* Note.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC87D2A1B1CCF00CBA7B0 /* Note.xcdatamodeld */; };
 		2B2FC8812A1B1FC200CBA7B0 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */; };
 		2B4C98702A45622F00DEA9CF /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4C986F2A45622F00DEA9CF /* SearchResult.swift */; };
-		2B4DC2542A3C53B000F46413 /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 2B4DC2532A3C53B000F46413 /* ActivityIndicatorView */; };
 		2B5326F12A02DE51006D297F /* FolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5326F02A02DE51006D297F /* FolderView.swift */; };
 		2B74065F29FF162200B99FFA /* NotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74065E29FF162200B99FFA /* NotesApp.swift */; };
 		2B74066129FF162200B99FFA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74066029FF162200B99FFA /* ContentView.swift */; };
@@ -46,7 +47,6 @@
 		2BD520462A52A0760052A809 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD520452A52A0760052A809 /* SearchViewModel.swift */; };
 		2BEEAFC82A5CD60F00967643 /* VoiceMemoModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEEAFC72A5CD60F00967643 /* VoiceMemoModalViewModel.swift */; };
 		2BEEAFCB2A5CD8F500967643 /* PlayAudioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEEAFCA2A5CD8F500967643 /* PlayAudioViewModel.swift */; };
-		2BEEAFCD2A5CE1BF00967643 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEEAFCC2A5CE1BF00967643 /* Keys.swift */; };
 		2BFA673C2A1D95E0008A2460 /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA67382A1D95E0008A2460 /* Folder+CoreDataClass.swift */; };
 		2BFA673D2A1D95E0008A2460 /* Folder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA67392A1D95E0008A2460 /* Folder+CoreDataProperties.swift */; };
 		2BFA673E2A1D95E0008A2460 /* Note+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA673A2A1D95E0008A2460 /* Note+CoreDataClass.swift */; };
@@ -58,6 +58,7 @@
 /* Begin PBXFileReference section */
 		2B05596D2A25CA03000FCDB7 /* ChatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponse.swift; sourceTree = "<group>"; };
 		2B0559722A25EE4F000FCDB7 /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
+		2B07CEE82A646DAD00E3E142 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		2B183AC82A3BF4E00037E36E /* SheetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetManager.swift; sourceTree = "<group>"; };
 		2B25827D2A023D7A00CE3BC6 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		2B2CF0F62A39A2BF00A2F280 /* PlayAudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAudioView.swift; sourceTree = "<group>"; };
@@ -65,7 +66,7 @@
 		2B2FC8802A1B1FC200CBA7B0 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		2B4C986F2A45622F00DEA9CF /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		2B5326F02A02DE51006D297F /* FolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderView.swift; sourceTree = "<group>"; };
-		2B74065B29FF162200B99FFA /* Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B74065B29FF162200B99FFA /* Notes-with-ai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Notes-with-ai.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B74065E29FF162200B99FFA /* NotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesApp.swift; sourceTree = "<group>"; };
 		2B74066029FF162200B99FFA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2B74066229FF162300B99FFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -96,7 +97,6 @@
 		2BD520452A52A0760052A809 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		2BEEAFC72A5CD60F00967643 /* VoiceMemoModalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceMemoModalViewModel.swift; sourceTree = "<group>"; };
 		2BEEAFCA2A5CD8F500967643 /* PlayAudioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAudioViewModel.swift; sourceTree = "<group>"; };
-		2BEEAFCC2A5CE1BF00967643 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		2BFA67382A1D95E0008A2460 /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Folder+CoreDataClass.swift"; path = "Notes/Folder+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		2BFA67392A1D95E0008A2460 /* Folder+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Folder+CoreDataProperties.swift"; path = "Notes/Folder+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		2BFA673A2A1D95E0008A2460 /* Note+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Note+CoreDataClass.swift"; path = "Notes/Note+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -111,7 +111,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B9FF2E12A2AC6690089CC08 /* AVKit.framework in Frameworks */,
-				2B4DC2542A3C53B000F46413 /* ActivityIndicatorView in Frameworks */,
+				2B1B28AC2A64708C000E619F /* ActivityIndicatorView in Frameworks */,
 				2BC0D5F52A2C8120005272D6 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,7 +147,7 @@
 		2B74065C29FF162200B99FFA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2B74065B29FF162200B99FFA /* Notes.app */,
+				2B74065B29FF162200B99FFA /* Notes-with-ai.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -164,7 +164,7 @@
 				2B74066029FF162200B99FFA /* ContentView.swift */,
 				2B74066229FF162300B99FFA /* Assets.xcassets */,
 				2B74066429FF162300B99FFA /* Preview Content */,
-				2BEEAFCC2A5CE1BF00967643 /* Keys.swift */,
+				2B07CEE82A646DAD00E3E142 /* Keys.swift */,
 			);
 			path = Notes;
 			sourceTree = "<group>";
@@ -295,9 +295,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2B74065A29FF162200B99FFA /* Notes */ = {
+		2B74065A29FF162200B99FFA /* Notes-with-ai */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2B74066929FF162300B99FFA /* Build configuration list for PBXNativeTarget "Notes" */;
+			buildConfigurationList = 2B74066929FF162300B99FFA /* Build configuration list for PBXNativeTarget "Notes-with-ai" */;
 			buildPhases = (
 				2B74065729FF162200B99FFA /* Sources */,
 				2B74065829FF162200B99FFA /* Frameworks */,
@@ -307,12 +307,12 @@
 			);
 			dependencies = (
 			);
-			name = Notes;
+			name = "Notes-with-ai";
 			packageProductDependencies = (
-				2B4DC2532A3C53B000F46413 /* ActivityIndicatorView */,
+				2B1B28AB2A64708C000E619F /* ActivityIndicatorView */,
 			);
 			productName = Notes;
-			productReference = 2B74065B29FF162200B99FFA /* Notes.app */;
+			productReference = 2B74065B29FF162200B99FFA /* Notes-with-ai.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -330,7 +330,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2B74065629FF162200B99FFA /* Build configuration list for PBXProject "Notes" */;
+			buildConfigurationList = 2B74065629FF162200B99FFA /* Build configuration list for PBXProject "Notes-with-ai" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -340,13 +340,13 @@
 			);
 			mainGroup = 2B74065229FF162200B99FFA;
 			packageReferences = (
-				2B0559742A25F158000FCDB7 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */,
+				2B1B28AA2A64708C000E619F /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */,
 			);
 			productRefGroup = 2B74065C29FF162200B99FFA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2B74065A29FF162200B99FFA /* Notes */,
+				2B74065A29FF162200B99FFA /* Notes-with-ai */,
 			);
 		};
 /* End PBXProject section */
@@ -382,7 +382,7 @@
 				2B9F3B222A00D45500F55754 /* NoteView.swift in Sources */,
 				2BBD9D0E2A08CB44007532FC /* FolderModal.swift in Sources */,
 				2BC772D82A1F645C001E4C44 /* EditMode.swift in Sources */,
-				2BEEAFCD2A5CE1BF00967643 /* Keys.swift in Sources */,
+				2B07CEE92A646DAD00E3E142 /* Keys.swift in Sources */,
 				2BB71A3F2A3AED850081F855 /* ColorSheetModal.swift in Sources */,
 				2BFB311B2A27255E000F17D1 /* NoteColors.swift in Sources */,
 				2B5326F12A02DE51006D297F /* FolderView.swift in Sources */,
@@ -541,7 +541,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Notes/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Notes;
+				INFOPLIST_KEY_CFBundleDisplayName = "Notes, ChatAi - simple, fancy";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app use microphone for voice memo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -554,11 +554,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ryunosuke.Notes;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ryunosuke.Notes-chat-ai-simple-fancy";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -574,7 +577,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Notes/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Notes;
+				INFOPLIST_KEY_CFBundleDisplayName = "Notes, ChatAi - simple, fancy";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app use microphone for voice memo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -587,18 +590,21 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ryunosuke.Notes;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ryunosuke.Notes-chat-ai-simple-fancy";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2B74065629FF162200B99FFA /* Build configuration list for PBXProject "Notes" */ = {
+		2B74065629FF162200B99FFA /* Build configuration list for PBXProject "Notes-with-ai" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2B74066729FF162300B99FFA /* Debug */,
@@ -607,7 +613,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2B74066929FF162300B99FFA /* Build configuration list for PBXNativeTarget "Notes" */ = {
+		2B74066929FF162300B99FFA /* Build configuration list for PBXNativeTarget "Notes-with-ai" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2B74066A29FF162300B99FFA /* Debug */,
@@ -619,7 +625,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2B0559742A25F158000FCDB7 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */ = {
+		2B1B28AA2A64708C000E619F /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/ActivityIndicatorView.git";
 			requirement = {
@@ -630,9 +636,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2B4DC2532A3C53B000F46413 /* ActivityIndicatorView */ = {
+		2B1B28AB2A64708C000E619F /* ActivityIndicatorView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2B0559742A25F158000FCDB7 /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */;
+			package = 2B1B28AA2A64708C000E619F /* XCRemoteSwiftPackageReference "ActivityIndicatorView" */;
 			productName = ActivityIndicatorView;
 		};
 /* End XCSwiftPackageProductDependency section */

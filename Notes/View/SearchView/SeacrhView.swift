@@ -143,7 +143,6 @@ struct SeacrhView: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    print("pressed")
                     self.presentationMode.wrappedValue.dismiss()
                 }
                 

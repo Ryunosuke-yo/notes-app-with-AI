@@ -24,13 +24,12 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func requestPermissionAndSetUp() {
         do {
             
-            try self.session.setCategory(.playAndRecord, options: .defaultToSpeaker)
+            try self.session.setCategory(.playAndRecord, options: [.defaultToSpeaker, .allowBluetooth])
             try self.session.setActive(true)
             
             self.session.requestRecordPermission {
                 status in
                 if !status {
-                    print("permisiion denied")
                 } else {
                     self.approved = true
                 }
@@ -38,12 +37,10 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 
             }
         } catch {
-            print(error.localizedDescription, "when")
         }
     }
     func startPlaying(url: URL) {
         if !approved {
-            print("Need permisiion for mic")
             return
         }
         guard let correctUrl = getCorrectUrlFrom(url: url) else {
@@ -57,14 +54,11 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             audioPlayer.volume = 1.0
             audioPlayer.play()
         } catch {
-            print("errrrr")
-            print(error.localizedDescription, "play")
         }
     }
     
     func stopPlaying() {
         if !approved {
-            print("Need permisiion for mic")
             return
         }
         
@@ -74,11 +68,9 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if !approved {
-            print("Need permisiion for mic")
             return
         }
         isPlaying = false
-        print("called")
         
     }
     
@@ -99,7 +91,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             recorder = try AVAudioRecorder(url: fileName, settings: settings)
             recorder.record()
         } catch {
-            print(error.localizedDescription, "when record")
+            return
         }
     }
     
@@ -117,13 +109,12 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             try FileManager.default.removeItem(at: correctUrl)
             onComplete()
         } catch {
-            print(error.localizedDescription, "error when deleting audio")
+          
         }
     }
     
     func getCorrectUrlFrom(url: URL)-> URL? {
         guard let audio = getAuidos().first(where: {$0.lastPathComponent == url.lastPathComponent}) else {
-            print("No maches")
             return nil
         }
         
@@ -138,7 +129,6 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             return res
             
         } catch {
-            print(error.localizedDescription, "when get audios")
         }
         
         return []
@@ -152,7 +142,6 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
           
           return newURL
         } catch {
-            print(error.localizedDescription, "when moving item")
             return nil
         }
     }

@@ -220,7 +220,7 @@ struct PlayAudioView: View {
                         return
                     } else {
                         if let correctUrl = audioManager.getCorrectUrlFrom(url: url) {
-                            print("updated")
+            
                             if let newUrl =  audioManager.updateFileName(url: correctUrl, newFileName: "\(viewModel.titleValue).m4a") {
                                 recordingToEdit.url = newUrl
                             }
@@ -266,7 +266,7 @@ struct PlayAudioView: View {
                 presentationMode.wrappedValue.dismiss()
             }
         } else {
-            print("coundn")
+           
         }
     }
     
@@ -275,7 +275,7 @@ struct PlayAudioView: View {
         do {
             try moc.save()
         } catch {
-            print("An error occurred: \(error)")
+        
         }
     }
 }

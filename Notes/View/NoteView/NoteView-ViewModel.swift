@@ -16,6 +16,7 @@ extension NoteView {
         @Published var showVoiceRec = false
         @Published var selectedFolder: Folder?
         @Published var selectedNoteId: UUID? = nil
+        @Published var showDeleteAllAlert = false
         
      
         

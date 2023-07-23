@@ -27,7 +27,6 @@ extension FolderView {
             do {
                 try moc.save()
             } catch {
-                print("An error occurred: \(error)")
             }
         }
         
@@ -43,8 +42,7 @@ extension FolderView {
                 do {
                     try moc.save()
                 } catch {
-                    print(error.localizedDescription, "when deleteing folder"
-                    )
+                    
                 }
             }
             

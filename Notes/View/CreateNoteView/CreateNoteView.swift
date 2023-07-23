@@ -59,7 +59,6 @@ struct CreateNoteView: View {
                     do {
                         try FileManager.default.removeItem(at: removeUrl)
                     } catch {
-                        print(error.localizedDescription, "when deleting txt")
                     }
                     
                 }
@@ -144,7 +143,7 @@ struct CreateNoteView: View {
             
         }
         .alert("Sure to delete?", isPresented: $viewModel.showDeleteAlert) {
-            Button("delete", role: .destructive) {
+            Button("Delete", role: .destructive) {
                 if let id = noteId {
                     deleteNote(noteId: id)
                     presentationMode.wrappedValue.dismiss()
@@ -182,7 +181,6 @@ struct CreateNoteView: View {
     private func createTxtFile() {
         let fileName = "\(viewModel.titleValue).txt"
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Documents directory not found.")
             return
         }
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
@@ -192,7 +190,6 @@ struct CreateNoteView: View {
             try viewModel.contentValue.write(to: fileURL, atomically: true, encoding: .utf8)
             viewModel.isSharePresented.toggle()
         } catch {
-            print("Failed to create text file. Error: \(error)")
         }
 
     }
@@ -235,7 +232,6 @@ struct CreateNoteView: View {
                 try moc.save()
                 presentationMode.wrappedValue.dismiss()
             } catch {
-                print("An error occurred: \(error)")
             }
         }
     
@@ -251,7 +247,6 @@ struct CreateNoteView: View {
         do {
             try moc.save()
         } catch {
-            print("An error occurred: \(error)")
         }
     }
 }
